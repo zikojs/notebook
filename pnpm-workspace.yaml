@@ -1,0 +1,8 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+  - 'demo'
+
+catalog:
+  ziko: 2.0.0-beta.10
+  zextra: ^1.15.0

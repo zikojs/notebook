@@ -1,0 +1,19 @@
+{
+  "name": "demo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@zikojs/notebook": "workspace:*",
+    "canvas-confetti": "^1.9.4",
+    "vanjs-core": "^1.6.1"
+  },
+  "devDependencies": {
+    "vite": "^8.2.2"
+  }
+}

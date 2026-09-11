@@ -1,0 +1,53 @@
+{
+  "name": "@zikojs/notebook",
+  "version": "0.1.0",
+  "description": "",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "cross-env NODE_ENV=development rollup --config rollup.config.js",
+    "watch": "cross-env NODE_ENV=development rollup --config rollup.config.js -w",
+    "build": "cross-env NODE_ENV=production rollup --config rollup.config.js"
+  },
+  "author": "zakaria elalaoui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zikojs/notebook.git",
+    "directory": "packages/notebook"
+  },
+  "keywords": [
+    "zikojs",
+    "notebook"
+  ],
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "types": "./src/index.d.ts"
+    }
+  },
+  "files": [
+    "src",
+    "dist",
+    "LICENCE"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@codemirror/commands": "^6.11.0",
+    "@codemirror/lang-javascript": "^6.2.5",
+    "@codemirror/lang-markdown": "^6.5.2",
+    "@codemirror/language": "^6.12.4",
+    "@codemirror/state": "^6.7.4",
+    "@codemirror/view": "^6.43.11",
+    "acorn": "^8.18.0",
+    "canvas-confetti": "^1.9.4",
+    "codemirror": "^6.0.2",
+    "lucide": "^1.44.0",
+    "marked": "^18.0.12",
+    "vanjs-core": "^1.6.1",
+    "zextra": "catalog:",
+    "ziko": "catalog:"
+  }
+}
