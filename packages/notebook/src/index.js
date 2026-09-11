@@ -58,7 +58,7 @@ export class NotebookApp {
     if (runCells) setTimeout(() => this.runAllCells(), 200);
   }
 
-  rewriteImportNode(node, code, importMapConfig) {
+  #rewriteImportNode(node, code, importMapConfig) {
     let source = node.source.value;
     if (importMapConfig && importMapConfig[source]) source = importMapConfig[source];
     else if (!source.startsWith("http") && !source.startsWith("./") && !source.startsWith("../")) {
@@ -84,14 +84,14 @@ export class NotebookApp {
     return lines.join('\n');
   }
 
-  transformImportsAndScope(code, importMapConfig) {
+  #transformImportsAndScope(code, importMapConfig) {
     try {
       const ast = acorn.parse(code, { ecmaVersion: 'latest', sourceType: 'module', allowReturnOutsideFunction: true });
       let modifications = [];
 
       ast.body.forEach(node => {
         if (node.type === 'ImportDeclaration') {
-          modifications.push({ start: node.start, end: node.end, replacement: this.rewriteImportNode(node, code, importMapConfig) });
+          modifications.push({ start: node.start, end: node.end, replacement: this.#rewriteImportNode(node, code, importMapConfig) });
         } else if (node.type === 'VariableDeclaration') {
           let replacementCode = "";
           node.declarations.forEach(decl => {
@@ -119,7 +119,7 @@ async evaluateCodeAsync(code, TARGET, importMapConfig) {
     window.__notebook_scope.van = window.__notebook_scope.van || van;
     window.__notebook_scope.TARGET = TARGET;
 
-    const compiledCode = this.transformImportsAndScope(code, importMapConfig);
+    const compiledCode = this.#transformImportsAndScope(code, importMapConfig);
     const asyncWrapper = `(async () => { 
       with (window.__notebook_scope) {
         ${compiledCode} 
