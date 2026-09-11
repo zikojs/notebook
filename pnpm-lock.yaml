@@ -259,6 +259,9 @@ importers:
       '@codemirror/view':
         specifier: ^6.43.11
         version: 6.43.11
+      '@zikojs/lucide':
+        specifier: ^0.2.2
+        version: 0.2.2
       acorn:
         specifier: ^8.18.0
         version: 8.18.0
@@ -459,6 +462,9 @@ packages:
 
   '@types/trusted-types@2.0.7':
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+
+  '@zikojs/lucide@0.2.2':
+    resolution: {integrity: sha512-Jy9N3LQqALKORrTX7h33/IQLl52nPVI+93/7m/CzhUZI3Bd5azTEAmWHmWehDXR11BGagG7sxLRDV53K4SlAzw==}
 
   acorn@8.18.0:
     resolution: {integrity: sha512-lGq+9yr1/GuAWaVYIHRjvvySG5/4VfKIvC8EWxStPdcDh/Ka7FG3twP6v4d5BkravUilhIAsG4Qj83t02LWUPQ==}
@@ -906,6 +912,11 @@ snapshots:
   '@types/pako@1.0.7': {}
 
   '@types/trusted-types@2.0.7': {}
+
+  '@zikojs/lucide@0.2.2':
+    dependencies:
+      lucide: 1.44.0
+      ziko: 1.10.0
 
   acorn@8.18.0: {}
 

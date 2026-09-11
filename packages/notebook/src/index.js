@@ -1,5 +1,6 @@
 import './index.css'
 import van from "vanjs-core";
+import './van-ziko.js'
 import * as acorn from "acorn";
 import { 
     NotebookCell,

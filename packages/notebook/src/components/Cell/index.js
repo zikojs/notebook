@@ -3,7 +3,13 @@ import { marked } from "marked";
 import { createIcons, icons } from "lucide";
 import { CodeEditor } from "../CodeEditor/index.js";
 
+import Pencil from '@zikojs/lucide/Pencil'
+import Play from '@zikojs/lucide/Play'
+import Plus from '@zikojs/lucide/Plus'
+
 const { div, button, span, i } = van.tags;
+
+import { tags } from 'ziko/dom'
 
 const Icon = ({ name }) => {
   const iconEl = i({ class: "icon" });
@@ -16,8 +22,9 @@ const Button = ({ class: className = "", title = "", disabled = false, onclick, 
 
 const CellPrompt = ({ type, countText }) =>
   span({ class: `prompt ${type === "out" ? "out" : ""}` },
-    type === "in" ? `In ${countText}:` : type === "out" ? `Out ${countText}:` : ""
-  );
+    type === "in" ? `In ${countText}:` : type === "out" ? `Out ${countText}:` : "",
+    tags.p('ziko')
+);
 
 const MarkdownView = ({ code, onClick }) => {
   const content = div();
@@ -38,9 +45,9 @@ const CellControls = ({ cellData, actions, isQueueRunning, isMaxCellsReached }) 
     Button({ class: `btn-icon ${cellData.readonly ? "btn-active" : ""}`, title: "Toggle Readonly", disabled: isQueueRunning, onclick: actions.toggleReadonly, children: [Icon({ name: cellData.readonly ? "Lock" : "Unlock" })] }),
     Button({ class: `btn-icon ${cellData.type === "markdown" ? "btn-active" : ""}`, title: "Toggle Type", disabled: isQueueRunning || cellData.readonly, onclick: actions.toggleType, children: [Icon({ name: cellData.type === "code" ? "FileText" : "Code" })] }),
     cellData.type === "markdown" && !cellData.isEditingMarkdown
-      ? Button({ class: "btn-icon", title: "Edit", disabled: isQueueRunning || cellData.readonly, onclick: actions.editMarkdown, children: [Icon({ name: "Pencil" })] })
-      : Button({ class: "btn-icon btn-primary", title: "Run", disabled: isQueueRunning, onclick: () => actions.runCode(true), children: [Icon({ name: "Play" })] }),
-    Button({ class: "btn-icon", title: "Add Below", disabled: isQueueRunning || isMaxCellsReached, onclick: actions.addBelow, children: [Icon({ name: "Plus" })] }),
+      ? Button({ class: "btn-icon", title: "Edit", disabled: isQueueRunning || cellData.readonly, onclick: actions.editMarkdown, children: [(Pencil({class : 'icon'})).element] })
+      : Button({ class: "btn-icon btn-primary", title: "Run", disabled: isQueueRunning, onclick: () => actions.runCode(true), children: [Play({class : 'icon'}).element] }),
+    Button({ class: "btn-icon", title: "Add Below", disabled: isQueueRunning || isMaxCellsReached, onclick: actions.addBelow, children: [Plus({class : 'icon'}).element] }),
     Button({ class: "btn-icon", title: "Delete", disabled: isQueueRunning, onclick: actions.deleteCell, children: [Icon({ name: "Trash2" })] })
   );
 };

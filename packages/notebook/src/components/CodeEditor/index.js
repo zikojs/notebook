@@ -5,6 +5,7 @@ import { bracketMatching } from "@codemirror/language";
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
 
+
 export const CodeEditor = ({ cellData, actions, notebookGlobalShortcuts, userCodeMirrorConfig = {}, codeMirrorPlugins = [], minLines = 3 }) => {
   const editorDom = document.createElement("div");
   editorDom.className = "input-wrapper";
