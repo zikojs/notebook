@@ -104,11 +104,6 @@ export const transformImportsAndScope = (code, importMapConfig) => {
 export const evaluateCodeAsync = async (code, TARGET, importMapConfig) => {
   const compiledCode = transformImportsAndScope(code, importMapConfig);
 
-  // `eval` inherits strict mode from its caller, and Vite's entry script is
-  // an ES module (always strict), where `with` is illegal. A function body
-  // built via `new Function` runs in sloppy mode regardless of the caller,
-  // so `with` is legal inside it again. Unlike direct `eval`, it doesn't
-  // close over the surrounding scope, so TARGET/van are passed in explicitly.
   const runCell = new Function("TARGET", "van", `
     return (async () => {
       with (window.__notebook_scope) {
