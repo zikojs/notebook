@@ -159,6 +159,17 @@ export class NotebookApp {
     minLines = 3,
     maxCells = Infinity
   } = {}) {
+    // 1. Generate unique UUID for this notebook instance
+    this.id = crypto.randomUUID ? crypto.randomUUID() : 'nb_' + Math.random().toString(36).substring(2, 9);
+    
+    // 2. Initialize the global scope map if not already present
+    if (!window.__notebook_scope_map) {
+      window.__notebook_scope_map = new Map();
+    }
+    
+    // 3. Register this instance's isolated scope
+    this.resetScope();
+
     this.importMap = importMap;
     this.codeMirrorConfig = codeMirrorConfig;
     this.codeMirrorPlugins = codeMirrorPlugins;
@@ -290,7 +301,11 @@ export class NotebookApp {
         let hasError = false;
 
         try {
-          await evaluateCodeAsync(code, cellData._outputRef, app.importMap);
+          // Retrieve this specific instance's compatible scope from window.__notebook_scope_map
+          const scope = app.getScope();
+          
+          // Pass either the scope object or the instance ID (app.id) to evaluateCodeAsync
+          await evaluateCodeAsync(code, cellData._outputRef, app.importMap, scope);
         } catch (err) {
           hasError = true;
           van.add(cellData._outputRef, div({ class: "error-output" }, err.toString()));
@@ -376,7 +391,7 @@ export class NotebookApp {
     cellData._controlsEl.replaceChildren(...buttons);
   }
 
-  // --- STATE MUTATORS ---
+  // --- STATE & SCOPE MUTATORS ---
 
   _renderAllCells() {
     this.cellsContainer.replaceChildren(...this.cells_state.map(c => c._dom || this._buildCellDom(c)));
@@ -486,7 +501,19 @@ export class NotebookApp {
   }
 
   resetScope() {
-    window.__notebook_scope = Object.create(null);
+    if (!window.__notebook_scope_map) {
+      window.__notebook_scope_map = new Map();
+    }
+    const newScope = Object.create(null);
+    window.__notebook_scope_map.set(this.id, newScope);
+    return newScope;
+  }
+
+  getScope() {
+    if (!window.__notebook_scope_map || !window.__notebook_scope_map.has(this.id)) {
+      return this.resetScope();
+    }
+    return window.__notebook_scope_map.get(this.id);
   }
 
   getNotebookData({ inputs = true, outputs = true } = {}) {

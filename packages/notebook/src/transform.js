@@ -21,19 +21,19 @@ export const rewriteImportNode = (node, code, importMapConfig) => {
     else if (spec.type === "ImportSpecifier") namedImports.push({ imported: spec.imported.name, local: spec.local.name });
   });
 
-  if (namespaceId) return `window.__notebook_scope.${namespaceId} = await import("${source}");`;
+  if (namespaceId) return `__scope.${namespaceId} = await import("${source}");`;
 
   const tmp = `__mod_${node.start}`;
   let lines = [`const ${tmp} = await import("${source}");`];
 
   if (defaultImportName && namedImports.length === 0) {
-    lines.push(`window.__notebook_scope.${defaultImportName} = ${tmp}.default ?? ${tmp};`);
+    lines.push(`__scope.${defaultImportName} = ${tmp}.default ?? ${tmp};`);
     return lines.join("\n");
   }
 
-  if (defaultImportName) lines.push(`window.__notebook_scope.${defaultImportName} = ${tmp}.default ?? ${tmp};`);
+  if (defaultImportName) lines.push(`__scope.${defaultImportName} = ${tmp}.default ?? ${tmp};`);
   namedImports.forEach(({ imported, local }) => {
-    lines.push(`window.__notebook_scope.${local} = ${tmp}.${imported} !== undefined ? ${tmp}.${imported} : (${tmp}.default ?? ${tmp});`);
+    lines.push(`__scope.${local} = ${tmp}.${imported} !== undefined ? ${tmp}.${imported} : (${tmp}.default ?? ${tmp});`);
   });
 
   return lines.join("\n");
@@ -53,7 +53,7 @@ export const transformImportsAndScope = (code, importMapConfig) => {
           if (decl.id.type === "Identifier") {
             const varName = decl.id.name;
             const initCode = decl.init ? code.slice(decl.init.start, decl.init.end) : "undefined";
-            replacementCode += `window.__notebook_scope.${varName} = ${initCode};\n`;
+            replacementCode += `__scope.${varName} = ${initCode};\n`;
           } else if (decl.id.type === "ObjectPattern") {
             const initCode = decl.init ? code.slice(decl.init.start, decl.init.end) : "undefined";
             const tempVar = `__destruct_obj_${decl.start}`;
@@ -62,7 +62,7 @@ export const transformImportsAndScope = (code, importMapConfig) => {
               if (prop.value && prop.value.type === "Identifier") {
                 const localName = prop.value.name;
                 const keyName = prop.key.type === "Identifier" ? prop.key.name : prop.key.value;
-                replacementCode += `window.__notebook_scope.${localName} = ${tempVar}.${keyName}; `;
+                replacementCode += `__scope.${localName} = ${tempVar}.${keyName}; `;
               }
             });
             replacementCode += `})();\n`;
@@ -73,7 +73,7 @@ export const transformImportsAndScope = (code, importMapConfig) => {
             decl.id.elements.forEach((elem, index) => {
               if (elem && elem.type === "Identifier") {
                 const localName = elem.name;
-                replacementCode += `window.__notebook_scope.${localName} = ${tempVar}[${index}]; `;
+                replacementCode += `__scope.${localName} = ${tempVar}[${index}]; `;
               }
             });
             replacementCode += `})();\n`;
@@ -83,11 +83,11 @@ export const transformImportsAndScope = (code, importMapConfig) => {
       } else if (node.type === "FunctionDeclaration" && node.id) {
         const funcName = node.id.name;
         const funcBody = code.slice(node.start, node.end);
-        modifications.push({ start: node.start, end: node.end, replacement: `window.__notebook_scope.${funcName} = ${funcBody.replace(/^function\s+\w+/, "function")}` });
+        modifications.push({ start: node.start, end: node.end, replacement: `__scope.${funcName} = ${funcBody.replace(/^function\s+\w+/, "function")}` });
       } else if (node.type === "ClassDeclaration" && node.id) {
         const className = node.id.name;
         const classBody = code.slice(node.start, node.end);
-        modifications.push({ start: node.start, end: node.end, replacement: `window.__notebook_scope.${className} = ${classBody.replace(/^class\s+\w+/, "class")}` });
+        modifications.push({ start: node.start, end: node.end, replacement: `__scope.${className} = ${classBody.replace(/^class\s+\w+/, "class")}` });
       }
     });
 
@@ -101,18 +101,19 @@ export const transformImportsAndScope = (code, importMapConfig) => {
   }
 };
 
-export const evaluateCodeAsync = async (code, TARGET, importMapConfig) => {
+export const evaluateCodeAsync = async (code, TARGET, importMapConfig, scope) => {
+  const validScope = scope || Object.create(null);
   const compiledCode = transformImportsAndScope(code, importMapConfig);
 
-  const runCell = new Function("TARGET", "van", `
+  const runCell = new Function("TARGET", "van", "__scope", `
     return (async () => {
-      with (window.__notebook_scope) {
+      with (__scope) {
         ${compiledCode}
       }
     })();
   `);
 
-  const result = await runCell(TARGET, van);
+  const result = await runCell(TARGET, van, validScope);
   if (result !== undefined && result !== null) {
     van.add(TARGET, result);
   }

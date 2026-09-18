@@ -2,7 +2,7 @@ import van from "vanjs-core";
 import { NotebookApp } from "@zikojs/notebook";
 
 // Shared execution scope for eval'd cell code
-window.__notebook_scope = Object.create(null);
+// window.__notebook_scope = Object.create(null);
 
 const myImportMap = {
   "canvas-confetti": "https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/+esm"
