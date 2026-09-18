@@ -13,3 +13,5 @@ van.tags = new Proxy(originalTags, {
     }
   }
 });
+
+export { van }

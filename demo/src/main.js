@@ -33,3 +33,5 @@ const notebookApp = new NotebookApp({
 });
 
 van.add(document.getElementById("app"), notebookApp.element);
+
+globalThis.a = notebookApp

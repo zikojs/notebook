@@ -1,15 +1,26 @@
-import van from "vanjs-core";
+// import van from "vanjs-core";
+import {van } from '../../van-ziko.js' // TEMP
 import { marked } from "marked";
 import { createIcons, icons } from "lucide";
 import { CodeEditor } from "../CodeEditor/index.js";
 
-import Pencil from '@zikojs/lucide/Pencil'
-import Play from '@zikojs/lucide/Play'
-import Plus from '@zikojs/lucide/Plus'
+import Pencil from "@zikojs/lucide/Pencil";
+import Play from "@zikojs/lucide/Play";
+import Plus from "@zikojs/lucide/Plus";
+import Trash2 from "@zikojs/lucide/Trash2"
+import Check from "@zikojs/lucide/Check"
+import Copy from "@zikojs/lucide/Copy"
+import Lock from "@zikojs/lucide/Lock"
+import Unlock from "@zikojs/lucide/Unlock"
+import Code from "@zikojs/lucide/Code"
+import FileText from "@zikojs/lucide/FileText"
+
+
+import { Swap } from 'ziko/components/Swap'
 
 const { div, button, span, i } = van.tags;
 
-import { tags } from 'ziko/dom'
+import { tags } from "ziko/dom";
 
 const Icon = ({ name }) => {
   const iconEl = i({ class: "icon" });
@@ -17,14 +28,14 @@ const Icon = ({ name }) => {
   return iconEl;
 };
 
-const Button = ({ class: className = "", title = "", disabled = false, onclick, children = [] }) =>
+const Button = ({ class: className = "", title = "", disabled = false, onclick }, ...children) =>
   button({ class: `btn ${className}`, title, disabled, onclick }, ...children);
 
 const CellPrompt = ({ type, countText }) =>
   span({ class: `prompt ${type === "out" ? "out" : ""}` },
     type === "in" ? `In ${countText}:` : type === "out" ? `Out ${countText}:` : "",
     tags.p('ziko')
-);
+  );
 
 const MarkdownView = ({ code, onClick }) => {
   const content = div();
@@ -41,14 +52,45 @@ const CellControls = ({ cellData, actions, isQueueRunning, isMaxCellsReached }) 
   };
 
   return () => div({ class: "cell-controls" },
-    Button({ class: `btn-icon ${isCopied.val ? "btn-active" : ""}`, title: "Copy Cell", onclick: handleCopy, children: [Icon({ name: isCopied.val ? "Check" : "Copy" })] }),
-    Button({ class: `btn-icon ${cellData.readonly ? "btn-active" : ""}`, title: "Toggle Readonly", disabled: isQueueRunning, onclick: actions.toggleReadonly, children: [Icon({ name: cellData.readonly ? "Lock" : "Unlock" })] }),
-    Button({ class: `btn-icon ${cellData.type === "markdown" ? "btn-active" : ""}`, title: "Toggle Type", disabled: isQueueRunning || cellData.readonly, onclick: actions.toggleType, children: [Icon({ name: cellData.type === "code" ? "FileText" : "Code" })] }),
+    Button(
+      { class: `btn-icon ${isCopied.val ? "btn-active" : ""}`, title: "Copy Cell", onclick: handleCopy },
+      Swap(
+        Copy({class : 'icon'}),
+        Check({class : 'icon'})
+      ).onPtrDown(e=>e.target.next()).element
+    ),
+    Button(
+      { class: `btn-icon ${cellData.readonly ? "btn-active" : ""}`, title: "Toggle Readonly", disabled: isQueueRunning, onclick: actions.toggleReadonly },
+      Swap(
+        Unlock({class : 'icon'}),
+        Lock({class : 'icon'}),
+      ).onPtrDown(e=>e.target.next()).element
+    ),
+    Button(
+      { class: `btn-icon ${cellData.type === "markdown" ? "btn-active" : ""}`, title: "Toggle Type", disabled: isQueueRunning || cellData.readonly, onclick: actions.toggleType },
+      Swap(
+        Code({class : 'icon'}),
+        FileText({class : 'icon'}),
+      ).onPtrDown(e=>e.target.next()).element
+      // Icon({ name: cellData.type === "code" ? "FileText" : "Code" })
+    ),
     cellData.type === "markdown" && !cellData.isEditingMarkdown
-      ? Button({ class: "btn-icon", title: "Edit", disabled: isQueueRunning || cellData.readonly, onclick: actions.editMarkdown, children: [(Pencil({class : 'icon'})).element] })
-      : Button({ class: "btn-icon btn-primary", title: "Run", disabled: isQueueRunning, onclick: () => actions.runCode(true), children: [Play({class : 'icon'}).element] }),
-    Button({ class: "btn-icon", title: "Add Below", disabled: isQueueRunning || isMaxCellsReached, onclick: actions.addBelow, children: [Plus({class : 'icon'}).element] }),
-    Button({ class: "btn-icon", title: "Delete", disabled: isQueueRunning, onclick: actions.deleteCell, children: [Icon({ name: "Trash2" })] })
+      ? Button(
+          { class: "btn-icon", title: "Edit", disabled: isQueueRunning || cellData.readonly, onclick: actions.editMarkdown },
+          Pencil({ class: "icon" }).element
+        )
+      : Button(
+          { class: "btn-icon btn-primary", title: "Run", disabled: isQueueRunning, onclick: () => actions.runCode(true) },
+          Play({ class: "icon" }).element
+        ),
+    Button(
+      { class: "btn-icon", title: "Add Below", disabled: isQueueRunning || isMaxCellsReached, onclick: actions.addBelow },
+      Plus({ class: "icon" }).element
+    ),
+    Button(
+      { class: "btn-icon", title: "Delete", disabled: isQueueRunning, onclick: actions.deleteCell },
+      Trash2({ class : 'icon'}).element
+    )
   );
 };
 
