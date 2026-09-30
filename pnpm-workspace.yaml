@@ -8,4 +8,4 @@ catalog:
   zextra: ^1.15.0
 
 minimumReleaseAgeExclude:
-  - ziko@2.0.0-beta.14
+  - ziko@2.0.0-beta.15.1

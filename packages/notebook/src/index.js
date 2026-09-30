@@ -4,6 +4,7 @@ import { marked } from "marked";
 import { Button } from "./ui.js";
 import { createCodeEditor } from "./codeEditor.js";
 import { evaluateCodeAsync } from "./transform.js";
+import { call_with_optional_props } from 'ziko/dom/internal-utils'
 
 import {
   Check,
@@ -28,7 +29,7 @@ export function Header({ state, actions }) {
   const { runAllBtn, clearBtn, addCodeBtn, addMdBtn, deleteActiveBtn, exportBtn, statusBadge, statusText } = state;
 
   return div({ class: "header" },
-    div({ class: "brand" }, "Jupyter VanJS Notebook", statusBadge),
+    div({ class: "brand" }, "</>", statusBadge),
     div({ class: "toolbar" }, 
       runAllBtn, clearBtn, addCodeBtn, addMdBtn, deleteActiveBtn, exportBtn
     )
@@ -146,9 +147,7 @@ export function CellItem({ cellData, app }) {
   return root;
 }
 
-// --- MAIN NOTEBOOK APP CLASS ---
-
-export class NotebookApp {
+export class UINotebook {
   constructor({
     cells: initialCells = [],
     importMap = {},
@@ -525,3 +524,6 @@ export class NotebookApp {
     });
   }
 }
+
+
+export const Notebook = call_with_optional_props(UINotebook)

@@ -210,15 +210,15 @@ catalogs:
       version: 1.15.0
     ziko:
       specifier: latest
-      version: 2.0.0-beta.14
+      version: 2.0.0-beta.15.1
 
 importers:
 
   .:
     dependencies:
       ziko:
-        specifier: 2.0.0-beta.14
-        version: 2.0.0-beta.14
+        specifier: 'catalog:'
+        version: 2.0.0-beta.15.1
 
   demo:
     dependencies:
@@ -285,7 +285,7 @@ importers:
         version: 1.15.0
       ziko:
         specifier: 'catalog:'
-        version: 2.0.0-beta.14
+        version: 2.0.0-beta.15.1
 
 packages:
 
@@ -720,8 +720,8 @@ packages:
     resolution: {integrity: sha512-rKPNlAQRHE12dAsWhIo4vGcmRGhra4Qp5ZnX9Gkp0Vcj2nHkbOFx1obFtrZbEtNfIjBpe0SLMvCAISqJq++2Cw==}
     hasBin: true
 
-  ziko@2.0.0-beta.14:
-    resolution: {integrity: sha512-ayYZG61LN8twQrDgS2JzNAfQ9mJcEkhqFjSUv3rZNLYj77kA7MTkVFz9ugdB9akjefT8xlRBx4kUKbDX18Yu8Q==}
+  ziko@2.0.0-beta.15.1:
+    resolution: {integrity: sha512-WYdyQht2yusky497Rrmgike+lNuCpRQzdoGu+mccVZ0iQRhX2boZkHSM3PbcH7l3PSeIm5LelQqlkhZMgL7eCw==}
 
 snapshots:
 
@@ -1123,4 +1123,4 @@ snapshots:
 
   ziko@1.10.0: {}
 
-  ziko@2.0.0-beta.14: {}
+  ziko@2.0.0-beta.15.1: {}

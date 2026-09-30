@@ -19,6 +19,6 @@
   "packageManager": "pnpm@11.24.0",
   "type": "module",
   "dependencies": {
-    "ziko": "2.0.0-beta.14"
+    "ziko": "catalog:"
   }
 }
