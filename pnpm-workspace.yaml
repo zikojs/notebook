@@ -4,8 +4,5 @@ packages:
   - 'demo'
 
 catalog:
-  ziko: latest
+  ziko: ^2.0.0-beta.15.1
   zextra: ^1.15.0
-
-minimumReleaseAgeExclude:
-  - ziko@2.0.0-beta.15.1

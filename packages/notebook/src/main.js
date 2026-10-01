@@ -146,7 +146,7 @@ export function CellItem({ cellData, app }) {
   return root;
 }
 
-export class UINotebook {
+export class Notebook {
   constructor({
     cells: initialCells = [],
     importMap = {},
@@ -523,6 +523,3 @@ export class UINotebook {
     });
   }
 }
-
-
-export const Notebook = call_with_optional_props(UINotebook)
