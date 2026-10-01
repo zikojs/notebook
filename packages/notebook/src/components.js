@@ -1,8 +1,8 @@
 import van from "vanjs-core";
-import { marked } from "marked";
-import { Button } from "./ui.js";
+import { remark } from "remark";
+import remarkRehype from "remark-rehype";
+import rehypeStringify from "rehype-stringify";
 import { createCodeEditor } from "./codeEditor.js";
-import { evaluateCodeAsync } from "./transform.js";
 
 import {
   Check,
@@ -21,10 +21,17 @@ import {
   Loader2
 } from './icons.js';
 
-const { div, span } = van.tags;
+const { div, button } = van.tags;
+
+import { tags } from 'ziko/dom'
+
+const { span } = tags
+
+export const Button = ({ class: className = "", title = "", disabled = false, onclick }, ...children) =>
+  button({ class: `btn ${className}`, title, disabled, onclick }, ...children);
 
 export function Header({ store, actions }) {
-  const statusBadge = span({ class: "status-badge", style: "display:none;" }, Loader2(), span());
+  const statusBadge = span({ class: "status-badge" }, Loader2(), span('Loading ...')).element;
   const runAllBtn = Button({ class: "btn-primary", onclick: actions.runAll }, PlayForward(), "Run All");
   const clearBtn = Button({ onclick: actions.clearOutputs }, Eraser(), "Clear Outputs");
   const addCodeBtn = Button({ onclick: actions.addCode }, Play(), "Add Code");
@@ -41,25 +48,36 @@ export function Header({ store, actions }) {
     addMdBtn.disabled = q.isRunning || maxReached;
   });
 
-  return div({ class: "header" },
-    div({ class: "brand" }, "</>", statusBadge),
-    div({ class: "toolbar" }, 
+  return tags.div({ class: "header" },
+    tags.div({ class: "brand" }, "</>", statusBadge),
+    tags.div({ class: "toolbar" }, 
       runAllBtn, clearBtn, addCodeBtn, addMdBtn, deleteActiveBtn, exportBtn
     )
-  );
+  ).element;
 }
 
 export function MarkdownView({ cellData, actions }) {
-  const content = div();
-  content.innerHTML = marked.parse(cellData.code || "*Empty Markdown Cell*");
+  const content = tags.div().element;
   
-  const wrap = div({ class: "markdown-rendered-cell markdown-body" }, content);
-  wrap.onclick = () => actions.editMarkdown();
-  return wrap;
+  // Process Markdown asynchronously using Remark + Rehype
+  remark()
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeStringify)
+    .process(cellData.code || "*Empty Markdown Cell*")
+    .then((file) => {
+      content.innerHTML = String(file);
+    })
+    .catch((err) => {
+      content.innerHTML = `<div class="error-output">Markdown rendering error: ${err.message}</div>`;
+    });
+  
+  const wrap = tags.div({ class: "markdown-rendered-cell markdown-body" }, content);
+  wrap.onClick(() => actions.editMarkdown())
+  return wrap.element;
 }
 
 export function CellControls({ cellData, store, actions }) {
-  const controlsContainer = div({ class: "cell-controls" });
+  const controlsContainer = tags.div({ class: "cell-controls" }).element;
 
   const renderButtons = () => {
     const isQueueRunning = store.get('executionQueueState').isRunning;
@@ -132,7 +150,7 @@ export function CellControls({ cellData, store, actions }) {
 }
 
 export function CellItem({ cellData, app, store }) {
-  const outputRef = div({ class: "output-area" });
+  const outputRef = tags.div({ class: "output-area" }).element;
   if (cellData.outputNode) outputRef.appendChild(cellData.outputNode);
   cellData._outputRef = outputRef;
 
@@ -140,14 +158,14 @@ export function CellItem({ cellData, app, store }) {
   cellData._actions = actions;
   cellData._editor = createCodeEditor(app, cellData, actions);
 
-  const inPrompt = span({ class: "prompt" });
-  const outPrompt = span({ class: "prompt out" });
-  const bodySlot = div({ style: "display:contents;" });
+  const inPrompt = span({ class: "prompt" }).element;
+  const outPrompt = span({ class: "prompt out" }).element;
+  const bodySlot = tags.div().style({ display : 'contents'}).element;
   const controlsEl = CellControls({ cellData, store, actions });
 
-  const outputGrid = div({ class: "cell-output-grid" }, outPrompt, div({ class: "output-wrapper" }, outputRef));
-  const inputGrid = div({ class: "cell-input-grid" }, inPrompt, bodySlot, controlsEl);
-  const root = div({ class: "cell" }, inputGrid, outputGrid);
+  const outputGrid = tags.div({ class: "cell-output-grid" }, outPrompt, div({ class: "output-wrapper" }, outputRef)).element;
+  const inputGrid = tags.div({ class: "cell-input-grid" }, inPrompt, bodySlot, controlsEl).element;
+  const root = tags.div({ class: "cell" }, inputGrid, outputGrid).element;
   root.onclick = () => app.setActiveCell(cellData.id);
 
   cellData._dom = root;

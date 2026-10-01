@@ -11,7 +11,6 @@ export class UINotebook {
     importMap = {},
     runCells = true,
     codeMirrorConfig = {},
-    markedPlugins = [],
     codeMirrorPlugins = [],
     minLines = 3,
     maxCells = Infinity
@@ -28,10 +27,6 @@ export class UINotebook {
     this.codeMirrorPlugins = codeMirrorPlugins;
     this.minLines = minLines;
     this.maxCells = maxCells;
-
-    if (Array.isArray(markedPlugins) && markedPlugins.length > 0) {
-      markedPlugins.forEach(plugin => marked.use(plugin));
-    }
 
     const startingCells = maxCells !== Infinity ? initialCells.slice(0, maxCells) : initialCells;
     const nextCellId = startingCells.length ? Math.max(...startingCells.map(c => c.id || 0)) + 1 : 1;
@@ -205,14 +200,27 @@ export class UINotebook {
   setActiveCell(id) {
     const currentActiveId = this.store.get('activeCellId');
     if (currentActiveId === id) return;
-    const current = this.store.get('cells').find(c => c.id === currentActiveId);
-    if (current && current.type === "markdown" && current.isEditingMarkdown) {
-      current.isEditingMarkdown = false;
-    }
+
+    // Check all cells and close editing mode for any markdown cells that are losing focus
+    this.store.get('cells').forEach(c => {
+      if (c.type === "markdown" && c.isEditingMarkdown) {
+        c.isEditingMarkdown = false;
+        this._refreshCell(c);
+      }
+    });
+
     this.store.set('activeCellId', id);
   }
 
   focusCell(targetId) {
+    // Close editing on other markdown cells before focusing
+    this.store.get('cells').forEach(c => {
+      if (c.type === "markdown" && c.isEditingMarkdown && c.id !== targetId) {
+        c.isEditingMarkdown = false;
+        this._refreshCell(c);
+      }
+    });
+
     const target = this.store.get('cells').find(c => c.id === targetId);
     if (target && target.type === "markdown" && !target.readonly) {
       target.isEditingMarkdown = true;
