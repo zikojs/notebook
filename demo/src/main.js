@@ -1,5 +1,5 @@
 import van from "vanjs-core";
-import { Notebook  } from "@zikojs/notebook";
+import { UINotebook  } from "@zikojs/notebook";
 
 // Shared execution scope for eval'd cell code
 // window.__notebook_scope = Object.create(null);
@@ -26,7 +26,7 @@ van.add(TARGET, btn);`
   }
 ];
 
-const notebookApp = new Notebook({
+const notebookApp = new UINotebook({
   cells: initialCellData,
   importMap: myImportMap,
   runCells: true,
@@ -37,4 +37,7 @@ const notebookApp = new Notebook({
   maxCells: 10
 });
 
-van.add(document.getElementById("app"), notebookApp.element);
+// van.add(document.getElementById("app"), notebookApp.element);
+
+globalThis.notebookApp = notebookApp
+document.body.append(notebookApp.element)
