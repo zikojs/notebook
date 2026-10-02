@@ -21,11 +21,11 @@ import {
   Loader2
 } from './icons.js';
 
-const { div, button } = van.tags;
+const { button } = van.tags;
 
 import { tags } from 'ziko/dom'
 
-const { span } = tags
+const { div, span } = tags
 
 export const Button = ({ class: className = "", title = "", disabled = false, onclick }, ...children) =>
   button({ class: `btn ${className}`, title, disabled, onclick }, ...children);
@@ -48,16 +48,16 @@ export function Header({ store, actions }) {
     addMdBtn.disabled = q.isRunning || maxReached;
   });
 
-  return tags.div({ class: "header" },
-    tags.div({ class: "brand" }, "</>", statusBadge),
-    tags.div({ class: "toolbar" }, 
+  return div({ class: "header" },
+    div({ class: "brand" }, "</>", statusBadge),
+    div({ class: "toolbar" }, 
       runAllBtn, clearBtn, addCodeBtn, addMdBtn, deleteActiveBtn, exportBtn
     )
   ).element;
 }
 
 export function MarkdownView({ cellData, actions }) {
-  const content = tags.div().element;
+  const content = div().element;
   
   // Process Markdown asynchronously using Remark + Rehype
   remark()
@@ -71,13 +71,13 @@ export function MarkdownView({ cellData, actions }) {
       content.innerHTML = `<div class="error-output">Markdown rendering error: ${err.message}</div>`;
     });
   
-  const wrap = tags.div({ class: "markdown-rendered-cell markdown-body" }, content);
+  const wrap = div({ class: "markdown-rendered-cell markdown-body" }, content);
   wrap.onClick(() => actions.editMarkdown())
   return wrap.element;
 }
 
 export function CellControls({ cellData, store, actions }) {
-  const controlsContainer = tags.div({ class: "cell-controls" }).element;
+  const controlsContainer = div({ class: "cell-controls" }).element;
 
   const renderButtons = () => {
     const isQueueRunning = store.get('executionQueueState').isRunning;
@@ -150,7 +150,7 @@ export function CellControls({ cellData, store, actions }) {
 }
 
 export function CellItem({ cellData, app, store }) {
-  const outputRef = tags.div({ class: "output-area" }).element;
+  const outputRef = div({ class: "output-area" }).element;
   if (cellData.outputNode) outputRef.appendChild(cellData.outputNode);
   cellData._outputRef = outputRef;
 
@@ -160,20 +160,21 @@ export function CellItem({ cellData, app, store }) {
 
   const inPrompt = span({ class: "prompt" }).element;
   const outPrompt = span({ class: "prompt out" }).element;
-  const bodySlot = tags.div().style({ display : 'contents'}).element;
+  const bodySlot = div().style({ display : 'contents'}).element;
   const controlsEl = CellControls({ cellData, store, actions });
 
-  const outputGrid = tags.div({ class: "cell-output-grid" }, outPrompt, div({ class: "output-wrapper" }, outputRef)).element;
-  const inputGrid = tags.div({ class: "cell-input-grid" }, inPrompt, bodySlot, controlsEl).element;
-  const root = tags.div({ class: "cell" }, inputGrid, outputGrid).element;
-  root.onclick = () => app.setActiveCell(cellData.id);
+  const outputGrid = div({ class: "cell-output-grid" }, outPrompt, div({ class: "output-wrapper" }, outputRef)).element;
+  const inputGrid = div({ class: "cell-input-grid" }, inPrompt, bodySlot, controlsEl).element;
+  const root = div({ class: "cell" }, inputGrid, outputGrid);
+  root.onClick(() => app.setActiveCell(cellData.id));
+  // root.onclick = () => app.setActiveCell(cellData.id);
 
-  cellData._dom = root;
+  cellData._dom = root.element;
   cellData._inPrompt = inPrompt;
   cellData._outPrompt = outPrompt;
   cellData._bodySlot = bodySlot;
   cellData._outputGrid = outputGrid;
 
   app._refreshCell(cellData);
-  return root;
+  return root.element;
 }
