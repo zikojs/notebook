@@ -114,7 +114,7 @@ export const evaluateCodeAsync = async (code, TARGET, importMapConfig, scope) =>
   `);
 
   const result = await runCell(TARGET, van, validScope);
-  if (result !== undefined && result !== null) {
-    van.add(TARGET, result);
-  }
+  // if (result !== undefined && result !== null) {
+  //   van.add(TARGET, result);
+  // }
 };

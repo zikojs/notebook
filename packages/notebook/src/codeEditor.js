@@ -5,15 +5,15 @@ import { bracketMatching, indentUnit, syntaxHighlighting, defaultHighlightStyle 
 import { closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
-import van from "vanjs-core";
+import { tags } from "ziko/dom";
 
-const { div } = van.tags;
+const { div } = tags;
 
 const languageFor = (type) =>
   type === "markdown" ? markdown() : javascript();
 
 export function createCodeEditor(app, cellData, actions) {
-  const editorDom = div({ class: "input-wrapper" });
+  const editorDom = div({ class: "input-wrapper" }).element;
 
   const languageCompartment = new Compartment();
   const readOnlyCompartment = new Compartment();

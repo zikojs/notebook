@@ -1,11 +1,9 @@
-import van from "vanjs-core";
 import { NotebookStore } from "./store.js";
 import { Header, CellItem, MarkdownView } from "./components.js";
 import { evaluateCodeAsync } from "./transform.js";
+import { tags, UIElement } from "ziko/dom";
 
-const { div } = van.tags;
-
-export class UINotebook {
+export class UINotebook extends UIElement{
   constructor({
     cells: initialCells = [],
     importMap = {},
@@ -15,6 +13,7 @@ export class UINotebook {
     minLines = 3,
     maxCells = Infinity
   } = {}) {
+    super({ element : 'div'})
     this.id = crypto.randomUUID ? crypto.randomUUID() : 'nb_' + Math.random().toString(36).substring(2, 9);
     
     if (!window.__notebook_scope_map) {
@@ -59,7 +58,7 @@ export class UINotebook {
       addCodeBelow: () => this.addCell("code", "", this.store.get('activeCellId'))
     };
 
-    this.cellsContainer = div({ class: "cells-container" });
+    this.cellsContainer = tags.div({ class: "cells-container" }).element;
     this.header = Header({
       store: this.store,
       actions: {
@@ -72,7 +71,11 @@ export class UINotebook {
       }
     });
 
-    this.element = div(this.header, div({ class: "notebook" }, this.cellsContainer));
+    this.append(
+      this.header, 
+      tags.div({ class: "notebook" }, 
+      this.cellsContainer)  
+    )
 
     this._renderAllCells();
 
@@ -117,7 +120,7 @@ export class UINotebook {
           await evaluateCodeAsync(code, cellData._outputRef, app.importMap, scope);
         } catch (err) {
           hasError = true;
-          van.add(cellData._outputRef, div({ class: "error-output" }, err.toString()));
+          tags.div({ class: "error-output" }, err.toString()).mount(cellData._outputRef)
         }
 
         const counter = this.store.get('executionCounter');
@@ -125,7 +128,7 @@ export class UINotebook {
         cellData.execCount = counter;
         cellData.hasDomOutput = cellData._outputRef.childNodes.length > 0 || hasError;
 
-        const container = div({ class: "output-area" });
+        const container = tags.div({ class: "output-area" }).element;
         while (cellData._outputRef.firstChild) container.appendChild(cellData._outputRef.firstChild);
         cellData.outputNode = container;
         cellData._outputRef.appendChild(container);
