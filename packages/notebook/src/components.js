@@ -34,7 +34,7 @@ export function Header({ store, actions }) {
   const statusBadge = span({ class: "status-badge" }, Loader2(), span('Loading ...')).element;
   const runAllBtn = Button({ class: "btn-primary", onclick: actions.runAll }, PlayForward(), "Run All");
   const clearBtn = Button({ onclick: actions.clearOutputs }, Eraser(), "Clear Outputs");
-  const addCodeBtn = Button({ onclick: actions.addCode }, Play(), "Add Code");
+  const addCodeBtn = Button({ onclick: actions.addCode }, Plus(), "Add Code");
   const addMdBtn = Button({ onclick: actions.addMarkdown }, FileText(), "Add Markdown");
   const deleteActiveBtn = Button({ onclick: actions.deleteActive }, Trash2(), "Delete Active");
   const exportBtn = Button({ onclick: actions.exportData }, Download(), "Export Data");

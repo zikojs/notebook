@@ -1,6 +1,6 @@
 {
   "name": "@zikojs/notebook",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "",
   "type": "module",
   "publishConfig": {
@@ -29,7 +29,7 @@
     },
     "./no-css": {
       "import": "./src/main.js",
-      "types": "./src/main.d.ts"
+      "types": "./src/index.d.ts"
     },
     "./style": {
       "import": "./src/index.css"

@@ -2,6 +2,7 @@ import { NotebookStore } from "./store.js";
 import { Header, CellItem, MarkdownView } from "./components.js";
 import { evaluateCodeAsync } from "./transform.js";
 import { tags, UIElement } from "ziko/dom";
+import { call_with_optional_props } from 'ziko/dom/internal-utils'
 
 export class UINotebook extends UIElement{
   constructor({
@@ -11,9 +12,11 @@ export class UINotebook extends UIElement{
     codeMirrorConfig = {},
     codeMirrorPlugins = [],
     minLines = 3,
-    maxCells = Infinity
+    maxCells = Infinity,
+    showHeader = false
   } = {}) {
     super({ element : 'div'})
+    this.setAttr({class : 'ziko-notebook'})
     this.id = crypto.randomUUID ? crypto.randomUUID() : 'nb_' + Math.random().toString(36).substring(2, 9);
     
     if (!window.__notebook_scope_map) {
@@ -28,7 +31,7 @@ export class UINotebook extends UIElement{
     this.maxCells = maxCells;
 
     const startingCells = maxCells !== Infinity ? initialCells.slice(0, maxCells) : initialCells;
-    const nextCellId = startingCells.length ? Math.max(...startingCells.map(c => c.id || 0)) + 1 : 1;
+    let nextCellId = startingCells.length ? Math.max(...startingCells.map(c => c.id || 0)) + 1 : 1;
 
     this.store = new NotebookStore({
       cells: startingCells.map(cell => ({
@@ -70,6 +73,8 @@ export class UINotebook extends UIElement{
         exportData: () => console.log("Notebook Data Export:", this.getNotebookData())
       }
     });
+
+    if(!showHeader) this.header.style.display = 'none'
 
     this.append(
       this.header, 
@@ -342,3 +347,5 @@ export class UINotebook extends UIElement{
     });
   }
 }
+
+export const Notebook = call_with_optional_props(UINotebook)
