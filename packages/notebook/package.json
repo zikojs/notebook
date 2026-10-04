@@ -1,6 +1,6 @@
 {
   "name": "@zikojs/notebook",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "",
   "type": "module",
   "publishConfig": {
@@ -51,10 +51,8 @@
     "@codemirror/view": "^6.43.11",
     "@zikojs/lucide": "^0.2.2",
     "acorn": "^8.18.0",
-    "canvas-confetti": "^1.9.4",
     "codemirror": "^6.0.2",
     "lucide": "^1.44.0",
-    "marked": "^18.0.12",
     "rehype-stringify": "^10.0.1",
     "remark": "^15.0.1",
     "remark-rehype": "^11.1.2",

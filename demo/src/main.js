@@ -1,4 +1,3 @@
-import van from "vanjs-core";
 import { UINotebook  } from "@zikojs/notebook";
 
 // Shared execution scope for eval'd cell code
@@ -20,7 +19,8 @@ const initialCellData = [
     id: 2,
     type: "code",
     readonly: false,
-    code: `import confetti from "canvas-confetti";
+    code: `import van from 'vanjs-core'
+import confetti from "canvas-confetti";
 const btn = van.tags.button({ class: "btn btn-primary", onclick: () => confetti() }, "Launch Confetti");
 van.add(TARGET, btn);` 
   }
