@@ -1,5 +1,6 @@
 import { UINotebook  } from "@zikojs/notebook";
 import { reactPlugin } from '@zikojs/notebook-runtime-react'
+import rehypeMindElixir from 'rehype-mind-elixir'
 
 // Shared execution scope for eval'd cell code
 // window.__notebook_scope = Object.create(null);
@@ -62,7 +63,8 @@ const notebookApp = new UINotebook({
   maxCells: 10,
   runtimePlugins : [
     reactPlugin()
-  ]
+  ],
+  rehypePlugins : [rehypeMindElixir]
   
 });
 

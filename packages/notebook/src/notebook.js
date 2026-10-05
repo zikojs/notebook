@@ -21,12 +21,15 @@ export class UINotebook extends UIElement{
     cells: initialCells = [],
     importMap = {},
     runCells = true,
-    codeMirrorConfig = {},
-    codeMirrorPlugins = [],
     minLines = 3,
     maxCells = Infinity,
     showHeader = true,
-    runtimePlugins = []
+    codeMirrorConfig = {},
+    codeMirrorPlugins = [],
+    runtimePlugins = [],
+    remarkPlugins = [],
+    rehypePlugins = []
+
   } = {}) {
     super({ element : 'div'})
     this.setAttr({class : 'ziko-notebook'})
@@ -41,6 +44,8 @@ export class UINotebook extends UIElement{
     this.runtimePlugins = runtimePlugins;
     this.codeMirrorConfig = codeMirrorConfig;
     this.codeMirrorPlugins = codeMirrorPlugins;
+    this.remarkPlugins = remarkPlugins;
+    this.rehypePlugins = rehypePlugins;
     this.minLines = minLines;
     this.maxCells = maxCells;
 
@@ -212,7 +217,12 @@ export class UINotebook extends UIElement{
 
     cellData._editor.sync(isActive, isMarkdownView);
     cellData._bodySlot.replaceChildren(
-      isMarkdownView ? MarkdownView({ cellData, actions: cellData._actions }) : cellData._editor.dom
+      isMarkdownView ? MarkdownView({ 
+        cellData, 
+        actions: cellData._actions,
+        remarkPlugins : this.remarkPlugins,
+        rehypePlugins : this.rehypePlugins
+      }) : cellData._editor.dom
     );
 
     const showOutput = cellData.type === "code" && cellData.hasDomOutput;
