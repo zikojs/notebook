@@ -24,6 +24,30 @@ const initialCellData = [
 import confetti from "canvas-confetti";
 const btn = van.tags.button({ class: "btn btn-primary", onclick: () => confetti() }, "Launch Confetti");
 van.add(TARGET, btn);` 
+  },
+  {
+    code : `import { createRoot } from "react-dom/client";
+import { useState } from "react"
+import confetti from "canvas-confetti";
+
+const App = () => {
+  const [count, setCount] = useState(0);
+  const handleClick = () => {
+    setCount(count + 1)
+    confetti()
+  }
+  return <button 
+    className="btn btn-primary" 
+    onClick={handleClick}>
+    Launch Confetti {count} 
+  </button>
+}
+
+const container = document.createElement("div");
+TARGET.appendChild(container);
+createRoot(container).render(<App />);
+    `
+
   }
 ];
 

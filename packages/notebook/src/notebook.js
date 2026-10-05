@@ -161,7 +161,7 @@ export class UINotebook extends UIElement{
         cellData._outputRef.appendChild(container);
 
         if (autoNext && !hasError) app.nextCell(cellData.id, "code");
-        else app._refreshCell(cellData);
+        app._refreshCell(cellData);
       },
       copyCode: async () => {
         const textToCopy = cellData._editor.getValue() || cellData.code;

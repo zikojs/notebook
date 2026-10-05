@@ -13,17 +13,4 @@ export const reactPlugin = ({
     });
   },
 
-  resolveImport(source) {
-    const imports = {
-      react: "https://esm.sh/react",
-      "react-dom":
-        "https://esm.sh/react-dom",
-      "react/jsx-runtime":
-        "https://esm.sh/react/jsx-runtime",
-      "react/jsx-dev-runtime":
-        "https://esm.sh/react/jsx-dev-runtime",
-    };
-
-    return imports[source];
-  },
 });
