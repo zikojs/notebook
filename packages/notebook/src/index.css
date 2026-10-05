@@ -13,54 +13,6 @@
 }
 
 
-/* --- HEADER & TOOLBAR --- */
-
-.ziko-notebook .header {
-  border-bottom: 1px solid var(--border-color);
-  background: #ffffff;
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-  width: 100%;
-}
-
-.ziko-notebook .brand {
-  font-weight: 600;
-  font-size: 16px;
-  color: #0f172a;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
-}
-
-.ziko-notebook .toolbar {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  flex-wrap: wrap;
-  max-width: 100%;
-}
-
-.ziko-notebook .status-badge {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--primary);
-  background: #e0f2fe;
-  padding: 4px 8px;
-  border-radius: 4px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
 /* --- NOTEBOOK & CELLS --- */
 
 .ziko-notebook .notebook {
@@ -136,12 +88,6 @@
   border-color: #cbd5e1;
 }
 
-/*
- * CodeMirror is an external component.
- *
- * Don't globally style .CodeMirror.
- * Scope only the CodeMirror instances owned by the notebook.
- */
 .ziko-notebook .input-wrapper .CodeMirror {
   font-family: "Fira Code", SFMono-Regular, Consolas, monospace;
   font-size: 13px;
@@ -165,7 +111,11 @@
   gap: 4px;
   flex-shrink: 0;
   flex-wrap: wrap;
-  max-width: 120px;
+  max-width: 60px;
+}
+
+.ziko-notebook .cm-line{
+  line-height: 1.3 !important;
 }
 
 /* --- OUTPUT --- */
@@ -178,98 +128,6 @@
 .ziko-notebook .output-area {
   font-size: 14px;
   word-break: break-word;
-}
-
-
-/* --- MARKDOWN --- */
-
-.ziko-notebook .markdown-rendered-cell {
-  grid-column: 1 / 3;
-  padding: 8px 12px;
-  cursor: pointer;
-  min-height: 38px;
-  border: 1px dashed transparent;
-  border-radius: 4px;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-
-.ziko-notebook .markdown-rendered-cell:hover {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-}
-
-.ziko-notebook .cell.active .markdown-rendered-cell {
-  border-color: #94a3b8;
-}
-
-.ziko-notebook .markdown-body {
-  line-height: 1.6;
-}
-
-.ziko-notebook .markdown-body h1,
-.ziko-notebook .markdown-body h2,
-.ziko-notebook .markdown-body h3 {
-  margin-top: 8px;
-  margin-bottom: 8px;
-  font-weight: 600;
-}
-
-.ziko-notebook .markdown-body h1 {
-  font-size: 1.5em;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 4px;
-}
-
-.ziko-notebook .markdown-body h2 {
-  font-size: 1.25em;
-}
-
-.ziko-notebook .markdown-body h3 {
-  font-size: 1.1em;
-}
-
-.ziko-notebook .markdown-body p {
-  margin-bottom: 8px;
-}
-
-.ziko-notebook .markdown-body p:last-child {
-  margin-bottom: 0;
-}
-
-.ziko-notebook .markdown-body ul,
-.ziko-notebook .markdown-body ol {
-  padding-left: 20px;
-  margin-bottom: 8px;
-}
-
-.ziko-notebook .markdown-body code {
-  background: #f1f5f9;
-  padding: 2px 4px;
-  border-radius: 4px;
-  font-family: ui-monospace, SFMono-Regular, monospace;
-  font-size: 0.9em;
-}
-
-.ziko-notebook .markdown-body pre {
-  background: #1e293b;
-  color: #f8fafc;
-  padding: 10px;
-  border-radius: 6px;
-  overflow-x: auto;
-  margin: 8px 0;
-}
-
-.ziko-notebook .markdown-body pre code {
-  background: transparent;
-  color: inherit;
-  padding: 0;
-}
-
-.ziko-notebook .markdown-body blockquote {
-  border-left: 4px solid var(--primary);
-  padding-left: 10px;
-  color: #64748b;
-  margin: 8px 0;
 }
 
 

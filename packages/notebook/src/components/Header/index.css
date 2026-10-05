@@ -1,0 +1,47 @@
+/* --- HEADER & TOOLBAR --- */
+
+.ziko-notebook .header {
+  border-bottom: 1px solid var(--border-color);
+  background: #ffffff;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  width: 100%;
+}
+
+.ziko-notebook .brand {
+  font-weight: 600;
+  font-size: 16px;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.ziko-notebook .toolbar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.ziko-notebook .status-badge {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--primary);
+  background: #e0f2fe;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
