@@ -8,8 +8,14 @@ import {
 import { evaluateCodeAsync } from "./compiler/index.js";
 import { tags, UIElement } from "ziko/dom";
 import { call_with_optional_props } from 'ziko/dom/internal-utils'
-
+import { useState, useDerived } from "ziko/hooks";
 const { div } = tags
+// const [st, setSt] = useState('hh')
+// globalThis.mm = useDerived((n)=>n, [st])
+// globalThis.pp = tags.p({}, mm).mount(document.body)
+// globalThis.st = st
+// globalThis.setSt = setSt
+
 export class UINotebook extends UIElement{
   constructor({
     cells: initialCells = [],

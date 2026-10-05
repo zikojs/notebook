@@ -1,6 +1,6 @@
 import { createCodeEditor } from "../../code-editor/index.js";
 import { tags } from 'ziko/dom'
-import van from "vanjs-core";
+import { useState } from 'ziko/hooks'
 import {
   Check,
   Copy,
@@ -17,6 +17,10 @@ const { div, span } = tags;
 
 import { Button } from "../Button/index.js";
 
+export const Prompt = () => {
+  return span({ class: "prompt" })
+}
+
 export function CellItem({ cellData, app, store }) {
   const outputRef = div({ class: "output-area" });
   if (cellData.outputNode) outputRef.append(cellData.outputNode);
@@ -25,8 +29,10 @@ export function CellItem({ cellData, app, store }) {
   const actions = app._cellActions(cellData);
   cellData._actions = actions;
   cellData._editor = createCodeEditor(app, cellData, actions);
-
-  const inPrompt = span({ class: "prompt" });
+  /* Check ziko */
+  const [In, setIn] = useState(0)
+  globalThis.setIn = setIn
+  const inPrompt = span({ class: "prompt" }, In);
   const outPrompt = span({ class: "prompt out" });
   const bodySlot = div().style({ display : 'contents'});
   const controlsEl = CellControls({ cellData, store, actions });
@@ -41,6 +47,7 @@ export function CellItem({ cellData, app, store }) {
   cellData._outPrompt = outPrompt.element;
   cellData._bodySlot = bodySlot.element;
   cellData._outputGrid = outputGrid.element;
+  cellData._setIn = setIn
 
   app._refreshCell(cellData);
   return root.element;
