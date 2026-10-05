@@ -58,6 +58,7 @@ export class UINotebook extends UIElement{
         type: cell.type || "code",
         code: cell.code || "",
         readonly: cell.readonly ?? false,
+        runtime: cell.runtime || null,
         isEditingMarkdown: cell.readonly ? false : (cell.isEditingMarkdown ?? true),
         execCount: cell.execCount ?? null,
         outputNode: cell.outputNode || null,
@@ -147,12 +148,13 @@ export class UINotebook extends UIElement{
             {
               importMap: app.importMap,
               plugins: app.runtimePlugins,
+              runtime: cellData.runtime // <-- Passed dynamically from the cell configuration
             },
             scope,
           );
         } catch (err) {
           hasError = true;
-          ErrorOutput(err).mount(cellData._outputRef)
+          ErrorOutput(err).mount(cellData._outputRef);
         }
 
         const counter = this.store.get('executionCounter');
@@ -278,6 +280,7 @@ export class UINotebook extends UIElement{
     const newCell = {
       id: newId, type, code: initialCode !== null ? initialCode : defaultText, readonly,
       isEditingMarkdown: !readonly && type === "markdown" && initialCode === null,
+      runtime: null,
       execCount: null, outputNode: null, hasDomOutput: false, _copiedFlag: false,
       _dom: null, _editor: null, _actions: null,
       _inPrompt: null, _outPrompt: null, _bodySlot: null, _outputGrid: null, _outputRef: null
