@@ -1,5 +1,5 @@
 import { transformReact } from "./transform.js";
-export const ReacIdentifier = 'svelte'
+export const ReacIdentifier = 'react'
 
 export const reactPlugin = ({
   jsxRuntime = "automatic",
@@ -7,11 +7,19 @@ export const reactPlugin = ({
 } = {}) => ({
   name: ReacIdentifier,
 
-  transform(code) {
-    return transformReact(code, {
-      jsxRuntime,
-      importSource,
-    });
+  async transform(code, context) {
+    // CRITICAL: Only transform if this cell's runtime is explicitly "react"
+    if (context.runtime && context.runtime !== "react") {
+      return code;
+    }
+    return transformReact(code, { jsxRuntime, importSource });
   },
+
+  // async afterEvaluate(result, context) {
+  //   if (context.runtime && context.runtime !== "react") {
+  //     return result;
+  //   }
+  //   // ... rest of React afterEvaluate logic
+  // }
 
 });

@@ -29,13 +29,21 @@ export function CellItem({ cellData, app, store }) {
   const actions = app._cellActions(cellData);
   cellData._actions = actions;
   cellData._editor = createCodeEditor(app, cellData, actions);
+  
   /* Check ziko */
-  const [In, setIn] = useState(0)
-  globalThis.setIn = setIn
+  const [In, setIn] = useState(0);
+  globalThis.setIn = setIn;
   const inPrompt = span({ class: "prompt" }, In);
   const outPrompt = span({ class: "prompt out" });
-  const bodySlot = div().style({ display : 'contents'});
-  const controlsEl = CellControls({ cellData, store, actions });
+  const bodySlot = div().style({ display: 'contents' });
+  
+  // Pass runtimePlugins from app into CellControls
+  const controlsEl = CellControls({ 
+    cellData, 
+    store, 
+    actions, 
+    runtimePlugins: app.runtimePlugins 
+  });
 
   const outputGrid = div({ class: "cell-output-grid" }, outPrompt, div({ class: "output-wrapper" }, outputRef));
   const inputGrid = div({ class: "cell-input-grid" }, inPrompt, bodySlot, controlsEl);
@@ -47,13 +55,12 @@ export function CellItem({ cellData, app, store }) {
   cellData._outPrompt = outPrompt.element;
   cellData._bodySlot = bodySlot.element;
   cellData._outputGrid = outputGrid.element;
-  cellData._setIn = setIn
+  cellData._setIn = setIn;
 
   app._refreshCell(cellData);
   return root.element;
 }
-
-export function CellControls({ cellData, store, actions }) {
+export function CellControls({ cellData, store, actions, runtimePlugins = [] }) {
   const controlsContainer = div({ class: "cell-controls" }).element;
 
   const renderButtons = () => {
@@ -61,7 +68,38 @@ export function CellControls({ cellData, store, actions }) {
     const isMaxCellsReached = store.get('cells').length >= store.get('maxCells');
     const isCopied = cellData._copiedFlag === true;
 
-    controlsContainer.replaceChildren(
+    // Build the runtime selector dropdown for code cells using native DOM options
+    let runtimeSelectEl = null;
+    if (cellData.type === "code") {
+      const selectElement = document.createElement("select");
+      selectElement.className = "runtime-select";
+      selectElement.title = "Select Cell Runtime";
+      selectElement.disabled = cellData.readonly;
+      
+      selectElement.onchange = (e) => {
+        actions.setRuntime(e.target.value === "" ? null : e.target.value);
+      };
+
+      // Default JS option
+      const optJs = document.createElement("option");
+      optJs.value = "";
+      optJs.textContent = "JS";
+      selectElement.appendChild(optJs);
+
+      // Runtime plugin options
+      for (const p of runtimePlugins) {
+        const opt = document.createElement("option");
+        opt.value = p.name;
+        opt.textContent = p.name.charAt(0).toUpperCase() + p.name.slice(1);
+        selectElement.appendChild(opt);
+      }
+
+      // Explicitly set the active value
+      selectElement.value = cellData.runtime || "";
+      runtimeSelectEl = selectElement;
+    }
+
+    const children = [
       Button({ 
         class: `btn-icon ${isCopied ? "btn-active" : ""}`, 
         title: isCopied ? "Copied!" : "Copy Cell Content", 
@@ -117,7 +155,13 @@ export function CellControls({ cellData, store, actions }) {
         disabled: isQueueRunning, 
         onclick: actions.deleteCell 
       }, Trash2())
-    );
+    ];
+
+    if (runtimeSelectEl) {
+      children.unshift(runtimeSelectEl);
+    }
+
+    controlsContainer.replaceChildren(...children);
   };
 
   renderButtons();

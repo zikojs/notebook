@@ -19,6 +19,7 @@ const initialCellData = [
     isEditingMarkdown: false
   },
   {
+    runtime : 'svelte',
     code : `<script>
   let count = $state(0);
 </script>
@@ -37,7 +38,7 @@ const initialCellData = [
     cursor: pointer;
   }
 </style>`
-  }
+  },
 //   {
 //     id: 2,
 //     type: "code",
@@ -47,30 +48,31 @@ const initialCellData = [
 // const btn = van.tags.button({ class: "btn btn-primary", onclick: () => confetti() }, "Launch Confetti");
 // van.add(TARGET, btn);` 
 //   },
-//   {
-//     code : `import { createRoot } from "react-dom/client";
-// import { useState } from "react"
-// import confetti from "canvas-confetti";
+  {
+    runtime : 'react',
+    code : `import { createRoot } from "react-dom/client";
+import { useState } from "react"
+import confetti from "canvas-confetti";
 
-// const App = () => {
-//   const [count, setCount] = useState(0);
-//   const handleClick = () => {
-//     setCount(count + 1)
-//     confetti()
-//   }
-//   return <button 
-//     className="btn btn-primary" 
-//     onClick={handleClick}>
-//     Launch Confetti {count} 
-//   </button>
-// }
+const App = () => {
+  const [count, setCount] = useState(0);
+  const handleClick = () => {
+    setCount(count + 1)
+    confetti()
+  }
+  return <button 
+    className="btn btn-primary" 
+    onClick={handleClick}>
+    Launch Confetti {count} 
+  </button>
+}
 
-// const container = document.createElement("div");
-// TARGET.appendChild(container);
-// createRoot(container).render(<App />);
-//     `
+const container = document.createElement("div");
+TARGET.appendChild(container);
+createRoot(container).render(<App />);
+    `
 
-//   }
+  }
 ];
 
 const notebookApp = new UINotebook({
@@ -83,7 +85,7 @@ const notebookApp = new UINotebook({
   minLines: 4,
   maxCells: 10,
   runtimePlugins : [
-    // reactPlugin(),
+    reactPlugin(),
     sveltePlugin()
   ],
   rehypePlugins : [rehypeMindElixir]

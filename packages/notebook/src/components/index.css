@@ -2,3 +2,20 @@
 @import url('./Button/index.css');
 @import url('./Header/index.css');
 @import url('./MarkdownView//index.css');
+
+.ziko-notebook .runtime-select {
+  font-family: inherit;
+  font-size: 11px;
+  padding: 2px 4px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: #ffffff;
+  color: #1e293b;
+  cursor: pointer;
+  height: 24px;
+}
+
+.ziko-notebook .runtime-select:focus {
+  outline: none;
+  border-color: var(--primary);
+}

@@ -199,7 +199,11 @@ export class UINotebook extends UIElement{
         app._refreshCell(cellData);
       },
       addBelow: () => app.addCell(cellData.type, null, cellData.id),
-      deleteCell: () => app.deleteCell(cellData.id)
+      deleteCell: () => app.deleteCell(cellData.id),
+      setRuntime: (newRuntime) => {
+        cellData.runtime = newRuntime;
+        app._refreshCell(cellData);
+      },
     };
   }
 
