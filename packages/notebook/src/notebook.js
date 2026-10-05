@@ -1,5 +1,10 @@
 import { NotebookStore } from "./store.js";
-import { Header, CellItem, MarkdownView } from "./components/index.js";
+import { 
+  Header, 
+  CellItem, 
+  MarkdownView,
+  ErrorOutput
+} from "./components/index.js";
 import { evaluateCodeAsync } from "./compiler/index.js";
 import { tags, UIElement } from "ziko/dom";
 import { call_with_optional_props } from 'ziko/dom/internal-utils'
@@ -136,7 +141,7 @@ export class UINotebook extends UIElement{
           );
         } catch (err) {
           hasError = true;
-          div({ class: "error-output" }, err.toString()).mount(cellData._outputRef)
+          ErrorOutput(err).mount(cellData._outputRef)
         }
 
         const counter = this.store.get('executionCounter');
@@ -157,12 +162,10 @@ export class UINotebook extends UIElement{
         try {
           await navigator.clipboard.writeText(textToCopy);
         } catch (err) {
-          const textArea = document.createElement("textarea");
-          textArea.value = textToCopy;
-          document.body.appendChild(textArea);
-          textArea.select();
+          const temporary = tags.textarea(textToCopy).mount(document.body)
+          temporary.element.select()
           document.execCommand("copy");
-          document.body.removeChild(textArea);
+          temporary.unmount()
         }
       },
       toggleReadonly: () => {

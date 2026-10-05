@@ -1,0 +1,55 @@
+/* --- BUTTONS --- */
+
+.ziko-notebook .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.ziko-notebook .btn:hover {
+  background: #f1f5f9;
+}
+
+.ziko-notebook .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ziko-notebook .btn-icon {
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.ziko-notebook .btn-primary {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+.ziko-notebook .btn-primary:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+.ziko-notebook .btn-active {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+.ziko-notebook .icon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2;
+}

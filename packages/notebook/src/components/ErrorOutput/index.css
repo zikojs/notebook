@@ -1,0 +1,10 @@
+.ziko-notebook .error-output {
+  color: #e11d48;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  white-space: pre-wrap;
+  font-size: 12px;
+  background: #fff1f2;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #fecdd3;
+}
