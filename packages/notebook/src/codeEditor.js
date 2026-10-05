@@ -13,7 +13,7 @@ const languageFor = (type) =>
   type === "markdown" ? markdown() : javascript();
 
 export function createCodeEditor(app, cellData, actions) {
-  const editorDom = div({ class: "input-wrapper" }).element;
+  const editorDom = div({ class: "input-wrapper" });
 
   const languageCompartment = new Compartment();
   const readOnlyCompartment = new Compartment();
@@ -143,7 +143,7 @@ export function createCodeEditor(app, cellData, actions) {
 
     view = new EditorView({
       state,
-      parent: editorDom
+      parent: editorDom.element
     });
 
     const lineHeight = view.defaultLineHeight || 19;
@@ -159,7 +159,7 @@ export function createCodeEditor(app, cellData, actions) {
   };
 
   return {
-    dom: editorDom,
+    dom: editorDom.element,
 
     getValue: () =>
       view
