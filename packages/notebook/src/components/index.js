@@ -2,7 +2,7 @@ import van from "vanjs-core";
 import { remark } from "remark";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { createCodeEditor } from "./codeEditor.js";
+import { createCodeEditor } from "../CodeEditor/index.js";
 
 import {
   Check,
@@ -19,7 +19,7 @@ import {
   Eraser,
   Download,
   Loader2
-} from './icons.js';
+} from './icons/index.js';
 
 const { button } = van.tags;
 
@@ -31,7 +31,7 @@ export const Button = ({ class: className = "", title = "", disabled = false, on
   button({ class: `btn ${className}`, title, disabled, onclick }, ...children);
 
 export function Header({ store, actions }) {
-  const statusBadge = span({ class: "status-badge" }, Loader2(), span('Loading ...')).element;
+  const statusBadge = span({ class: "status-badge" }, Loader2(), span('Loading ...'));
   const runAllBtn = Button({ class: "btn-primary", onclick: actions.runAll }, PlayForward(), "Run All");
   const clearBtn = Button({ onclick: actions.clearOutputs }, Eraser(), "Clear Outputs");
   const addCodeBtn = Button({ onclick: actions.addCode }, Plus(), "Add Code");
@@ -40,8 +40,8 @@ export function Header({ store, actions }) {
   const exportBtn = Button({ onclick: actions.exportData }, Download(), "Export Data");
 
   store.on('change:executionQueueState', (q) => {
-    statusBadge.style.display = q.isRunning ? "inline-flex" : "none";
-    statusBadge.lastChild.textContent = `Executing Queue (${q.currentIndex + 1}/${q.total})`;
+    statusBadge.style({display :q.isRunning ? "inline-flex" : "none" })
+    statusBadge.element.lastChild.textContent = `Executing Queue (${q.currentIndex + 1}/${q.total})`;
     [runAllBtn, clearBtn, deleteActiveBtn].forEach(b => { b.disabled = q.isRunning; });
     const maxReached = store.get('cells').length >= store.get('maxCells');
     addCodeBtn.disabled = q.isRunning || maxReached;
@@ -57,7 +57,7 @@ export function Header({ store, actions }) {
 }
 
 export function MarkdownView({ cellData, actions }) {
-  const content = div().element;
+  const content = div();
   
   // Process Markdown asynchronously using Remark + Rehype
   remark()
@@ -65,10 +65,10 @@ export function MarkdownView({ cellData, actions }) {
     .use(rehypeStringify)
     .process(cellData.code || "*Empty Markdown Cell*")
     .then((file) => {
-      content.innerHTML = String(file);
+      content.element.innerHTML = String(file);
     })
     .catch((err) => {
-      content.innerHTML = `<div class="error-output">Markdown rendering error: ${err.message}</div>`;
+      content.element.innerHTML = `<div class="error-output">Markdown rendering error: ${err.message}</div>`;
     });
   
   const wrap = div({ class: "markdown-rendered-cell markdown-body" }, content);
@@ -150,30 +150,29 @@ export function CellControls({ cellData, store, actions }) {
 }
 
 export function CellItem({ cellData, app, store }) {
-  const outputRef = div({ class: "output-area" }).element;
-  if (cellData.outputNode) outputRef.appendChild(cellData.outputNode);
-  cellData._outputRef = outputRef;
+  const outputRef = div({ class: "output-area" });
+  if (cellData.outputNode) outputRef.append(cellData.outputNode);
+  cellData._outputRef = outputRef.element;
 
   const actions = app._cellActions(cellData);
   cellData._actions = actions;
   cellData._editor = createCodeEditor(app, cellData, actions);
 
-  const inPrompt = span({ class: "prompt" }).element;
-  const outPrompt = span({ class: "prompt out" }).element;
-  const bodySlot = div().style({ display : 'contents'}).element;
+  const inPrompt = span({ class: "prompt" });
+  const outPrompt = span({ class: "prompt out" });
+  const bodySlot = div().style({ display : 'contents'});
   const controlsEl = CellControls({ cellData, store, actions });
 
-  const outputGrid = div({ class: "cell-output-grid" }, outPrompt, div({ class: "output-wrapper" }, outputRef)).element;
-  const inputGrid = div({ class: "cell-input-grid" }, inPrompt, bodySlot, controlsEl).element;
+  const outputGrid = div({ class: "cell-output-grid" }, outPrompt, div({ class: "output-wrapper" }, outputRef));
+  const inputGrid = div({ class: "cell-input-grid" }, inPrompt, bodySlot, controlsEl);
   const root = div({ class: "cell" }, inputGrid, outputGrid);
   root.onClick(() => app.setActiveCell(cellData.id));
-  // root.onclick = () => app.setActiveCell(cellData.id);
 
   cellData._dom = root.element;
-  cellData._inPrompt = inPrompt;
-  cellData._outPrompt = outPrompt;
-  cellData._bodySlot = bodySlot;
-  cellData._outputGrid = outputGrid;
+  cellData._inPrompt = inPrompt.element;
+  cellData._outPrompt = outPrompt.element;
+  cellData._bodySlot = bodySlot.element;
+  cellData._outputGrid = outputGrid.element;
 
   app._refreshCell(cellData);
   return root.element;
