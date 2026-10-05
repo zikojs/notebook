@@ -14,7 +14,8 @@ export class UINotebook extends UIElement{
     codeMirrorPlugins = [],
     minLines = 3,
     maxCells = Infinity,
-    showHeader = true
+    showHeader = true,
+    runtimePlugins = []
   } = {}) {
     super({ element : 'div'})
     this.setAttr({class : 'ziko-notebook'})
@@ -26,6 +27,7 @@ export class UINotebook extends UIElement{
     this.resetScope();
 
     this.importMap = importMap;
+    this.runtimePlugins = runtimePlugins;
     this.codeMirrorConfig = codeMirrorConfig;
     this.codeMirrorPlugins = codeMirrorPlugins;
     this.minLines = minLines;
@@ -123,7 +125,15 @@ export class UINotebook extends UIElement{
 
         try {
           const scope = app.getScope();
-          await evaluateCodeAsync(code, cellData._outputRef, app.importMap, scope);
+          await evaluateCodeAsync(
+            code,
+            cellData._outputRef,
+            {
+              importMap: app.importMap,
+              plugins: app.runtimePlugins,
+            },
+            scope,
+          );
         } catch (err) {
           hasError = true;
           div({ class: "error-output" }, err.toString()).mount(cellData._outputRef)

@@ -1,11 +1,13 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+  - 'packages/runtimes/*'
   - 'demo'
 
 catalog:
   ziko: ^2.0.0-beta.16.0
   zextra: ^1.15.0
+  '@babel/standalone': latest
 
 minimumReleaseAgeExclude:
   - ziko@2.0.0-beta.16.0

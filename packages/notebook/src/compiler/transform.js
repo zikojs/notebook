@@ -12,7 +12,10 @@ import {
 
 export const transformImportsAndScope = (
   code,
-  importMapConfig,
+  {
+    importMap = {},
+    plugins = [],
+  } = {},
 ) => {
   try {
     const ast = acorn.parse(code, {
@@ -20,6 +23,11 @@ export const transformImportsAndScope = (
       sourceType: "module",
       allowReturnOutsideFunction: true,
     });
+
+    const context = {
+      importMap,
+      plugins,
+    };
 
     const modifications = [];
 
@@ -31,7 +39,7 @@ export const transformImportsAndScope = (
           replacement: rewriteImportNode(
             node,
             code,
-            importMapConfig,
+            context,
           ),
         });
 
@@ -88,11 +96,16 @@ export const transformImportsAndScope = (
 
     let transformedCode = code;
 
-    modifications.forEach((mod) => {
+    modifications.forEach((modification) => {
       transformedCode =
-        transformedCode.slice(0, mod.start) +
-        mod.replacement +
-        transformedCode.slice(mod.end);
+        transformedCode.slice(
+          0,
+          modification.start,
+        ) +
+        modification.replacement +
+        transformedCode.slice(
+          modification.end,
+        );
     });
 
     return transformedCode;
@@ -103,6 +116,9 @@ export const transformImportsAndScope = (
     ) {
       throw new SyntaxError(
         "Invalid code module layout syntax.",
+        {
+          cause: error,
+        },
       );
     }
 

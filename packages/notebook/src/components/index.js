@@ -2,7 +2,7 @@ import van from "vanjs-core";
 import { remark } from "remark";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { createCodeEditor } from "../CodeEditor/index.js";
+import { createCodeEditor } from "../code-editor/index.js";
 
 import {
   Check,

@@ -19,6 +19,7 @@
   "packageManager": "pnpm@11.24.0",
   "type": "module",
   "dependencies": {
+    "@babel/standalone": "^7.29.9",
     "ziko": "2.0.0-beta.16.0"
   }
 }

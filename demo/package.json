@@ -11,7 +11,8 @@
   "dependencies": {
     "@zikojs/notebook": "workspace:*",
     "canvas-confetti": "^1.9.4",
-    "vanjs-core": "^1.6.1"
+    "vanjs-core": "^1.6.1",
+    "@zikojs/notebook-runtime-react": "workspace:*"
   },
   "devDependencies": {
     "vite": "^8.2.2"

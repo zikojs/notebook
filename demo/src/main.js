@@ -1,4 +1,5 @@
 import { UINotebook  } from "@zikojs/notebook";
+import { reactPlugin } from '@zikojs/notebook-runtime-react'
 
 // Shared execution scope for eval'd cell code
 // window.__notebook_scope = Object.create(null);
@@ -34,7 +35,11 @@ const notebookApp = new UINotebook({
   markedPlugins: [],
   codeMirrorPlugins: [],
   minLines: 4,
-  maxCells: 10
+  maxCells: 10,
+  runtimePlugins : [
+    reactPlugin()
+  ]
+  
 });
 
 // van.add(document.getElementById("app"), notebookApp.element);

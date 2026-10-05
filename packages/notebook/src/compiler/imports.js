@@ -1,6 +1,24 @@
-export const resolveImport = (source, importMapConfig = {}) => {
-  if (importMapConfig[source]) {
-    return importMapConfig[source];
+export const resolveImport = (
+  source,
+  {
+    importMap = {},
+    plugins = [],
+  } = {},
+) => {
+  if (importMap[source]) {
+    return importMap[source];
+  }
+
+  for (const plugin of plugins) {
+    if (plugin.resolveImport) {
+      const resolved = plugin.resolveImport(
+        source,
+      );
+
+      if (resolved) {
+        return resolved;
+      }
+    }
   }
 
   if (
@@ -18,11 +36,11 @@ export const resolveImport = (source, importMapConfig = {}) => {
 export const rewriteImportNode = (
   node,
   code,
-  importMapConfig,
+  context,
 ) => {
   const source = resolveImport(
     node.source.value,
-    importMapConfig,
+    context,
   );
 
   if (node.specifiers.length === 0) {
