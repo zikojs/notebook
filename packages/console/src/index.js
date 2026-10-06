@@ -35,17 +35,17 @@ document.body.append(Console.warn("Standalone warning"))
 document.body.append(Console.table([1,2,3]))
 
 
-// // 3) Live: hook the real console into a feed
-// Console.theme = theme
-// const feed = createFeed()
-// Hook(console, e => feed.push(e))
-// globalThis.c = ConsoleFeed({feed})
-// document.body.append(c)
+// 3) Live: hook the real console into a feed
+Console.theme = theme
+const feed = createFeed()
+Hook(console, e => feed.push(e))
+globalThis.c = ConsoleFeed({feed})
+document.body.append(c)
 
-// console.log("Hello from VanJS", 42, true, null, undefined)
-// console.log({a: 1})
-// console.group("Request")
-// console.log("parsing")
-// console.group("Auth")
-// console.warn("token expires soon")
-// console.groupEnd()
+console.log("Hello from VanJS", 42, true, null, undefined)
+console.log({a: 1})
+console.group("Request")
+console.log("parsing")
+console.group("Auth")
+console.warn("token expires soon")
+console.groupEnd()

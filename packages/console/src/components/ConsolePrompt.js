@@ -1,7 +1,5 @@
-import van from "https://cdn.jsdelivr.net/npm/vanjs-core@1.5.3/src/van.js";
-
-const { div, span, input } = van.tags;
-
+import { tags } from "ziko/dom";
+const { div, span, input } = tags;
 export function ConsolePrompt({
   feed
 }) {
@@ -27,18 +25,14 @@ export function ConsolePrompt({
     }
   };
 
-  return div(
-    { class: "cf-prompt" },
-
-    span("\u203A"),
-
-    input({
+  const inp = input({
       placeholder: "Run JavaScript",
       "aria-label": "Run JavaScript",
       spellcheck: false,
       autocomplete: "off",
 
-      onkeydown: e => {
+      onKeyDown: __e__ => {
+        const e = __e__.event
         const el = e.target;
 
         if (
@@ -69,5 +63,12 @@ export function ConsolePrompt({
         }
       }
     })
-  );
+
+  return div(
+    { class: "cf-prompt" },
+
+    span("\u203A"),
+    inp
+    
+  ).element;
 }
