@@ -242,19 +242,33 @@ export class UINotebook extends UIElement{
   }
 
   setActiveCell(id) {
-    const currentActiveId = this.store.get('activeCellId');
-    if (currentActiveId === id) return;
+  const cells = this.store.get('cells');
+  const target = cells.find(c => c.id === id);
 
-    // Check all cells and close editing mode for any markdown cells that are losing focus
-    this.store.get('cells').forEach(c => {
-      if (c.type === "markdown" && c.isEditingMarkdown) {
-        c.isEditingMarkdown = false;
-        this._refreshCell(c);
-      }
-    });
+  if (!target) return;
 
-    this.store.set('activeCellId', id);
+  const currentActiveId = this.store.get('activeCellId');
+
+  if (currentActiveId === id) {
+    return;
   }
+
+  // Only one cell can be active.
+  cells.forEach(cell => {
+    if (cell.id !== id && cell.type === "markdown") {
+      cell.isEditingMarkdown = false;
+    }
+  });
+
+  this.store.set('activeCellId', id);
+
+  // Refresh every cell so the previous active cell loses "active".
+  cells.forEach(cell => {
+    if (cell._dom) {
+      this._refreshCell(cell);
+    }
+  });
+}
 
   focusCell(targetId) {
     // Close editing on other markdown cells before focusing
