@@ -1,5 +1,11 @@
 import { compile } from "svelte/compiler";
-import { mount, unmount } from "https://esm.sh/svelte";
+import { 
+  mount, 
+  unmount
+} from "https://esm.sh/svelte";
+
+import { tags } from 'ziko/dom'
+
 
 export const SvelteIdentifier = 'svelte'
 export const sveltePlugin = ({
@@ -35,7 +41,7 @@ export const sveltePlugin = ({
       const blob = new Blob([jsCode], { type: "application/javascript" });
       const moduleUrl = URL.createObjectURL(blob);
 
-      const mod = await import(moduleUrl);
+      const mod = await import(/* @vite-ignore */moduleUrl);
       const Component = mod.default;
       URL.revokeObjectURL(moduleUrl);
 
@@ -50,7 +56,7 @@ export const sveltePlugin = ({
       }
 
       TARGET.innerHTML = "";
-      const container = document.createElement("div");
+      const container = tags.div().element;
       TARGET.appendChild(container);
 
       TARGET.__svelteInstance = mount(Component, {
@@ -59,21 +65,12 @@ export const sveltePlugin = ({
 
       return TARGET.__svelteInstance;
     } catch (err) {
-      TARGET.innerHTML = `<pre style="color: red; white-space: pre-wrap;">Svelte Error: ${err.message}</pre>`;
+      tags.pre(`Svelte Error: ${err.message}`).style({
+        color : 'red',
+        whiteSpace : 'pre-wrap'
+      }).mount(TARGET)
       console.error(err);
     }
   },
 
-  // resolveImport(source) {
-  //   const imports = {
-  //     svelte: "https://esm.sh/svelte",
-  //     "svelte/internal": "https://esm.sh/svelte/internal",
-  //     "svelte/internal/client": "https://esm.sh/svelte/internal/client",
-  //     "svelte/internal/disclose-version": "https://esm.sh/svelte/internal/disclose-version",
-  //     "svelte/motion": "https://esm.sh/svelte/motion",
-  //     "svelte/store": "https://esm.sh/svelte/store",
-  //     "svelte/transition": "https://esm.sh/svelte/transition",
-  //   };
-  //   return imports[source] || (source.startsWith("http") ? source : `https://esm.sh/${source}`);
-  // },
 });

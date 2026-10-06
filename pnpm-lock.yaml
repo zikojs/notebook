@@ -319,6 +319,9 @@ importers:
       svelte:
         specifier: ^5.57.1
         version: 5.57.1
+      ziko:
+        specifier: 'catalog:'
+        version: 2.0.0-beta.16.0
 
 packages:
 
@@ -995,6 +998,9 @@ packages:
   ziko@2.0.0-beta.16.0:
     resolution: {integrity: sha512-KDNtB1olrlP4cZsoTmB3A+Ain3ahHWZw3cmjTPBE0KwXGIV/ZUXYJKMAb4/hxg/omNnIWJrh3ZvxTI2Z9UBKnA==}
 
+  ziko@2.0.0-beta.16.2:
+    resolution: {integrity: sha512-M0G165WPxJ7kpmMWglql2kh8RdIcSEdGeNm5b8Aj0qE1bll93ROkApPaP2mjG8NDVCvyUtLsZ9TVdBlfhBJO1Q==}
+
   zimmerframe@1.1.5:
     resolution: {integrity: sha512-msJxIvYDYcoNL+PJsu+7qmpDWsYmAxTY+2TNYXXF0hzBzBk0BMecOqDOG/EckUoKCuKwObfbugIl8QpqHDXeFA==}
 
@@ -1226,14 +1232,14 @@ snapshots:
   '@zikojs/lucide@1.1.0':
     dependencies:
       lucide: 1.48.0
-      ziko: 2.0.0-beta.16.0
+      ziko: 2.0.0-beta.16.2
 
   '@zikojs/mind-elixir@1.0.0-alpha.1':
     dependencies:
       mind-elixir: 6.0.0-next.4
       yaml: 2.9.1
       zextra: 1.15.2
-      ziko: 2.0.0-beta.16.0
+      ziko: 2.0.0-beta.16.2
 
   acorn@8.18.0: {}
 
@@ -1609,7 +1615,7 @@ snapshots:
       mind-elixir: 6.0.0-next.4
       unist-util-visit: 5.1.0
       yaml: 2.9.1
-      ziko: 2.0.0-beta.16.0
+      ziko: 2.0.0-beta.16.2
 
   rehype-stringify@10.0.1:
     dependencies:
@@ -1787,6 +1793,8 @@ snapshots:
   ziko@2.0.0-beta.15.1: {}
 
   ziko@2.0.0-beta.16.0: {}
+
+  ziko@2.0.0-beta.16.2: {}
 
   zimmerframe@1.1.5: {}
 
