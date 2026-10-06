@@ -207,7 +207,7 @@ catalogs:
   default:
     '@babel/standalone':
       specifier: latest
-      version: 7.29.9
+      version: 8.0.6
     zextra:
       specifier: ^1.15.0
       version: 1.15.2
@@ -231,6 +231,9 @@ importers:
 
   demo:
     dependencies:
+      '@zikojs/console':
+        specifier: workspace:*
+        version: link:../packages/console
       '@zikojs/notebook':
         specifier: workspace:*
         version: link:../packages/notebook
@@ -253,6 +256,12 @@ importers:
       vite:
         specifier: ^8.2.2
         version: 8.3.1(yaml@2.9.1)
+
+  packages/console:
+    dependencies:
+      ziko:
+        specifier: 'catalog:'
+        version: 2.0.0-beta.16.0
 
   packages/notebook:
     dependencies:
@@ -312,13 +321,13 @@ importers:
     dependencies:
       '@babel/standalone':
         specifier: 'catalog:'
-        version: 7.29.9
+        version: 8.0.6
 
   packages/runtimes/svelte:
     dependencies:
       '@babel/standalone':
         specifier: 'catalog:'
-        version: 7.29.9
+        version: 8.0.6
       svelte:
         specifier: ^5.57.1
         version: 5.57.1
@@ -376,6 +385,10 @@ packages:
   '@babel/standalone@7.29.9':
     resolution: {integrity: sha512-Oztlw9huD3bdgX6HmYqCSBamOtH05qbbF5TGfD2cbetKsqMo/2U9WB24U02qGDqMzmY0wY2bnLhbFAjXW3dWYg==}
     engines: {node: '>=6.9.0'}
+
+  '@babel/standalone@8.0.6':
+    resolution: {integrity: sha512-KOK+cX/FvysgJ6rY5Q47SxHmYmHVyDYE+s9QNNeIucaeFh8oukV4AUwzQZO8iqzBF1WzD7+U3TATQu0eKgR9kg==}
+    engines: {node: ^22.18.0 || >=24.11.0}
 
   '@babel/template@8.0.0':
     resolution: {integrity: sha512-eAD0QW/AlbamBbw0FeGiwasbCVPq5ncW0HNVyLP3B9czqLyh4gvw+5JTSNt6le9+ziAU7mqDZsKTHf3jTb4chQ==}
@@ -1130,9 +1143,6 @@ packages:
     resolution: {integrity: sha512-rKPNlAQRHE12dAsWhIo4vGcmRGhra4Qp5ZnX9Gkp0Vcj2nHkbOFx1obFtrZbEtNfIjBpe0SLMvCAISqJq++2Cw==}
     hasBin: true
 
-  ziko@2.0.0-beta.15.1:
-    resolution: {integrity: sha512-WYdyQht2yusky497Rrmgike+lNuCpRQzdoGu+mccVZ0iQRhX2boZkHSM3PbcH7l3PSeIm5LelQqlkhZMgL7eCw==}
-
   ziko@2.0.0-beta.16.0:
     resolution: {integrity: sha512-KDNtB1olrlP4cZsoTmB3A+Ain3ahHWZw3cmjTPBE0KwXGIV/ZUXYJKMAb4/hxg/omNnIWJrh3ZvxTI2Z9UBKnA==}
 
@@ -1208,6 +1218,12 @@ snapshots:
       '@babel/types': 8.0.6
 
   '@babel/standalone@7.29.9': {}
+
+  '@babel/standalone@8.0.6':
+    dependencies:
+      '@babel/core': 8.0.6
+      '@babel/generator': 8.0.6
+      '@babel/parser': 8.0.6
 
   '@babel/template@8.0.0':
     dependencies:
@@ -2051,7 +2067,7 @@ snapshots:
   zextra@1.15.2:
     dependencies:
       '@zikojs/lucide': 1.1.0
-      ziko: 2.0.0-beta.15.1
+      ziko: 2.0.0-beta.16.0
       ziko-lucide: 1.0.2
 
   ziko-lucide@1.0.2:
@@ -2061,8 +2077,6 @@ snapshots:
       ziko: 1.10.0
 
   ziko@1.10.0: {}
-
-  ziko@2.0.0-beta.15.1: {}
 
   ziko@2.0.0-beta.16.0: {}
 

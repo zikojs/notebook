@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@zikojs/notebook": "workspace:*",
+    "@zikojs/console": "workspace:*",
     "@zikojs/notebook-runtime-react": "workspace:*",
     "@zikojs/notebook-runtime-svelte": "workspace:*",
     "canvas-confetti": "^1.9.4",
