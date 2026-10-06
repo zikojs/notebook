@@ -8,6 +8,7 @@ catalog:
   ziko: ^2.0.0-beta.16.0
   zextra: ^1.15.0
   '@babel/standalone': latest
+  '@babel/core': latest
 
 minimumReleaseAgeExclude:
   - ziko@2.0.0-beta.16.0

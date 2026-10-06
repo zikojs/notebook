@@ -1,6 +1,7 @@
 import { UINotebook  } from "@zikojs/notebook";
 import { reactPlugin } from '@zikojs/notebook-runtime-react'
 import { sveltePlugin } from '@zikojs/notebook-runtime-svelte'
+
 import rehypeMindElixir from 'rehype-mind-elixir'
 
 // Shared execution scope for eval'd cell code
@@ -86,7 +87,7 @@ const notebookApp = new UINotebook({
   maxCells: 10,
   runtimePlugins : [
     reactPlugin(),
-    sveltePlugin()
+    sveltePlugin(),
   ],
   rehypePlugins : [rehypeMindElixir]
   
