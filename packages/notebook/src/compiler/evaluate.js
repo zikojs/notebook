@@ -10,52 +10,55 @@ export const evaluateCodeAsync = async (
   } = {},
   scope,
 ) => {
-  const validScope = scope || Object.create(null);
-
-  // Auto-detect runtime if not explicitly passed by the cell
-  let activeRuntime = runtime;
-  
-  if (!activeRuntime) {
-    // 1. Check for explicit comment directive like `// @runtime svelte` or `// @runtime react`
-    const commentMatch = code.match(/^\/\/\s*@?runtime[:\s]+([a-zA-Z0-9_-]+)/i);
-    if (commentMatch) {
-      activeRuntime = commentMatch[1].toLowerCase();
-    } 
-    // 2. Fallback heuristic: if code contains Svelte syntax indicators like <script> tags
-    else if (code.includes("<script>") || code.includes("<style>") || /^\s*<[a-zA-Z-]+/m.test(code)) {
-      // Check if svelte plugin exists, default to svelte if template tags are present
-      if (plugins.some(p => p.name === "svelte")) {
-        activeRuntime = "svelte";
-      }
-    }
-  }
+  const validScope =
+    scope || Object.create(null);
 
   const context = {
     TARGET,
     scope: validScope,
     importMap,
     plugins,
-    runtime: activeRuntime,
+    runtime,
   };
 
-  // Find the plugin matching the active runtime
-  const selectedPlugin = plugins.find(p => p.name === activeRuntime);
+  const selectedPlugin = plugins.find(
+    p => p.name === runtime,
+  );
 
-  // If the plugin handles its own evaluation (like Svelte compiling + dynamic import), run it exclusively
-  if (selectedPlugin && selectedPlugin.evaluate) {
-    return await selectedPlugin.evaluate(code, context);
+  // Runtime-specific evaluator
+  if (
+    selectedPlugin &&
+    selectedPlugin.evaluate
+  ) {
+    return await selectedPlugin.evaluate(
+      code,
+      context,
+    );
   }
 
   let compiledCode = code;
 
   for (const plugin of plugins) {
-    if (selectedPlugin && plugin.name !== activeRuntime) continue;
+    if (
+      selectedPlugin &&
+      plugin.name !== runtime
+    ) {
+      continue;
+    }
+
     if (plugin.transform) {
-      compiledCode = await plugin.transform(compiledCode, context);
+      compiledCode = await plugin.transform(
+        compiledCode,
+        context,
+      );
     }
   }
 
-  compiledCode = transformImportsAndScope(compiledCode, importMap);
+  compiledCode =
+    transformImportsAndScope(
+      compiledCode,
+      importMap,
+    );
 
   const runCell = new Function(
     "TARGET",
@@ -69,12 +72,24 @@ export const evaluateCodeAsync = async (
     `,
   );
 
-  let result = await runCell(TARGET, validScope);
+  let result = await runCell(
+    TARGET,
+    validScope,
+  );
 
   for (const plugin of plugins) {
-    if (selectedPlugin && plugin.name !== activeRuntime) continue;
+    if (
+      selectedPlugin &&
+      plugin.name !== runtime
+    ) {
+      continue;
+    }
+
     if (plugin.afterEvaluate) {
-      result = await plugin.afterEvaluate(result, context);
+      result = await plugin.afterEvaluate(
+        result,
+        context,
+      );
     }
   }
 
