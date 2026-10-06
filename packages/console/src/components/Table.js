@@ -29,5 +29,5 @@ export function Table(data) {
         ),
       ),
     ),
-  );
+  ).element;
 }
