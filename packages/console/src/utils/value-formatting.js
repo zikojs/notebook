@@ -1,4 +1,5 @@
 export const isObj = v => v !== null && typeof v === "object"
+export const isProps = a => a && typeof a === "object" && !(a instanceof Node) && Object.getPrototypeOf(a) === Object.prototype
 export const cname = v => { try { return Object.getPrototypeOf(v)?.constructor?.name || "" } catch { return "" } }
 export const prim = v => typeof v === "string" ? JSON.stringify(v) : typeof v === "bigint" ? v + "n" : String(v)
 export const primCls = v => v == null ? "nul" : typeof v === "string" ? "str" : typeof v === "boolean" ? "bool" : "num"

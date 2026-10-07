@@ -3,6 +3,7 @@ import { reactPlugin } from '@zikojs/notebook-runtime-react'
 import { sveltePlugin } from '@zikojs/notebook-runtime-svelte'
 
 import rehypeMindElixir from 'rehype-mind-elixir'
+import rehypeMermaid from 'rehype-mermaid'
 
 // Shared execution scope for eval'd cell code
 // window.__notebook_scope = Object.create(null);
@@ -89,7 +90,7 @@ const notebookApp = new UINotebook({
     reactPlugin(),
     sveltePlugin(),
   ],
-  rehypePlugins : [rehypeMindElixir]
+  rehypePlugins : [rehypeMermaid, rehypeMindElixir]
   
 });
 
