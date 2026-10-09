@@ -67,6 +67,7 @@ export const evaluateCodeAsync = async (
     // Bind the active TARGET for this cell evaluation
     if (typeof __Ziko__ !== "undefined" && __Ziko__.__Config__) {
       __Ziko__.__Config__.default.target = TARGET;
+      __Ziko__.__Config__.default.autoMount = true;
     }
 
     return (async () => {
