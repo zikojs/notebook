@@ -21,6 +21,10 @@ const initialCellData = [
     isEditingMarkdown: false
   },
   {
+    code : `import { tags } from 'ziko/dom'
+tags.p('hello world')`
+  },
+  {
     runtime : 'svelte',
     code : `<script>
   let count = $state(0);

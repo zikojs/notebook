@@ -207,13 +207,16 @@ catalogs:
   default:
     '@babel/standalone':
       specifier: latest
-      version: 8.0.6
+      version: 8.0.7
+    '@zikojs/console':
+      specifier: latest
+      version: 0.5.0
     zextra:
       specifier: ^1.15.0
       version: 1.15.2
     ziko:
-      specifier: ^2.0.0-beta.16.0
-      version: 2.0.0-beta.16.0
+      specifier: latest
+      version: 2.0.0-beta.17.0
 
 importers:
 
@@ -225,15 +228,15 @@ importers:
       '@babel/standalone':
         specifier: ^7.29.9
         version: 7.29.9
+      '@zikojs/console':
+        specifier: ^0.5.0
+        version: 0.5.0
       ziko:
-        specifier: 2.0.0-beta.16.0
-        version: 2.0.0-beta.16.0
+        specifier: 2.0.0-beta.16.2
+        version: 2.0.0-beta.16.2
 
   demo:
     dependencies:
-      '@zikojs/console':
-        specifier: workspace:*
-        version: link:../packages/console
       '@zikojs/notebook':
         specifier: workspace:*
         version: link:../packages/notebook
@@ -266,12 +269,6 @@ importers:
         specifier: ^8.2.2
         version: 8.3.1(yaml@2.9.1)
 
-  packages/console:
-    dependencies:
-      ziko:
-        specifier: 'catalog:'
-        version: 2.0.0-beta.16.0
-
   packages/notebook:
     dependencies:
       '@codemirror/autocomplete':
@@ -295,6 +292,9 @@ importers:
       '@codemirror/view':
         specifier: ^6.43.11
         version: 6.43.13
+      '@zikojs/console':
+        specifier: 'catalog:'
+        version: 0.5.0
       '@zikojs/lucide':
         specifier: ^0.2.2
         version: 0.2.2
@@ -324,25 +324,25 @@ importers:
         version: 1.15.2
       ziko:
         specifier: 'catalog:'
-        version: 2.0.0-beta.16.0
+        version: 2.0.0-beta.17.0
 
   packages/runtimes/react:
     dependencies:
       '@babel/standalone':
         specifier: 'catalog:'
-        version: 8.0.6
+        version: 8.0.7
 
   packages/runtimes/svelte:
     dependencies:
       '@babel/standalone':
         specifier: 'catalog:'
-        version: 8.0.6
+        version: 8.0.7
       svelte:
         specifier: ^5.57.1
         version: 5.57.1
       ziko:
         specifier: 'catalog:'
-        version: 2.0.0-beta.16.0
+        version: 2.0.0-beta.17.0
 
 packages:
 
@@ -361,12 +361,20 @@ packages:
     resolution: {integrity: sha512-5zwYt1V4ji3mXKKRIAkohSJ29WepxNwxQi+7y7P5AcVPh1dcxnZBU2cfxHnPwS+u9+lZnXPsv30TQaF2xg+Tfg==}
     engines: {node: ^22.18.0 || >=24.11.0}
 
+  '@babel/core@8.0.7':
+    resolution: {integrity: sha512-ZIsZWBG6Y1oa+8fkQVp0xeCdjCHBkXFCCIWrmg9SvejVvfcVQgKKRmGrBDWfM7rilhvnRoEuaqa5dkK7KB3pHA==}
+    engines: {node: ^22.18.0 || >=24.11.0}
+
   '@babel/generator@8.0.6':
     resolution: {integrity: sha512-/pcanjdRsonCexCuxgGD8fKnBLLzk2i9uM4kmcmGyyev2R5YDs+rafMYZ89RvaGY1mW8T7C5au0TyYaEeHBGng==}
     engines: {node: ^22.18.0 || >=24.11.0}
 
   '@babel/helper-compilation-targets@8.0.6':
     resolution: {integrity: sha512-HTrtZ4+iA0+kzdbCgvdSk1U4pEl3BvpGnlUbualCGNbrVhhQvhgBzurTUmqpWyvyHbWYWaIfdx2mOlL9LJjsew==}
+    engines: {node: ^22.18.0 || >=24.11.0}
+
+  '@babel/helper-compilation-targets@8.0.7':
+    resolution: {integrity: sha512-ilAZCdOOlOVA7dQbaFNw2f/59p6GW33NxTopc3DvEE3efp3ZXTrGX/yZScaKw8/vd9bq31Ag0EcXiLw32bAgJg==}
     engines: {node: ^22.18.0 || >=24.11.0}
 
   '@babel/helper-globals@8.0.6':
@@ -389,8 +397,17 @@ packages:
     resolution: {integrity: sha512-fQtPOXjYOYv85PIdwotp2TJGVYOycX0PQq+l844fFAxOULtBy8BVF35GyeueX0r4KvDthqPH5xAI1clQPk/2uA==}
     engines: {node: ^22.18.0 || >=24.11.0}
 
+  '@babel/helpers@8.0.7':
+    resolution: {integrity: sha512-5dMj5kFwS2AY7Dt4PZp4px3c5ThMbbEa7tZfuHTncCGSFYq8uoA1ufDE1IS/lYpQedE+3+GQ3cPZUiplIu195w==}
+    engines: {node: ^22.18.0 || >=24.11.0}
+
   '@babel/parser@8.0.6':
     resolution: {integrity: sha512-LpGDIYJAzc3Y3PT9x+FxBrGYu2PlWxLmyN7SwPTzaX0LSwEmFJBsRnPBqmaXF2r1v+Zhz6lNiEJ+7yKtM5+Ugg==}
+    engines: {node: ^22.18.0 || >=24.11.0}
+    hasBin: true
+
+  '@babel/parser@8.0.7':
+    resolution: {integrity: sha512-UkDwEbPO1px2JQSrdh4qIgaH1JgG7GO/pFeJkpxhDxIETkT/QvGpnigXIw75ViHYPtIgKITmVUJqLjiO+JuWjA==}
     engines: {node: ^22.18.0 || >=24.11.0}
     hasBin: true
 
@@ -398,8 +415,8 @@ packages:
     resolution: {integrity: sha512-Oztlw9huD3bdgX6HmYqCSBamOtH05qbbF5TGfD2cbetKsqMo/2U9WB24U02qGDqMzmY0wY2bnLhbFAjXW3dWYg==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/standalone@8.0.6':
-    resolution: {integrity: sha512-KOK+cX/FvysgJ6rY5Q47SxHmYmHVyDYE+s9QNNeIucaeFh8oukV4AUwzQZO8iqzBF1WzD7+U3TATQu0eKgR9kg==}
+  '@babel/standalone@8.0.7':
+    resolution: {integrity: sha512-Dz1O7HeZW2YvQ/NPDXQZ90NKp0MnQ1ed3a2FqXoi8ikkOMS4VIcE1Ouldp2S6gTatMZqqrTsR8om21B3Umrh4w==}
     engines: {node: ^22.18.0 || >=24.11.0}
 
   '@babel/template@8.0.0':
@@ -408,6 +425,10 @@ packages:
 
   '@babel/traverse@8.0.6':
     resolution: {integrity: sha512-ilYV+qLStGzSKLipJlETdvdtpK3rAuwfCmCoGKv15MU4EoeIuLkespSNoNLFGOPSciEHx9TLWtN5mv0fz5w5mQ==}
+    engines: {node: ^22.18.0 || >=24.11.0}
+
+  '@babel/traverse@8.0.7':
+    resolution: {integrity: sha512-bVV0brinsTWgc6ptSIoQo3GbITtl0VZAqEUJbHHcyfDPEu+q/fEvlYEa+6H85HoK8IdksKBFtKJbJFZ6Kff+zg==}
     engines: {node: ^22.18.0 || >=24.11.0}
 
   '@babel/types@8.0.6':
@@ -744,6 +765,9 @@ packages:
 
   '@upsetjs/venn.js@2.0.0':
     resolution: {integrity: sha512-WbBhLrooyePuQ1VZxrJjtLvTc4NVfpOyKx0sKqioq9bX1C1m7Jgykkn8gLrtwumBioXIqam8DLxp88Adbue6Hw==}
+
+  '@zikojs/console@0.5.0':
+    resolution: {integrity: sha512-pxThg/0/iPE9SqBZWvaZVawf6kFaGj8cR5S5aY0Iaf3thr7Cqos//4grWxIQ3fGhFGnFo4ZQoDU6Zkov9UgD+A==}
 
   '@zikojs/lucide@0.2.2':
     resolution: {integrity: sha512-Jy9N3LQqALKORrTX7h33/IQLl52nPVI+93/7m/CzhUZI3Bd5azTEAmWHmWehDXR11BGagG7sxLRDV53K4SlAzw==}
@@ -1376,6 +1400,10 @@ packages:
     resolution: {integrity: sha512-XrsrhT5sybtKI6wakr2SPOlGZWWYbUXZ7a0jT8/QOeAPau+1X/bSegNe5YR75oJmEZQbKningirmGOEJCIk61Q==}
     engines: {node: '>=12.20.0'}
 
+  obug@3.0.0:
+    resolution: {integrity: sha512-5vvB5+W7ePv+p3uqxi+RcW1XAzLW0/hxt3/4X4Lc4qHudzOhmBiBwOY6DRob4WnanAEGvNcLjF+KNOufrUoEQw==}
+    engines: {node: '>=12.20.0'}
+
   package-manager-detector@1.9.0:
     resolution: {integrity: sha512-zAMfbta9nPA8AKkA4WdmNAT8R8s6Dk0/xwPsqNnRidMFcLo1YkLuPDTgs2f64XdzS8vbLNnoJ+uUIkgbz7oRHA==}
 
@@ -1542,6 +1570,10 @@ packages:
     resolution: {integrity: sha512-zj/ob3UsvJGN0whEAKFp53REA5X66hvffVqoCtVQAakJKnKlH+/PcOfMoFwIG/o4rElqLv/ycAFlx8ZlXUorCg==}
     engines: {node: '>=18.12.0'}
 
+  verkit@0.5.0:
+    resolution: {integrity: sha512-u4J1hr6Y+C/hit34GwL3eIcUf3wngT8TlYUjK7tk0jxydKLAq3sYvifjdTDA6U3KCKRcQCQDGf/srjxfZF3l7g==}
+    engines: {node: '>=18.12.0'}
+
   vfile-location@5.0.3:
     resolution: {integrity: sha512-5yXvWDEgqeiYiBe1lbxYF7UMAIm/IcopxMHrMQDq3nvKcjPKIhZklUKL+AE7J7uApI4kwe2snsK+eI6UTj9EHg==}
 
@@ -1616,11 +1648,11 @@ packages:
     resolution: {integrity: sha512-rKPNlAQRHE12dAsWhIo4vGcmRGhra4Qp5ZnX9Gkp0Vcj2nHkbOFx1obFtrZbEtNfIjBpe0SLMvCAISqJq++2Cw==}
     hasBin: true
 
-  ziko@2.0.0-beta.16.0:
-    resolution: {integrity: sha512-KDNtB1olrlP4cZsoTmB3A+Ain3ahHWZw3cmjTPBE0KwXGIV/ZUXYJKMAb4/hxg/omNnIWJrh3ZvxTI2Z9UBKnA==}
-
   ziko@2.0.0-beta.16.2:
     resolution: {integrity: sha512-M0G165WPxJ7kpmMWglql2kh8RdIcSEdGeNm5b8Aj0qE1bll93ROkApPaP2mjG8NDVCvyUtLsZ9TVdBlfhBJO1Q==}
+
+  ziko@2.0.0-beta.17.0:
+    resolution: {integrity: sha512-aAlQEfJ4qbD3YnZaM0yTSTqCVujizFIjTsqF6PJEqbRru8YW0PXrI2EOip3l/aWFVEpNPzl4c464rJwe5PxXmw==}
 
   zimmerframe@1.1.5:
     resolution: {integrity: sha512-msJxIvYDYcoNL+PJsu+7qmpDWsYmAxTY+2TNYXXF0hzBzBk0BMecOqDOG/EckUoKCuKwObfbugIl8QpqHDXeFA==}
@@ -1661,6 +1693,25 @@ snapshots:
       obug: 2.2.1
       verkit: 0.3.2
 
+  '@babel/core@8.0.7':
+    dependencies:
+      '@babel/code-frame': 8.0.6
+      '@babel/generator': 8.0.6
+      '@babel/helper-compilation-targets': 8.0.7
+      '@babel/helpers': 8.0.7
+      '@babel/parser': 8.0.7
+      '@babel/template': 8.0.0
+      '@babel/traverse': 8.0.7
+      '@babel/types': 8.0.6
+      '@types/gensync': 1.0.5
+      convert-source-map: 2.0.0
+      empathic: 2.1.0
+      gensync: 1.0.0-beta.2
+      import-meta-resolve: 4.2.0
+      json5: 2.2.3
+      obug: 3.0.0
+      verkit: 0.5.0
+
   '@babel/generator@8.0.6':
     dependencies:
       '@babel/parser': 8.0.6
@@ -1678,6 +1729,14 @@ snapshots:
       flru: 1.0.2
       verkit: 0.3.2
 
+  '@babel/helper-compilation-targets@8.0.7':
+    dependencies:
+      '@babel/compat-data': 8.0.5
+      '@babel/helper-validator-option': 8.0.0
+      browserslist: 4.29.3
+      flru: 1.0.2
+      verkit: 0.5.0
+
   '@babel/helper-globals@8.0.6': {}
 
   '@babel/helper-string-parser@8.0.6': {}
@@ -1691,17 +1750,26 @@ snapshots:
       '@babel/template': 8.0.0
       '@babel/types': 8.0.6
 
+  '@babel/helpers@8.0.7':
+    dependencies:
+      '@babel/template': 8.0.0
+      '@babel/types': 8.0.6
+
   '@babel/parser@8.0.6':
+    dependencies:
+      '@babel/types': 8.0.6
+
+  '@babel/parser@8.0.7':
     dependencies:
       '@babel/types': 8.0.6
 
   '@babel/standalone@7.29.9': {}
 
-  '@babel/standalone@8.0.6':
+  '@babel/standalone@8.0.7':
     dependencies:
-      '@babel/core': 8.0.6
+      '@babel/core': 8.0.7
       '@babel/generator': 8.0.6
-      '@babel/parser': 8.0.6
+      '@babel/parser': 8.0.7
 
   '@babel/template@8.0.0':
     dependencies:
@@ -1718,6 +1786,16 @@ snapshots:
       '@babel/template': 8.0.0
       '@babel/types': 8.0.6
       obug: 2.2.1
+
+  '@babel/traverse@8.0.7':
+    dependencies:
+      '@babel/code-frame': 8.0.6
+      '@babel/generator': 8.0.6
+      '@babel/helper-globals': 8.0.6
+      '@babel/parser': 8.0.7
+      '@babel/template': 8.0.0
+      '@babel/types': 8.0.6
+      obug: 3.0.0
 
   '@babel/types@8.0.6':
     dependencies:
@@ -2091,6 +2169,10 @@ snapshots:
       d3-selection: 3.0.0
       d3-transition: 3.0.1(d3-selection@3.0.0)
 
+  '@zikojs/console@0.5.0':
+    dependencies:
+      ziko: 2.0.0-beta.17.0
+
   '@zikojs/lucide@0.2.2':
     dependencies:
       lucide: 1.48.0
@@ -2099,14 +2181,14 @@ snapshots:
   '@zikojs/lucide@1.1.0':
     dependencies:
       lucide: 1.48.0
-      ziko: 2.0.0-beta.16.2
+      ziko: 2.0.0-beta.17.0
 
   '@zikojs/mind-elixir@1.0.0-alpha.1':
     dependencies:
       mind-elixir: 6.0.0-next.4
       yaml: 2.9.1
       zextra: 1.15.2
-      ziko: 2.0.0-beta.16.2
+      ziko: 2.0.0-beta.17.0
 
   acorn@8.18.0: {}
 
@@ -2826,6 +2908,8 @@ snapshots:
 
   obug@2.2.1: {}
 
+  obug@3.0.0: {}
+
   package-manager-detector@1.9.0: {}
 
   parse5@7.3.0:
@@ -2879,7 +2963,7 @@ snapshots:
       mind-elixir: 6.0.0-next.4
       unist-util-visit: 5.1.0
       yaml: 2.9.1
-      ziko: 2.0.0-beta.16.2
+      ziko: 2.0.0-beta.17.0
 
   rehype-stringify@10.0.1:
     dependencies:
@@ -3058,6 +3142,8 @@ snapshots:
 
   verkit@0.3.2: {}
 
+  verkit@0.5.0: {}
+
   vfile-location@5.0.3:
     dependencies:
       '@types/unist': 3.0.3
@@ -3093,7 +3179,7 @@ snapshots:
   zextra@1.15.2:
     dependencies:
       '@zikojs/lucide': 1.1.0
-      ziko: 2.0.0-beta.16.0
+      ziko: 2.0.0-beta.17.0
       ziko-lucide: 1.0.2
 
   ziko-lucide@1.0.2:
@@ -3104,9 +3190,9 @@ snapshots:
 
   ziko@1.10.0: {}
 
-  ziko@2.0.0-beta.16.0: {}
-
   ziko@2.0.0-beta.16.2: {}
+
+  ziko@2.0.0-beta.17.0: {}
 
   zimmerframe@1.1.5: {}
 

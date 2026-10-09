@@ -163,9 +163,11 @@ export class UINotebook extends UIElement{
         cellData.hasDomOutput = cellData._outputRef.childNodes.length > 0 || hasError;
 
         const container = div({ class: "output-area" }).element;
-        while (cellData._outputRef.firstChild) container.appendChild(cellData._outputRef.firstChild);
-        cellData.outputNode = container;
-        cellData._outputRef.appendChild(container);
+        // while (cellData._outputRef.firstChild) container.appendChild(cellData._outputRef.firstChild);
+        // cellData.outputNode = container;
+        // cellData._outputRef.appendChild(container);
+
+        console.log(container)
 
         if (autoNext && !hasError) app.nextCell(cellData.id, "code");
         app._refreshCell(cellData);

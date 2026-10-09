@@ -5,10 +5,11 @@ packages:
   - 'demo'
 
 catalog:
-  ziko: ^2.0.0-beta.16.0
+  ziko: latest
   zextra: ^1.15.0
+  '@zikojs/console': latest
   '@babel/standalone': latest
   '@babel/core': latest
 
 minimumReleaseAgeExclude:
-  - ziko@2.0.0-beta.16.0
+  - ziko@2.0.0-beta.17.0

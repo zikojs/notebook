@@ -21,6 +21,7 @@
   "dependencies": {
     "@babel/core": "^8.0.6",
     "@babel/standalone": "^7.29.9",
-    "ziko": "2.0.0-beta.16.0"
+    "@zikojs/console": "^0.5.0",
+    "ziko": "2.0.0-beta.16.2"
   }
 }

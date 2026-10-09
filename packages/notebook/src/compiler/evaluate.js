@@ -64,11 +64,18 @@ export const evaluateCodeAsync = async (
     "TARGET",
     "__scope__",
     `
-      return (async () => {
-        with (__scope__) {
+    // Bind the active TARGET for this cell evaluation
+    if (typeof __Ziko__ !== "undefined" && __Ziko__.__Config__) {
+      __Ziko__.__Config__.default.target = TARGET;
+    }
+
+    return (async () => {
+      with (__scope__) {
+        return await (async () => {
           ${compiledCode}
-        }
-      })();
+        })();
+      }
+    })();
     `,
   );
 
