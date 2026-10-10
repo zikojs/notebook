@@ -10,11 +10,13 @@ import {
   rewriteClassDeclaration,
 } from "./scope.js";
 
-export const transformImportsAndScope = (
+
+export const transformImportsAndScope = async (
   code,
   {
     importMap = {},
     plugins = [],
+    resolverEndpoint,
   } = {},
 ) => {
   try {
@@ -27,36 +29,34 @@ export const transformImportsAndScope = (
     const context = {
       importMap,
       plugins,
+      resolverEndpoint,
     };
 
     const modifications = [];
 
-    ast.body.forEach((node) => {
+    for (const node of ast.body) {
       if (node.type === "ImportDeclaration") {
         modifications.push({
           start: node.start,
           end: node.end,
-          replacement: rewriteImportNode(
+          replacement: await rewriteImportNode(
             node,
             code,
             context,
           ),
         });
 
-        return;
+        continue;
       }
 
       if (node.type === "VariableDeclaration") {
         modifications.push({
           start: node.start,
           end: node.end,
-          replacement: rewriteVariableDeclaration(
-            node,
-            code,
-          ),
+          replacement: rewriteVariableDeclaration(node, code),
         });
 
-        return;
+        continue;
       }
 
       if (
@@ -66,13 +66,10 @@ export const transformImportsAndScope = (
         modifications.push({
           start: node.start,
           end: node.end,
-          replacement: rewriteFunctionDeclaration(
-            node,
-            code,
-          ),
+          replacement: rewriteFunctionDeclaration(node, code),
         });
 
-        return;
+        continue;
       }
 
       if (
@@ -82,31 +79,21 @@ export const transformImportsAndScope = (
         modifications.push({
           start: node.start,
           end: node.end,
-          replacement: rewriteClassDeclaration(
-            node,
-            code,
-          ),
+          replacement: rewriteClassDeclaration(node, code),
         });
       }
-    });
+    }
 
-    modifications.sort(
-      (a, b) => b.start - a.start,
-    );
+    modifications.sort((a, b) => b.start - a.start);
 
     let transformedCode = code;
 
-    modifications.forEach((modification) => {
+    for (const modification of modifications) {
       transformedCode =
-        transformedCode.slice(
-          0,
-          modification.start,
-        ) +
+        transformedCode.slice(0, modification.start) +
         modification.replacement +
-        transformedCode.slice(
-          modification.end,
-        );
-    });
+        transformedCode.slice(modification.end);
+    }
 
     return transformedCode;
   } catch (error) {
@@ -116,9 +103,7 @@ export const transformImportsAndScope = (
     ) {
       throw new SyntaxError(
         "Invalid code module layout syntax.",
-        {
-          cause: error,
-        },
+        { cause: error },
       );
     }
 

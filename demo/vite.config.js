@@ -1,13 +1,11 @@
 import { defineConfig } from 'vite';
+import notebookResolver from './nb-resolver.js'
 
 export default defineConfig({
   plugins:[
-    notebookImports()
+    notebookResolver()
   ],
-  resolve: {
-    noExternal: ['react'],
-  },
-  optimizeDeps: {
-    include: ['canvas-confetti']
-  }
+  // optimizeDeps: {
+  //   include: ['canvas-confetti', "ziko/dom","ziko"]
+  // }
 });

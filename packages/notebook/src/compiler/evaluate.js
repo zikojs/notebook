@@ -54,11 +54,14 @@ export const evaluateCodeAsync = async (
     }
   }
 
-  compiledCode =
-    transformImportsAndScope(
-      compiledCode,
-      importMap,
-    );
+  compiledCode = await transformImportsAndScope(
+  compiledCode,
+  {
+    importMap,
+    plugins,
+  },
+);
+console.log(compiledCode)
 
   const runCell = new Function(
     "TARGET",
