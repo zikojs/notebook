@@ -14,11 +14,17 @@ function isBareSpecifier(source) {
 }
 
 function toViteUrl(id) {
-  const normalized = id.replace(/\\/g, "/");
+  const normalized = id.replaceAll("\\", "/");
+const optimizedDeps = "/node_modules/.vite/deps/";
 
-  return normalized.startsWith("/")
-    ? `/@fs${normalized}`
-    : `/@fs/${normalized}`;
+if (normalized.includes(optimizedDeps)) {
+  const depsIndex = normalized.lastIndexOf(optimizedDeps);
+
+  return (
+    normalized.slice(depsIndex) +
+    (normalized.includes("?") ? "" : "")
+  );
+}
 }
 
 export default function notebookResolver({
