@@ -5,7 +5,7 @@ packages:
   - 'demo'
 
 catalog:
-  ziko: latest
+  ziko: 2.0.0-beta.17.0
   zextra: ^1.15.0
   '@zikojs/console': latest
   '@babel/standalone': latest

@@ -9,7 +9,8 @@ import rehypeMermaid from 'rehype-mermaid'
 // window.__notebook_scope = Object.create(null);
 
 const myImportMap = {
-  "canvas-confetti": "https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/+esm"
+  "canvas-confetti": "https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/+esm",
+  "ziko":'/node_modules/ziko/dist/ziko.mjs'
 };
 
 const gist_raw = 'https://gist.githubusercontent.com/zakarialaoui10/a0537d3e4787d1070d57400f93a259bf/raw/9aa68e5f1f6c4e4223326f22054c6579285ac66c/hello'

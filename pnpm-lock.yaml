@@ -215,7 +215,7 @@ catalogs:
       specifier: ^1.15.0
       version: 1.15.2
     ziko:
-      specifier: latest
+      specifier: 2.0.0-beta.17.0
       version: 2.0.0-beta.17.0
 
 importers:
@@ -264,6 +264,9 @@ importers:
       vanjs-core:
         specifier: ^1.6.1
         version: 1.6.1
+      ziko:
+        specifier: 'catalog:'
+        version: 2.0.0-beta.17.0
     devDependencies:
       vite:
         specifier: ^8.2.2
@@ -3179,7 +3182,7 @@ snapshots:
   zextra@1.15.2:
     dependencies:
       '@zikojs/lucide': 1.1.0
-      ziko: 2.0.0-beta.17.0
+      ziko: 2.0.0-beta.16.2
       ziko-lucide: 1.0.2
 
   ziko-lucide@1.0.2:
