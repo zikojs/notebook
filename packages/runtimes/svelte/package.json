@@ -16,7 +16,9 @@
   "type": "module",
   "dependencies": {
     "@babel/standalone": "catalog:",
+    "@codemirror/theme-one-dark": "^6.1.3",
+    "codemirror-lang-svelte": "^2.1.0",
     "svelte": "^5.57.1",
-    "ziko":"catalog:"
+    "ziko": "catalog:"
   }
 }

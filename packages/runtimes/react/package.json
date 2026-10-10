@@ -15,6 +15,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@babel/standalone": "catalog:"
+    "@babel/standalone": "catalog:",
+    "esbuild-wasm": "^0.28.2"
   }
 }

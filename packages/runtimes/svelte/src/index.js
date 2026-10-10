@@ -4,6 +4,9 @@ import {
   unmount
 } from "https://esm.sh/svelte";
 
+import { svelte } from "codemirror-lang-svelte";
+// import { oneDark } from "@codemirror/theme-one-dark";
+
 
 import { tags } from 'ziko/dom'
 
@@ -13,6 +16,7 @@ export const sveltePlugin = ({
   runes = true,
 } = {}) => ({
   name: SvelteIdentifier,
+  language: svelte(),
 
   async evaluate(code, context) {
     const { TARGET } = context;

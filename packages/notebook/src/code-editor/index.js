@@ -9,13 +9,28 @@ import { tags } from "ziko/dom";
 
 const { div } = tags;
 
-const languageFor = (type) =>
-  type === "markdown" ? markdown() : javascript();
 
+const getRuntimePlugin = (runtime, runtimePlugins = []) =>
+  runtimePlugins.find((plugin) => plugin?.name === runtime);
+
+const languageFor = (type, runtime, runtimePlugins = []) => {
+  if (type === "markdown") return markdown();
+
+  const plugin = getRuntimePlugin(runtime, runtimePlugins);
+
+  return plugin?.language ?? javascript();
+};
+
+const themeFor = (runtime, runtimePlugins = []) => {
+  const plugin = getRuntimePlugin(runtime, runtimePlugins);
+
+  return plugin?.theme ?? [];
+};
 export function createCodeEditor(app, cellData, actions) {
   const editorDom = div({ class: "input-wrapper" });
 
   const languageCompartment = new Compartment();
+  const themeCompartment = new Compartment();
   const readOnlyCompartment = new Compartment();
   const editableCompartment = new Compartment();
 
@@ -114,8 +129,12 @@ export function createCodeEditor(app, cellData, actions) {
         EditorState.tabSize.of(2),
 
         languageCompartment.of(
-          languageFor(cellData.type)
-        ),
+  languageFor(cellData.type, cellData.runtime, app.runtimePlugins)
+),
+
+themeCompartment.of(
+  themeFor(cellData.runtime, app.runtimePlugins)
+),
 
         readOnlyCompartment.of(
           EditorState.readOnly.of(cellData.readonly)
@@ -166,62 +185,51 @@ export function createCodeEditor(app, cellData, actions) {
         ? view.state.doc.toString()
         : cellData.code,
 
-    
-sync: (isActive, isMarkdownView) => {
-  if (!isMarkdownView) {
-    if (!view) {
-      requestAnimationFrame(() => {
-        initEditor();
+    sync: (isActive, isMarkdownView) => {
+      if (!isMarkdownView) {
+        if (!view) {
+          requestAnimationFrame(() => initEditor());
+        } else {
+          view.dispatch({
+            effects: [
+              languageCompartment.reconfigure(
+                languageFor(cellData.type, cellData.runtime, app.runtimePlugins)
+              ),
 
-        // The editor may only become available after initialization.
-        // Check the current active cell, not a potentially stale
-        // isActive value captured by this callback.
-        if (
-          app.store.get("activeCellId") === cellData.id &&
-          !cellData.readonly &&
-          view
-        ) {
-          view.focus();
-        }
-      });
-    } else {
-      view.dispatch({
-        effects: [
-          languageCompartment.reconfigure(
-            languageFor(cellData.type)
-          ),
-          readOnlyCompartment.reconfigure(
-            EditorState.readOnly.of(cellData.readonly)
-          ),
-          editableCompartment.reconfigure(
-            EditorView.editable.of(!cellData.readonly)
-          )
-        ]
-      });
+              themeCompartment.reconfigure(
+                themeFor(cellData.runtime, app.runtimePlugins)
+              ),
 
-      const currentValue = view.state.doc.toString();
+              readOnlyCompartment.reconfigure(
+                EditorState.readOnly.of(cellData.readonly)
+              ),
 
-      if (currentValue !== cellData.code) {
-        view.dispatch({
-          changes: {
-            from: 0,
-            to: currentValue.length,
-            insert: cellData.code
+              editableCompartment.reconfigure(
+                EditorView.editable.of(!cellData.readonly)
+              )
+            ]
+          });
+
+          const currentValue = view.state.doc.toString();
+
+          if (currentValue !== cellData.code) {
+            view.dispatch({
+              changes: {
+                from: 0,
+                to: currentValue.length,
+                insert: cellData.code
+              }
+            });
           }
-        });
-      }
+        }
 
-      if (
-        isActive &&
-        !cellData.readonly
-      ) {
-        requestAnimationFrame(() => view?.focus());
+        if (isActive && view && !cellData.readonly) {
+          requestAnimationFrame(() => view.focus());
+        }
+      } else if (view) {
+        view.destroy();
+        view = null;
       }
     }
-  } else if (view) {
-    view.destroy();
-    view = null;
-  }
-}
   };
 }
