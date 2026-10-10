@@ -764,31 +764,30 @@ nextCell(currentId, defaultType) {
     return window.__notebook_scope_map.get(this.id);
   }
 
-  getNotebookData({
-    inputs = true,
-    outputs = true,
-  } = {}) {
-    return this.store.get("cells").map((cell) => {
-      const exportedCell = {
-        id: cell.id,
-        type: cell.type,
-        readonly: cell.readonly,
-        order: cell.execCount,
-      };
+  
+getNotebookData({ inputs = true, outputs = true } = {}) {
+  return this.store.get("cells").map((cell) => {
+    const exportedCell = {
+      id: cell.id,
+      type: cell.type,
+      readonly: cell.readonly,
+      runtime: cell.runtime ?? null,
+      order: cell.execCount,
+    };
 
-      if (inputs) {
-        exportedCell.code = cell.code;
-      }
+    if (inputs) {
+      exportedCell.code = cell._editor?.getValue() ?? cell.code;
+    }
 
-      if (outputs) {
-        exportedCell.outputHtml = cell.outputNode
-          ? cell.outputNode.innerHTML
-          : null;
-      }
+    if (outputs) {
+      exportedCell.outputHtml = cell.outputNode
+        ? cell.outputNode.innerHTML
+        : cell._outputRef?.innerHTML ?? null;
+    }
 
-      return exportedCell;
-    });
-  }
+    return exportedCell;
+  });
+}
 }
 
 export const Notebook = call_with_optional_props(UINotebook);
