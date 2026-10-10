@@ -12,13 +12,6 @@ import { call_with_optional_props } from "ziko/dom/internal-utils";
 
 const { div } = tags;
 
-import { Console as _Console } from '@zikojs/console'
-
-const Console = {
-  log : (...args) => div(_Console.log(...args)),
-  table : (...args) => div(_Console.table(...args))
-}
-
 const isPromiseLike = (value) =>
   value != null &&
   (typeof value === "object" || typeof value === "function") &&
@@ -53,9 +46,6 @@ export class UINotebook extends UIElement {
     super({ element: "div" });
 
     this.setAttr({ class: "ziko-notebook" });
-      __Ziko__.__Config__.default.autoMount = true;
-      globalThis.Console = Console
-
 
     this.id = globalThis.crypto?.randomUUID
       ? globalThis.crypto.randomUUID()

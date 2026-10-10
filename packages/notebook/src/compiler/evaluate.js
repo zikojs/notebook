@@ -1,4 +1,14 @@
 import { transformImportsAndScope } from "./transform.js";
+import { Console as _Console } from '@zikojs/console'
+import { tags } from 'ziko/dom'
+const { div } = tags
+
+const Console = {
+  log : (...args) => div(_Console.log(...args)),
+  table : (...args) => div(_Console.table(...args)),
+  warn : (...args) => div(_Console.warn(...args)),
+  error : (...args) => div(_Console.error(...args))
+}
 
 export const evaluateCodeAsync = async (
   code,
@@ -10,8 +20,9 @@ export const evaluateCodeAsync = async (
   } = {},
   scope,
 ) => {
-  const validScope =
-    scope || Object.create(null);
+  const validScope = scope || Object.create(null);
+
+  scope.console = Console
 
   const context = {
     TARGET,
@@ -61,7 +72,7 @@ export const evaluateCodeAsync = async (
     plugins,
   },
 );
-console.log(compiledCode)
+// console.log(compiledCode)
 
   const runCell = new Function(
     "TARGET",
@@ -70,8 +81,10 @@ console.log(compiledCode)
     // Bind the active TARGET for this cell evaluation
     if (typeof __Ziko__ !== "undefined" && __Ziko__.__Config__) {
       __Ziko__.__Config__.default.target = TARGET;
-      // __Ziko__.__Config__.default.autoMount = true;
+      __Ziko__.__Config__.default.autoMount = true;
     }
+
+
 
     return (async () => {
       with (__scope__) {

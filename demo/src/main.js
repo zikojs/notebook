@@ -36,8 +36,12 @@ render(<App />, TARGET);`,
 runtime : 'preact'
   },
   {
-    code : `import { tags } from 'ziko/dom'
-tags.p('hello world')`
+    code : `import { tags } from 'ziko@2.0.0-beta.17.1/dom'
+import { useState } from 'ziko/hooks'
+const [state, setState] = useState('kkkk')
+tags.p(state)
+setState(tags.h1('kkkk'))
+setState(tags.h1('kkkkLL'))`
   },
   {
     runtime : 'svelte',
