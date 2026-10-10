@@ -166,47 +166,62 @@ export function createCodeEditor(app, cellData, actions) {
         ? view.state.doc.toString()
         : cellData.code,
 
-    sync: (isActive, isMarkdownView) => {
-      if (!isMarkdownView) {
-        if (!view) {
-          requestAnimationFrame(() => initEditor());
-        } else {
-          view.dispatch({
-            effects: [
-              languageCompartment.reconfigure(
-                languageFor(cellData.type)
-              ),
+    
+sync: (isActive, isMarkdownView) => {
+  if (!isMarkdownView) {
+    if (!view) {
+      requestAnimationFrame(() => {
+        initEditor();
 
-              readOnlyCompartment.reconfigure(
-                EditorState.readOnly.of(cellData.readonly)
-              ),
+        // The editor may only become available after initialization.
+        // Check the current active cell, not a potentially stale
+        // isActive value captured by this callback.
+        if (
+          app.store.get("activeCellId") === cellData.id &&
+          !cellData.readonly &&
+          view
+        ) {
+          view.focus();
+        }
+      });
+    } else {
+      view.dispatch({
+        effects: [
+          languageCompartment.reconfigure(
+            languageFor(cellData.type)
+          ),
+          readOnlyCompartment.reconfigure(
+            EditorState.readOnly.of(cellData.readonly)
+          ),
+          editableCompartment.reconfigure(
+            EditorView.editable.of(!cellData.readonly)
+          )
+        ]
+      });
 
-              editableCompartment.reconfigure(
-                EditorView.editable.of(!cellData.readonly)
-              )
-            ]
-          });
+      const currentValue = view.state.doc.toString();
 
-          const currentValue = view.state.doc.toString();
-
-          if (currentValue !== cellData.code) {
-            view.dispatch({
-              changes: {
-                from: 0,
-                to: currentValue.length,
-                insert: cellData.code
-              }
-            });
+      if (currentValue !== cellData.code) {
+        view.dispatch({
+          changes: {
+            from: 0,
+            to: currentValue.length,
+            insert: cellData.code
           }
-        }
+        });
+      }
 
-        if (isActive && view && !cellData.readonly) {
-          requestAnimationFrame(() => view.focus());
-        }
-      } else if (view) {
-        view.destroy();
-        view = null;
+      if (
+        isActive &&
+        !cellData.readonly
+      ) {
+        requestAnimationFrame(() => view?.focus());
       }
     }
+  } else if (view) {
+    view.destroy();
+    view = null;
+  }
+}
   };
 }

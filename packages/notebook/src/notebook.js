@@ -523,32 +523,42 @@ export class UINotebook extends UIElement {
     });
   }
 
-  focusCell(targetId) {
-    this.store.get("cells").forEach((cell) => {
-      if (
-        cell.type === "markdown" &&
-        cell.isEditingMarkdown &&
-        cell.id !== targetId
-      ) {
-        cell.isEditingMarkdown = false;
-        this._refreshCell(cell);
-      }
-    });
+  focusCell(id) {
+  const cells = this.store.get("cells");
+  const cell = cells.find((c) => c.id === id);
 
-    const target = this.store
-      .get("cells")
-      .find((cell) => cell.id === targetId);
+  if (!cell) return;
 
-    if (
-      target &&
-      target.type === "markdown" &&
-      !target.readonly
-    ) {
-      target.isEditingMarkdown = true;
+  for (const c of cells) {
+    if (c.type === "markdown" && c.id !== id) {
+      c.isEditingMarkdown = false;
     }
-
-    this.store.set("activeCellId", targetId);
   }
+
+  if (cell.type === "markdown" && !cell.readonly) {
+    cell.isEditingMarkdown = true;
+  }
+
+  this.store.set("activeCellId", id);
+  this._refreshCell(cell);
+
+  // Scroll the target cell into view when it is outside the viewport.
+  requestAnimationFrame(() => {
+    const element = cell._dom;
+
+    if (!element?.isConnected) return;
+
+    const rect = element.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+
+    if (rect.top < 0 || rect.bottom > viewportHeight) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: rect.top < 0 ? "start" : "nearest",
+      });
+    }
+  });
+}
 
   addCell(
     type = "code",
@@ -656,18 +666,25 @@ export class UINotebook extends UIElement {
     this.focusCell(updatedCells[nextActiveIndex].id);
   }
 
-  nextCell(currentId, defaultType) {
-    const cells = this.store.get("cells");
-    const index = cells.findIndex(
-      (cell) => cell.id === currentId
-    );
+  
+nextCell(currentId, defaultType) {
+  const cells = this.store.get("cells");
+  const index = cells.findIndex((cell) => cell.id === currentId);
 
-    if (index === cells.length - 1) {
-      this.addCell(defaultType, null, currentId);
-    } else if (index >= 0) {
-      this.focusCell(cells[index + 1].id);
+  if (index === -1) return;
+
+  if (index === cells.length - 1) {
+    const newId = this.addCell(defaultType, null, currentId);
+
+    if (newId !== null) {
+      this.focusCell(newId);
     }
+
+    return;
   }
+
+  this.focusCell(cells[index + 1].id);
+}
 
   async runCell(id) {
     await this.ready;
