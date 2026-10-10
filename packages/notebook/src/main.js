@@ -1,1 +1,1 @@
-export { UINotebook } from './notebook.js';
+export * from './notebook.js';

@@ -1,0 +1,31 @@
+---
+import { Notebook } from '@zikojs/notebook'
+console.log(Notebook)
+const initialCellData = [
+  {
+    id: 1,
+    type: "markdown",
+    code: "# Interactive Playground Shortcuts\n- `Shift + Enter`: Run and advance/create cell\n- `Ctrl + Enter`: Run standalone without making a cell\n- `Ctrl + Shift + D`: Delete selection\n- `Ctrl + Shift + M`: Insert a new Markdown block below\n- `Ctrl + Shift + Y`: Insert a new Code block below",
+    readonly: false,
+    isEditingMarkdown: false
+  },
+]
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro</title>
+	</head>
+	<body>
+		<h1>Astro</h1>
+		<Notebook 
+			cells = {initialCellData}
+			runCells = {true},
+		client:only/>
+	</body>
+</html>

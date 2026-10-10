@@ -37,6 +37,8 @@ export function Header({ store, actions }) {
     addMdBtn.disabled = q.isRunning || maxReached;
   });
 
+  statusBadge.unmount()
+
   return div({ class: 'header' },
     // div({ class: 'brand' }, '</>', statusBadge),
     div({ class: 'toolbar' }, 
