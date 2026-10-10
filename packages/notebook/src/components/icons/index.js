@@ -6,6 +6,7 @@ import _Code2 from '@zikojs/lucide/Code2'
 import _FileText from '@zikojs/lucide/FileText'
 import _Pencil from '@zikojs/lucide/Pencil'
 import _Play from '@zikojs/lucide/Play'
+import _Refresh from '@zikojs/lucide/RefreshCcw'
 import _Plus from '@zikojs/lucide/Plus'
 import _Trash2 from '@zikojs/lucide/Trash2'
 import _PlayForward from '@zikojs/lucide/StepForward'
@@ -21,6 +22,7 @@ export const Code2 = () => _Code2({ class: 'icon', stroke : 'currentColor' }).el
 export const FileText = () => _FileText({ class: 'icon', stroke : 'currentColor' }).element
 export const Pencil = () => _Pencil({ class: 'icon', stroke : 'currentColor' }).element
 export const Play = () => _Play({ class: 'icon', stroke : 'currentColor' }).element
+export const Refresh = () => _Refresh({ class: 'icon', stroke : 'currentColor' }).element
 export const Plus = () => _Plus({ class: 'icon', stroke : 'currentColor' }).element
 export const Trash2 = () => _Trash2({ class: 'icon', stroke : 'currentColor' }).element
 export const PlayForward = () => _PlayForward({ class: 'icon', stroke : 'currentColor' }).element

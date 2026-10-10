@@ -10,6 +10,7 @@ import {
   FileText,
   Pencil,
   Play,
+  Refresh,
   Plus,
   Trash2,
 } from '../icons/index.js';
@@ -135,12 +136,20 @@ export function CellControls({ cellData, store, actions, runtimePlugins = [] }) 
             disabled: isQueueRunning || cellData.readonly, 
             onclick: actions.editMarkdown 
           }, Pencil())
-        : Button({ 
+        : div(
+          Button({ 
+            class: "btn-icon", 
+            title: "Run (Shift+Enter)", 
+            disabled: isQueueRunning, 
+            onclick: () => actions.runCode(false) 
+          }, Refresh()),
+          Button({ 
             class: "btn-icon btn-primary", 
             title: "Run & Advance (Shift+Enter)", 
             disabled: isQueueRunning, 
             onclick: () => actions.runCode(true) 
-          }, Play()),
+          }, Play())
+        ).style({ display : 'contents'}).element,
 
       Button({ 
         class: "btn-icon", 
