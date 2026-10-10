@@ -1,6 +1,6 @@
 import { EditorView, keymap, lineNumbers, highlightActiveLine } from "@codemirror/view";
 import { EditorState, Compartment } from "@codemirror/state";
-import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands";
 import { bracketMatching, indentUnit, syntaxHighlighting, defaultHighlightStyle } from "@codemirror/language";
 import { closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
 import { javascript } from "@codemirror/lang-javascript";
@@ -99,10 +99,12 @@ export function createCodeEditor(app, cellData, actions) {
           return true;
         }
       },
+      indentWithTab,
       ...buildPluginKeymap(),
       ...closeBracketsKeymap,
       ...defaultKeymap,
-      ...historyKeymap
+      ...historyKeymap,
+      
     ]);
 
     const extraExtensions = Array.isArray(app.codeMirrorConfig)
