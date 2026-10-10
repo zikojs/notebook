@@ -1,22 +1,35 @@
+
 import { NotebookStore } from "./store.js";
-import { 
-  Header, 
-  CellItem, 
+import {
+  Header,
+  CellItem,
   MarkdownView,
-  ErrorOutput
+  ErrorOutput,
 } from "./components/index.js";
 import { evaluateCodeAsync } from "./compiler/index.js";
 import { tags, UIElement } from "ziko/dom";
-import { call_with_optional_props } from 'ziko/dom/internal-utils'
-import { useState, useDerived } from "ziko/hooks";
-const { div } = tags
-// const [st, setSt] = useState('hh')
-// globalThis.mm = useDerived((n)=>n, [st])
-// globalThis.pp = tags.p({}, mm).mount(document.body)
-// globalThis.st = st
-// globalThis.setSt = setSt
+import { call_with_optional_props } from "ziko/dom/internal-utils";
 
-export class UINotebook extends UIElement{
+const { div } = tags;
+
+const isPromiseLike = (value) =>
+  value != null &&
+  (typeof value === "object" || typeof value === "function") &&
+  typeof value.then === "function";
+
+const resolveCode = async (code) => {
+  const resolved = await code;
+
+  if (typeof resolved !== "string") {
+    throw new TypeError(
+      `Cell code must resolve to a string; received ${typeof resolved}.`
+    );
+  }
+
+  return resolved;
+};
+
+export class UINotebook extends UIElement {
   constructor({
     cells: initialCells = [],
     importMap = {},
@@ -28,16 +41,20 @@ export class UINotebook extends UIElement{
     codeMirrorPlugins = [],
     runtimePlugins = [],
     remarkPlugins = [],
-    rehypePlugins = []
-
+    rehypePlugins = [],
   } = {}) {
-    super({ element : 'div'})
-    this.setAttr({class : 'ziko-notebook'})
-    this.id = crypto.randomUUID ? crypto.randomUUID() : 'nb_' + Math.random().toString(36).substring(2, 9);
-    
+    super({ element: "div" });
+
+    this.setAttr({ class: "ziko-notebook" });
+
+    this.id = globalThis.crypto?.randomUUID
+      ? globalThis.crypto.randomUUID()
+      : "nb_" + Math.random().toString(36).substring(2, 9);
+
     if (!window.__notebook_scope_map) {
       window.__notebook_scope_map = new Map();
     }
+
     this.resetScope();
 
     this.importMap = importMap;
@@ -49,159 +66,369 @@ export class UINotebook extends UIElement{
     this.minLines = minLines;
     this.maxCells = maxCells;
 
-    const startingCells = maxCells !== Infinity ? initialCells.slice(0, maxCells) : initialCells;
-    let nextCellId = startingCells.length ? Math.max(...startingCells.map(c => c.id || 0)) + 1 : 1;
+    this.nextCellId = 1;
 
     this.store = new NotebookStore({
-      cells: startingCells.map(cell => ({
-        id: cell.id || nextCellId++,
-        type: cell.type || "code",
-        code: cell.code || "",
-        readonly: cell.readonly ?? false,
-        runtime: cell.runtime || null,
-        isEditingMarkdown: cell.readonly ? false : (cell.isEditingMarkdown ?? true),
-        execCount: cell.execCount ?? null,
-        outputNode: cell.outputNode || null,
-        hasDomOutput: cell.hasDomOutput ?? false,
-        _copiedFlag: false,
-        _dom: null, _editor: null, _actions: null,
-        _inPrompt: null, _outPrompt: null, _bodySlot: null, _outputGrid: null, _outputRef: null
-      })),
-      activeCellId: startingCells.length ? startingCells[0].id : null,
+      cells: [],
+      activeCellId: null,
       executionCounter: 1,
-      executionQueueState: { isRunning: false, currentIndex: 0, total: 0 },
-      maxCells: this.maxCells
+      executionQueueState: {
+        isRunning: false,
+        currentIndex: 0,
+        total: 0,
+      },
+      maxCells: this.maxCells,
     });
 
-    this.nextCellId = nextCellId;
-
     this.notebookGlobalShortcuts = {
-      deleteActive: () => this.deleteCell(this.store.get('activeCellId')),
-      addMdBelow: () => this.addCell("markdown", "", this.store.get('activeCellId')),
-      addCodeBelow: () => this.addCell("code", "", this.store.get('activeCellId'))
+      deleteActive: () =>
+        this.deleteCell(this.store.get("activeCellId")),
+      addMdBelow: () =>
+        this.addCell("markdown", "", this.store.get("activeCellId")),
+      addCodeBelow: () =>
+        this.addCell("code", "", this.store.get("activeCellId")),
     };
 
     this.cellsContainer = div({ class: "cells-container" }).element;
+
     this.header = Header({
       store: this.store,
       actions: {
         runAll: () => this.runAllCells(),
         clearOutputs: () => this.clearOutputs(),
-        addCode: () => this.addCell("code", "", this.store.get('activeCellId')),
-        addMarkdown: () => this.addCell("markdown", "", this.store.get('activeCellId')),
-        deleteActive: () => this.deleteCell(this.store.get('activeCellId')),
-        exportData: () => console.log("Notebook Data Export:", this.getNotebookData())
-      }
+        addCode: () =>
+          this.addCell("code", "", this.store.get("activeCellId")),
+        addMarkdown: () =>
+          this.addCell("markdown", "", this.store.get("activeCellId")),
+        deleteActive: () =>
+          this.deleteCell(this.store.get("activeCellId")),
+        exportData: () =>
+          console.log("Notebook Data Export:", this.getNotebookData()),
+      },
     });
 
-    if(!showHeader) this.header.style.display = 'none'
+    if (!showHeader) {
+      this.header.style.display = "none";
+    }
 
     this.append(
-      this.header, 
-      div({ class: "notebook" }, 
-      this.cellsContainer)  
-    )
+      this.header,
+      div({ class: "notebook" }, this.cellsContainer)
+    );
 
-    this._renderAllCells();
-
-    this.store.on('change:activeCellId', (newId, oldId) => {
+    this.store.on("change:activeCellId", (newId, oldId) => {
       if (oldId !== null) {
-        const prev = this.store.get('cells').find(c => c.id === oldId);
-        if (prev) this._refreshCell(prev);
+        const previous = this.store
+          .get("cells")
+          .find((cell) => cell.id === oldId);
+
+        if (previous?._dom) {
+          this._refreshCell(previous);
+        }
       }
-      const next = this.store.get('cells').find(c => c.id === newId);
-      if (next) this._refreshCell(next);
+
+      const next = this.store
+        .get("cells")
+        .find((cell) => cell.id === newId);
+
+      if (next?._dom) {
+        this._refreshCell(next);
+      }
     });
 
+    // Always expose one readiness Promise, whether the initial
+    // data is synchronous or asynchronous.
+    this.ready = this._initialize(initialCells);
+
+    // Prevent an unhandled-rejection warning when callers rely on
+    // runCells but don't explicitly await notebook.ready.
+    // Awaiting notebook.ready still rejects if the initial cells
+    // collection itself fails to load.
+    this.ready.catch(() => {});
+
     if (runCells) {
-      setTimeout(() => { this.runAllCells(); }, 200);
+      this.ready
+        .then(() => this.runAllCells())
+        .catch((error) => {
+          console.error("Failed to initialize notebook:", error);
+        });
     }
   }
 
-  _isMaxCellsReached() { return this.store.get('cells').length >= this.maxCells; }
+  /**
+   * Resolve the initial cells array, normalize it, render it,
+   * and resolve any Promise-based cell code.
+   */
+  async _initialize(initialCells) {
+    const resolvedCells = await initialCells;
+
+    if (!Array.isArray(resolvedCells)) {
+      throw new TypeError(
+        "Notebook cells must be an array or a Promise resolving to an array."
+      );
+    }
+
+    this._replaceInitialCells(resolvedCells);
+    await this._resolvePendingCellCode();
+
+    return this;
+  }
+
+  /**
+   * Normalize and replace initial cells.
+   * Used for both synchronous and asynchronous initial data.
+   */
+  _replaceInitialCells(initialCells) {
+    const startingCells =
+      this.maxCells !== Infinity
+        ? initialCells.slice(0, this.maxCells)
+        : initialCells;
+
+    const ids = startingCells
+      .map((cell) => cell.id)
+      .filter((id) => Number.isFinite(id));
+
+    this.nextCellId = ids.length ? Math.max(...ids) + 1 : 1;
+
+    const normalizedCells = startingCells.map((cell) => {
+      const id = cell.id ?? this.nextCellId++;
+      const source = cell.code ?? "";
+      const pendingCode = isPromiseLike(source)
+        ? Promise.resolve(source)
+        : null;
+
+      return {
+        id,
+        type: cell.type || "code",
+        code: pendingCode
+          ? ""
+          : typeof source === "string"
+            ? source
+            : "",
+        _codePromise: pendingCode,
+        _codeLoadError: null,
+
+        readonly: cell.readonly ?? false,
+        runtime: cell.runtime || null,
+        isEditingMarkdown: cell.readonly
+          ? false
+          : (cell.isEditingMarkdown ?? true),
+        execCount: cell.execCount ?? null,
+        outputNode: cell.outputNode || null,
+        hasDomOutput: cell.hasDomOutput ?? false,
+
+        _copiedFlag: false,
+        _dom: null,
+        _editor: null,
+        _actions: null,
+        _inPrompt: null,
+        _outPrompt: null,
+        _bodySlot: null,
+        _outputGrid: null,
+        _outputRef: null,
+      };
+    });
+
+    this.store.set("cells", normalizedCells);
+    this.store.set(
+      "activeCellId",
+      normalizedCells.length ? normalizedCells[0].id : null
+    );
+
+    this._renderAllCells();
+  }
+
+  /**
+   * Resolve every pending code source independently.
+   * A single failed code request does not block other cells.
+   */
+  async _resolvePendingCellCode() {
+    const cells = this.store.get("cells");
+
+    await Promise.all(
+      cells.map((cell) => this._resolveCellCode(cell))
+    );
+  }
+
+  async _resolveCellCode(cellData) {
+    if (!cellData._codePromise) {
+      return !cellData._codeLoadError;
+    }
+
+    const sourcePromise = cellData._codePromise;
+
+    try {
+      const code = await resolveCode(sourcePromise);
+
+      // Ignore stale results if the cell's source was replaced
+      // while the previous Promise was still pending.
+      if (cellData._codePromise !== sourcePromise) {
+        return false;
+      }
+
+      cellData.code = code;
+      cellData._codePromise = null;
+      cellData._codeLoadError = null;
+
+      if (cellData._dom) {
+        this._refreshCell(cellData);
+      }
+
+      return true;
+    } catch (error) {
+      if (cellData._codePromise !== sourcePromise) {
+        return false;
+      }
+
+      cellData._codePromise = null;
+      cellData._codeLoadError = error;
+
+      if (cellData._outputRef) {
+        cellData._outputRef.replaceChildren();
+        ErrorOutput(error).mount(cellData._outputRef);
+        cellData.hasDomOutput = true;
+
+        if (cellData._dom) {
+          this._refreshCell(cellData);
+        }
+      }
+
+      console.error(
+        `Failed to load code for notebook cell ${cellData.id}:`,
+        error
+      );
+
+      return false;
+    }
+  }
+
+  _isMaxCellsReached() {
+    return this.store.get("cells").length >= this.maxCells;
+  }
 
   _cellActions(cellData) {
     const app = this;
+
     return {
       setActive: () => app.setActiveCell(cellData.id),
+
       runCode: async (autoNext = true) => {
+        // If this cell's code is still loading, wait for it.
+        await app._resolveCellCode(cellData);
+
+        if (cellData._codeLoadError) {
+          return;
+        }
+
         const code = cellData._editor.getValue();
         cellData.code = code;
 
         if (cellData.type === "markdown") {
           cellData.isEditingMarkdown = false;
-          if (autoNext) app.nextCell(cellData.id, "markdown");
-          else app._refreshCell(cellData);
+
+          if (autoNext) {
+            app.nextCell(cellData.id, "markdown");
+          } else {
+            app._refreshCell(cellData);
+          }
+
           return;
         }
 
         if (!code.trim()) return;
 
-        cellData._outputRef.innerHTML = "";
+        cellData._outputRef.replaceChildren();
+
         let hasError = false;
 
         try {
           const scope = app.getScope();
+
           await evaluateCodeAsync(
             code,
             cellData._outputRef,
             {
               importMap: app.importMap,
               plugins: app.runtimePlugins,
-              runtime: cellData.runtime // <-- Passed dynamically from the cell configuration
+              runtime: cellData.runtime,
             },
-            scope,
+            scope
           );
-        } catch (err) {
+        } catch (error) {
           hasError = true;
-          ErrorOutput(err).mount(cellData._outputRef);
+          ErrorOutput(error).mount(cellData._outputRef);
         }
 
-        const counter = this.store.get('executionCounter');
-        this.store.set('executionCounter', counter + 1);
+        const counter = app.store.get("executionCounter");
+
+        app.store.set("executionCounter", counter + 1);
         cellData.execCount = counter;
-        cellData.hasDomOutput = cellData._outputRef.childNodes.length > 0 || hasError;
+        cellData.hasDomOutput =
+          cellData._outputRef.childNodes.length > 0 || hasError;
 
-        const container = div({ class: "output-area" }).element;
-        // while (cellData._outputRef.firstChild) container.appendChild(cellData._outputRef.firstChild);
-        // cellData.outputNode = container;
-        // cellData._outputRef.appendChild(container);
+        // Output mounting remains handled by the existing component
+        // lifecycle / autoMount behavior.
+        if (autoNext && !hasError) {
+          app.nextCell(cellData.id, "code");
+        }
 
-        console.log(container)
-
-        if (autoNext && !hasError) app.nextCell(cellData.id, "code");
         app._refreshCell(cellData);
       },
+
       copyCode: async () => {
-        const textToCopy = cellData._editor.getValue() || cellData.code;
+        const textToCopy =
+          cellData._editor.getValue() || cellData.code;
+
         try {
           await navigator.clipboard.writeText(textToCopy);
-        } catch (err) {
-          const temporary = tags.textarea(textToCopy).mount(document.body)
-          temporary.element.select()
+        } catch {
+          const temporary = tags.textarea(textToCopy).mount(
+            document.body
+          );
+
+          temporary.element.select();
           document.execCommand("copy");
-          temporary.unmount()
+          temporary.unmount();
         }
       },
+
       toggleReadonly: () => {
         cellData.readonly = !cellData.readonly;
-        if (cellData.readonly && cellData.type === "markdown") cellData.isEditingMarkdown = false;
+
+        if (
+          cellData.readonly &&
+          cellData.type === "markdown"
+        ) {
+          cellData.isEditingMarkdown = false;
+        }
+
         app._refreshCell(cellData);
       },
+
       toggleType: () => {
         if (cellData.readonly) return;
-        cellData.type = cellData.type === "code" ? "markdown" : "code";
+
+        cellData.type =
+          cellData.type === "code" ? "markdown" : "code";
+
         cellData.isEditingMarkdown = true;
         cellData.hasDomOutput = false;
+
         app._refreshCell(cellData);
       },
+
       editMarkdown: () => {
         if (cellData.readonly) return;
+
         cellData.isEditingMarkdown = true;
         app._refreshCell(cellData);
       },
-      addBelow: () => app.addCell(cellData.type, null, cellData.id),
+
+      addBelow: () =>
+        app.addCell(cellData.type, null, cellData.id),
+
       deleteCell: () => app.deleteCell(cellData.id),
+
       setRuntime: (newRuntime) => {
         cellData.runtime = newRuntime;
         app._refreshCell(cellData);
@@ -210,195 +437,355 @@ export class UINotebook extends UIElement{
   }
 
   _buildCellDom(cellData) {
-    return CellItem({ cellData, app: this, store: this.store });
+    return CellItem({
+      cellData,
+      app: this,
+      store: this.store,
+    });
   }
 
   _refreshCell(cellData) {
-    const activeId = this.store.get('activeCellId');
+    if (!cellData._dom) return;
+
+    const activeId = this.store.get("activeCellId");
     const isActive = activeId === cellData.id;
-    cellData._dom.className = `cell ${isActive ? "active" : ""} ${cellData.readonly ? "readonly" : ""}`.trim();
 
-    const countText = cellData.execCount ? `[${cellData.execCount}]` : "[ ]";
-    const isMarkdownView = cellData.type === "markdown" && !cellData.isEditingMarkdown;
+    cellData._dom.className =
+      `cell ${isActive ? "active" : ""} ${
+        cellData.readonly ? "readonly" : ""
+      }`.trim();
 
-    cellData._inPrompt.textContent = cellData.type === "code" ? `In ${countText}:` : "";
+    const countText = cellData.execCount
+      ? `[${cellData.execCount}]`
+      : "[ ]";
+
+    const isMarkdownView =
+      cellData.type === "markdown" &&
+      !cellData.isEditingMarkdown;
+
+    cellData._inPrompt.textContent =
+      cellData.type === "code" ? `In ${countText}:` : "";
 
     cellData._editor.sync(isActive, isMarkdownView);
+
     cellData._bodySlot.replaceChildren(
-      isMarkdownView ? MarkdownView({ 
-        cellData, 
-        actions: cellData._actions,
-        remarkPlugins : this.remarkPlugins,
-        rehypePlugins : this.rehypePlugins
-      }) : cellData._editor.dom
+      isMarkdownView
+        ? MarkdownView({
+            cellData,
+            actions: cellData._actions,
+            remarkPlugins: this.remarkPlugins,
+            rehypePlugins: this.rehypePlugins,
+          })
+        : cellData._editor.dom
     );
 
-    const showOutput = cellData.type === "code" && cellData.hasDomOutput;
-    cellData._outputGrid.style.display = showOutput ? "grid" : "none";
+    const showOutput =
+      cellData.type === "code" && cellData.hasDomOutput;
+
+    cellData._outputGrid.style.display =
+      showOutput ? "grid" : "none";
+
     cellData._outPrompt.textContent = `Out ${countText}:`;
   }
 
   _renderAllCells() {
-    const cells = this.store.get('cells');
-    this.cellsContainer.replaceChildren(...cells.map(c => c._dom || this._buildCellDom(c)));
+    const cells = this.store.get("cells");
+
+    this.cellsContainer.replaceChildren(
+      ...cells.map(
+        (cell) => cell._dom || this._buildCellDom(cell)
+      )
+    );
   }
 
   setActiveCell(id) {
-  const cells = this.store.get('cells');
-  const target = cells.find(c => c.id === id);
+    const cells = this.store.get("cells");
+    const target = cells.find((cell) => cell.id === id);
 
-  if (!target) return;
+    if (!target) return;
 
-  const currentActiveId = this.store.get('activeCellId');
+    const currentActiveId = this.store.get("activeCellId");
 
-  if (currentActiveId === id) {
-    return;
-  }
+    if (currentActiveId === id) return;
 
-  // Only one cell can be active.
-  cells.forEach(cell => {
-    if (cell.id !== id && cell.type === "markdown") {
-      cell.isEditingMarkdown = false;
-    }
-  });
-
-  this.store.set('activeCellId', id);
-
-  // Refresh every cell so the previous active cell loses "active".
-  cells.forEach(cell => {
-    if (cell._dom) {
-      this._refreshCell(cell);
-    }
-  });
-}
-
-  focusCell(targetId) {
-    // Close editing on other markdown cells before focusing
-    this.store.get('cells').forEach(c => {
-      if (c.type === "markdown" && c.isEditingMarkdown && c.id !== targetId) {
-        c.isEditingMarkdown = false;
-        this._refreshCell(c);
+    cells.forEach((cell) => {
+      if (cell.id !== id && cell.type === "markdown") {
+        cell.isEditingMarkdown = false;
       }
     });
 
-    const target = this.store.get('cells').find(c => c.id === targetId);
-    if (target && target.type === "markdown" && !target.readonly) {
-      target.isEditingMarkdown = true;
-    }
-    this.store.set('activeCellId', targetId);
+    this.store.set("activeCellId", id);
+
+    cells.forEach((cell) => {
+      if (cell._dom) {
+        this._refreshCell(cell);
+      }
+    });
   }
 
-  addCell(type = "code", initialCode = null, afterId = null, readonly = false) {
-    const cells = [...this.store.get('cells')];
+  focusCell(targetId) {
+    this.store.get("cells").forEach((cell) => {
+      if (
+        cell.type === "markdown" &&
+        cell.isEditingMarkdown &&
+        cell.id !== targetId
+      ) {
+        cell.isEditingMarkdown = false;
+        this._refreshCell(cell);
+      }
+    });
+
+    const target = this.store
+      .get("cells")
+      .find((cell) => cell.id === targetId);
+
+    if (
+      target &&
+      target.type === "markdown" &&
+      !target.readonly
+    ) {
+      target.isEditingMarkdown = true;
+    }
+
+    this.store.set("activeCellId", targetId);
+  }
+
+  addCell(
+    type = "code",
+    initialCode = null,
+    afterId = null,
+    readonly = false
+  ) {
+    const cells = [...this.store.get("cells")];
+
     if (cells.length >= this.maxCells) {
-      console.warn(`Cannot create cell: Maximum cell limit (${this.maxCells}) reached.`);
+      console.warn(
+        `Cannot create cell: Maximum cell limit (${this.maxCells}) reached.`
+      );
+
       return null;
     }
 
     const newId = this.nextCellId++;
-    const defaultText = type === "markdown" ? "### New Markdown Cell\nClick to edit..." : "";
+
+    const defaultText =
+      type === "markdown"
+        ? "### New Markdown Cell\nClick to edit..."
+        : "";
+
+    const source =
+      initialCode !== null ? initialCode : defaultText;
+
+    const pendingCode = isPromiseLike(source)
+      ? Promise.resolve(source)
+      : null;
+
     const newCell = {
-      id: newId, type, code: initialCode !== null ? initialCode : defaultText, readonly,
-      isEditingMarkdown: !readonly && type === "markdown" && initialCode === null,
+      id: newId,
+      type,
+      code: pendingCode
+        ? ""
+        : typeof source === "string"
+          ? source
+          : "",
+      _codePromise: pendingCode,
+      _codeLoadError: null,
+
+      readonly,
+      isEditingMarkdown:
+        !readonly &&
+        type === "markdown" &&
+        initialCode === null,
       runtime: null,
-      execCount: null, outputNode: null, hasDomOutput: false, _copiedFlag: false,
-      _dom: null, _editor: null, _actions: null,
-      _inPrompt: null, _outPrompt: null, _bodySlot: null, _outputGrid: null, _outputRef: null
+      execCount: null,
+      outputNode: null,
+      hasDomOutput: false,
+
+      _copiedFlag: false,
+      _dom: null,
+      _editor: null,
+      _actions: null,
+      _inPrompt: null,
+      _outPrompt: null,
+      _bodySlot: null,
+      _outputGrid: null,
+      _outputRef: null,
     };
 
     if (afterId === null) {
       cells.push(newCell);
     } else {
-      const index = cells.findIndex(c => c.id === afterId);
+      const index = cells.findIndex(
+        (cell) => cell.id === afterId
+      );
+
       cells.splice(index + 1, 0, newCell);
     }
 
-    this.store.set('cells', cells);
+    this.store.set("cells", cells);
     this._renderAllCells();
     this.focusCell(newId);
+
+    // Resolve newly added Promise-based code without blocking
+    // the synchronous addCell() API.
+    if (pendingCode) {
+      this._resolveCellCode(newCell);
+    }
+
     return newId;
   }
 
   deleteCell(id) {
-    const cells = this.store.get('cells');
+    const cells = this.store.get("cells");
+
     if (cells.length <= 1) return;
-    const index = cells.findIndex(c => c.id === id);
-    const updatedCells = cells.filter(c => c.id !== id);
-    
-    this.store.set('cells', updatedCells);
+
+    const index = cells.findIndex((cell) => cell.id === id);
+    const updatedCells = cells.filter(
+      (cell) => cell.id !== id
+    );
+
+    this.store.set("cells", updatedCells);
     this._renderAllCells();
-    const nextActiveIndex = Math.min(index, updatedCells.length - 1);
+
+    const nextActiveIndex = Math.min(
+      Math.max(index, 0),
+      updatedCells.length - 1
+    );
+
     this.focusCell(updatedCells[nextActiveIndex].id);
   }
 
   nextCell(currentId, defaultType) {
-    const cells = this.store.get('cells');
-    const idx = cells.findIndex(c => c.id === currentId);
-    if (idx === cells.length - 1) this.addCell(defaultType, null, currentId);
-    else this.focusCell(cells[idx + 1].id);
+    const cells = this.store.get("cells");
+    const index = cells.findIndex(
+      (cell) => cell.id === currentId
+    );
+
+    if (index === cells.length - 1) {
+      this.addCell(defaultType, null, currentId);
+    } else if (index >= 0) {
+      this.focusCell(cells[index + 1].id);
+    }
   }
 
   async runCell(id) {
-    const cell = this.store.get('cells').find(c => c.id === id);
-    if (cell && cell._actions) await cell._actions.runCode(false);
+    await this.ready;
+
+    const cell = this.store
+      .get("cells")
+      .find((item) => item.id === id);
+
+    if (cell?._actions) {
+      await cell._actions.runCode(false);
+    }
   }
 
   async runAllCells() {
-    const cells = this.store.get('cells');
-    const codeCells = cells.filter(c => c.type === "code");
+    await this.ready;
+
+    const cells = this.store.get("cells");
+    const codeCells = cells.filter(
+      (cell) => cell.type === "code"
+    );
+
     if (codeCells.length === 0) return;
 
-    this.store.set('executionQueueState', { isRunning: true, currentIndex: 0, total: codeCells.length });
+    this.store.set("executionQueueState", {
+      isRunning: true,
+      currentIndex: 0,
+      total: codeCells.length,
+    });
 
-    for (const cell of cells) {
-      if (cell.type === "code" && cell._actions) {
-        this.store.set('executionQueueState', { 
-          isRunning: true, 
-          currentIndex: codeCells.indexOf(cell), 
-          total: codeCells.length 
+    try {
+      for (const cell of cells) {
+        if (cell.type !== "code" || !cell._actions) {
+          continue;
+        }
+
+        this.store.set("executionQueueState", {
+          isRunning: true,
+          currentIndex: codeCells.indexOf(cell),
+          total: codeCells.length,
         });
+
         await cell._actions.runCode(false);
       }
+    } finally {
+      this.store.set("executionQueueState", {
+        isRunning: false,
+        currentIndex: 0,
+        total: 0,
+      });
     }
-
-    this.store.set('executionQueueState', { isRunning: false, currentIndex: 0, total: 0 });
   }
 
   clearOutputs() {
-    this.store.get('cells').forEach(cell => {
+    this.store.get("cells").forEach((cell) => {
       cell.execCount = null;
       cell.outputNode = null;
       cell.hasDomOutput = false;
-      if (cell._outputRef) cell._outputRef.innerHTML = "";
+
+      if (cell._outputRef) {
+        cell._outputRef.replaceChildren();
+      }
     });
-    this.store.set('executionCounter', 1);
-    this.store.get('cells').forEach(c => this._refreshCell(c));
+
+    this.store.set("executionCounter", 1);
+
+    this.store.get("cells").forEach((cell) => {
+      this._refreshCell(cell);
+    });
   }
 
   resetScope() {
     if (!window.__notebook_scope_map) {
       window.__notebook_scope_map = new Map();
     }
+
     const newScope = Object.create(null);
+
     window.__notebook_scope_map.set(this.id, newScope);
+
     return newScope;
   }
 
   getScope() {
-    if (!window.__notebook_scope_map || !window.__notebook_scope_map.has(this.id)) {
+    if (
+      !window.__notebook_scope_map ||
+      !window.__notebook_scope_map.has(this.id)
+    ) {
       return this.resetScope();
     }
+
     return window.__notebook_scope_map.get(this.id);
   }
 
-  getNotebookData({ inputs = true, outputs = true } = {}) {
-    return this.store.get('cells').map(cell => {
-      const exportedCell = { id: cell.id, type: cell.type, readonly: cell.readonly, order: cell.execCount };
-      if (inputs) exportedCell.code = cell.code;
-      if (outputs) exportedCell.outputHtml = cell.outputNode ? cell.outputNode.innerHTML : null;
+  getNotebookData({
+    inputs = true,
+    outputs = true,
+  } = {}) {
+    return this.store.get("cells").map((cell) => {
+      const exportedCell = {
+        id: cell.id,
+        type: cell.type,
+        readonly: cell.readonly,
+        order: cell.execCount,
+      };
+
+      if (inputs) {
+        exportedCell.code = cell.code;
+      }
+
+      if (outputs) {
+        exportedCell.outputHtml = cell.outputNode
+          ? cell.outputNode.innerHTML
+          : null;
+      }
+
       return exportedCell;
     });
   }
 }
 
-export const Notebook = call_with_optional_props(UINotebook)
+export const Notebook = call_with_optional_props(UINotebook);

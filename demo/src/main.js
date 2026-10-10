@@ -12,6 +12,7 @@ const myImportMap = {
   "canvas-confetti": "https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/+esm"
 };
 
+const gist_raw = 'https://gist.githubusercontent.com/zakarialaoui10/a0537d3e4787d1070d57400f93a259bf/raw/9aa68e5f1f6c4e4223326f22054c6579285ac66c/hello'
 const initialCellData = [
   {
     id: 1,
@@ -19,6 +20,9 @@ const initialCellData = [
     code: "# Interactive Playground Shortcuts\n- `Shift + Enter`: Run and advance/create cell\n- `Ctrl + Enter`: Run standalone without making a cell\n- `Ctrl + Shift + D`: Delete selection\n- `Ctrl + Shift + M`: Insert a new Markdown block below\n- `Ctrl + Shift + Y`: Insert a new Code block below",
     readonly: false,
     isEditingMarkdown: false
+  },
+  {
+    code : fetch(gist_raw).then(e=>e.text())
   },
   {
     code : `import { tags } from 'ziko/dom'
