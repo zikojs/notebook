@@ -46,6 +46,8 @@ export class UINotebook extends UIElement {
     super({ element: "div" });
 
     this.setAttr({ class: "ziko-notebook" });
+      __Ziko__.__Config__.default.autoMount = true;
+
 
     this.id = globalThis.crypto?.randomUUID
       ? globalThis.crypto.randomUUID()

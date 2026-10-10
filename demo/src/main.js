@@ -1,6 +1,7 @@
 import { UINotebook  } from "@zikojs/notebook";
 import { reactPlugin } from '@zikojs/notebook-runtime-react'
 import { sveltePlugin } from '@zikojs/notebook-runtime-svelte'
+import { preactPlugin } from '@zikojs/notebook-runtime-preact'
 
 import rehypeMindElixir from 'rehype-mind-elixir'
 import rehypeMermaid from 'rehype-mermaid'
@@ -10,7 +11,10 @@ import rehypeMermaid from 'rehype-mermaid'
 
 const myImportMap = {
   "canvas-confetti": "https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/+esm",
-  "ziko":'/node_modules/ziko/dist/ziko.mjs'
+  // "ziko":'/node_modules/ziko/dist/ziko.mjs',
+  //  react: "react",
+  // "react-dom/client": "react-dom/client",
+  // "react/jsx-runtime": "react/jsx-runtime",
 };
 
 const gist_raw = 'https://gist.githubusercontent.com/zakarialaoui10/a0537d3e4787d1070d57400f93a259bf/raw/9aa68e5f1f6c4e4223326f22054c6579285ac66c/hello'
@@ -24,6 +28,12 @@ const initialCellData = [
   },
   {
     code : fetch(gist_raw).then(e=>e.text())
+  },
+  {
+    code : `import { render } from 'preact'
+const App = () => <h1>Hello from preact</h1>
+render(<App />, TARGET);`,
+runtime : 'preact'
   },
   {
     code : `import { tags } from 'ziko/dom'
@@ -98,6 +108,7 @@ const notebookApp = new UINotebook({
   runtimePlugins : [
     reactPlugin(),
     sveltePlugin(),
+    preactPlugin()
   ],
   rehypePlugins : [rehypeMermaid, rehypeMindElixir]
   
