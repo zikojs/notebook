@@ -279,9 +279,6 @@ importers:
       vanjs-core:
         specifier: ^1.6.1
         version: 1.6.1
-      ziko:
-        specifier: 'catalog:'
-        version: 2.0.0-beta.17.0
     devDependencies:
       vite:
         specifier: ^8.2.2
@@ -3937,7 +3934,7 @@ snapshots:
   '@zikojs/astro@0.3.5(yaml@2.9.1)':
     dependencies:
       '@zikojs/server': 0.6.1(yaml@2.9.1)
-      ziko: 2.0.0-beta.17.0
+      ziko: 2.0.0-beta.16.2
     transitivePeerDependencies:
       - '@noble/hashes'
       - '@types/node'
