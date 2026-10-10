@@ -424,8 +424,10 @@ export class UINotebook extends UIElement {
         app._refreshCell(cellData);
       },
 
-      addBelow: () =>
-        app.addCell(cellData.type, null, cellData.id),
+      addBelow: () => {
+        app.setActiveCell(cellData.id);
+        app.addCell(cellData.type, null, cellData.id);
+      },
 
       deleteCell: () => app.deleteCell(cellData.id),
 
@@ -560,90 +562,74 @@ export class UINotebook extends UIElement {
   });
 }
 
-  addCell(
-    type = "code",
-    initialCode = null,
-    afterId = null,
-    readonly = false
-  ) {
-    const cells = [...this.store.get("cells")];
+  
 
-    if (cells.length >= this.maxCells) {
-      console.warn(
-        `Cannot create cell: Maximum cell limit (${this.maxCells}) reached.`
-      );
+addCell(type = "code", initialCode = null, afterId = null, readonly = false) {
+  const cells = [...this.store.get("cells")];
 
-      return null;
-    }
+  if (cells.length >= this.maxCells) {
+    console.warn(
+      `Cannot create cell: Maximum cell limit (${this.maxCells}) reached.`
+    );
+    return null;
+  }
 
-    const newId = this.nextCellId++;
+  // Prefer the cell associated with the clicked "+" button.
+  // Fall back to the last focused cell, then the last cell.
+  const sourceCell =
+    (afterId !== null
+      ? cells.find((cell) => cell.id === afterId)
+      : null) ??
+    cells.find(
+      (cell) => cell.id === this.store.get("activeCellId")
+    ) ??
+    cells.at(-1);
 
-    const defaultText =
-      type === "markdown"
-        ? "### New Markdown Cell\nClick to edit..."
-        : "";
+  const newId = this.nextCellId++;
+  const defaultText =
+    type === "markdown"
+      ? "### New Markdown Cell\nClick to edit..."
+      : "";
 
-    const source =
-      initialCode !== null ? initialCode : defaultText;
+  const newCell = {
+    id: newId,
+    type,
+    code: initialCode !== null ? initialCode : defaultText,
+    readonly,
+    isEditingMarkdown:
+      !readonly && type === "markdown" && initialCode === null,
+    runtime: sourceCell?.runtime ?? null,
+    execCount: null,
+    outputNode: null,
+    hasDomOutput: false,
+    _copiedFlag: false,
+    _dom: null,
+    _editor: null,
+    _actions: null,
+    _inPrompt: null,
+    _outPrompt: null,
+    _bodySlot: null,
+    _outputGrid: null,
+    _outputRef: null,
+  };
 
-    const pendingCode = isPromiseLike(source)
-      ? Promise.resolve(source)
-      : null;
-
-    const newCell = {
-      id: newId,
-      type,
-      code: pendingCode
-        ? ""
-        : typeof source === "string"
-          ? source
-          : "",
-      _codePromise: pendingCode,
-      _codeLoadError: null,
-
-      readonly,
-      isEditingMarkdown:
-        !readonly &&
-        type === "markdown" &&
-        initialCode === null,
-      runtime: null,
-      execCount: null,
-      outputNode: null,
-      hasDomOutput: false,
-
-      _copiedFlag: false,
-      _dom: null,
-      _editor: null,
-      _actions: null,
-      _inPrompt: null,
-      _outPrompt: null,
-      _bodySlot: null,
-      _outputGrid: null,
-      _outputRef: null,
-    };
-
-    if (afterId === null) {
+  if (afterId === null) {
+    cells.push(newCell);
+  } else {
+    const index = cells.findIndex((cell) => cell.id === afterId);
+    if (index === -1) {
       cells.push(newCell);
     } else {
-      const index = cells.findIndex(
-        (cell) => cell.id === afterId
-      );
-
       cells.splice(index + 1, 0, newCell);
     }
-
-    this.store.set("cells", cells);
-    this._renderAllCells();
-    this.focusCell(newId);
-
-    // Resolve newly added Promise-based code without blocking
-    // the synchronous addCell() API.
-    if (pendingCode) {
-      this._resolveCellCode(newCell);
-    }
-
-    return newId;
   }
+
+  this.store.set("cells", cells);
+  this._renderAllCells();
+  this.focusCell(newId);
+
+  return newId;
+}
 
   deleteCell(id) {
     const cells = this.store.get("cells");
