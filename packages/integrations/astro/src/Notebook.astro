@@ -1,0 +1,35 @@
+---
+import type { NotebookCell } from "@zikojs/notebook";
+interface Props {
+  cells : NotebookCell[]
+};
+const {
+    cells
+} = Astro.props;
+const serializedCells = JSON.stringify(cells);
+---
+
+<div
+    data-notebook-wrapper
+    data-notebook-cells = {serializedCells}
+>
+</div>
+
+<script>
+    import { Notebook } from '@zikojs/notebook/no-css';
+    const notebook_wrapper = document.querySelectorAll('[data-notebook-wrapper]');
+    notebook_wrapper.forEach(element => {
+        const target = element as HTMLElement;
+        const { 
+            notebookCells
+        } = target.dataset
+        const cells = notebookCells ? JSON.parse(notebookCells) : []
+        Notebook({
+            cells
+        }).mount(target)
+    })
+</script>
+
+<style is:global>
+    @import '@zikojs/notebook/style'
+</style>

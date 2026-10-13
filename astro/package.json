@@ -15,6 +15,7 @@
   "dependencies": {
     "@zikojs/astro": "^0.3.5",
     "astro": "^7.3.8",
-    "@zikojs/notebook": "workspace:*"
+    "@zikojs/notebook": "workspace:*",
+    "@zikojs/astro-notebook" : "workspace:*"
   }
 }

@@ -240,6 +240,9 @@ importers:
       '@zikojs/astro':
         specifier: ^0.3.5
         version: 0.3.5(yaml@2.9.1)
+      '@zikojs/astro-notebook':
+        specifier: workspace:*
+        version: link:../packages/integrations/astro
       '@zikojs/notebook':
         specifier: workspace:*
         version: link:../packages/notebook
@@ -283,6 +286,15 @@ importers:
       vite:
         specifier: ^8.2.2
         version: 8.3.1(yaml@2.9.1)
+
+  packages/integrations/astro:
+    dependencies:
+      '@zikojs/notebook':
+        specifier: workspace:*
+        version: link:../../notebook
+      ziko:
+        specifier: 'catalog:'
+        version: 2.0.0-beta.17.1
 
   packages/notebook:
     dependencies:

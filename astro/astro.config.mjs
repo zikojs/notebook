@@ -8,7 +8,7 @@ export default defineConfig({
   integrations: [zikojs()],
   vite:{
     resolve:{
-      noExternal:['@zikojs/notebook']
+      noExternal:['@zikojs/notebook', '@zikojs/console']
     }
   }
 });
