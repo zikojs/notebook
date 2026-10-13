@@ -1,35 +1,30 @@
 ---
-import type { NotebookCell } from "@zikojs/notebook";
-interface Props {
-  cells : NotebookCell[]
-};
-const {
-    cells
-} = Astro.props;
-const serializedCells = JSON.stringify(cells);
+import type { NotebookOptions } from "@zikojs/notebook";
+
+type Props = NotebookOptions;
+
+const props: Props = Astro.props;
+
+const serializedConfig = JSON.stringify(props)
 ---
 
 <div
-    data-notebook-wrapper
-    data-notebook-cells = {serializedCells}
->
-</div>
+  data-notebook-wrapper
+  data-notebook-config={serializedConfig}
+></div>
 
 <script>
-    import { Notebook } from '@zikojs/notebook/no-css';
-    const notebook_wrapper = document.querySelectorAll('[data-notebook-wrapper]');
-    notebook_wrapper.forEach(element => {
-        const target = element as HTMLElement;
-        const { 
-            notebookCells
-        } = target.dataset
-        const cells = notebookCells ? JSON.parse(notebookCells) : []
-        Notebook({
-            cells
-        }).mount(target)
-    })
+  import { Notebook } from "@zikojs/notebook/no-css";
+
+  document.querySelectorAll<HTMLElement>("[data-notebook-wrapper]").forEach((element) => {
+    const config = element.dataset.notebookConfig
+      ? JSON.parse(element.dataset.notebookConfig)
+      : {};
+
+    Notebook(config).mount(element);
+  });
 </script>
 
 <style is:global>
-    @import '@zikojs/notebook/style'
+  @import "@zikojs/notebook/style";
 </style>

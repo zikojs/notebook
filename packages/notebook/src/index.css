@@ -108,10 +108,14 @@
 .ziko-notebook .cell-controls {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  grid-column: 1 / -1;
   gap: 4px;
   flex-shrink: 0;
   flex-wrap: wrap;
-  max-width: 60px;
+  /* border-bottom: 1px solid #f1f5f9; */
+  padding-bottom: 6px;
+  margin-bottom: 2px;
 }
 
 .ziko-notebook .cm-line{
@@ -147,15 +151,6 @@
   .ziko-notebook .cell-input-grid {
     grid-template-columns: 42px 1fr;
     grid-template-rows: auto auto;
-  }
-
-  .ziko-notebook .cell-controls {
-    grid-column: 1 / -1;
-    justify-content: flex-end;
-    border-bottom: 1px solid #f1f5f9;
-    padding-bottom: 6px;
-    margin-bottom: 2px;
-    max-width: 100%;
   }
 
   .ziko-notebook .cell-output-grid {
