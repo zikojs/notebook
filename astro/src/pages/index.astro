@@ -1,32 +1,108 @@
 ---
-import { Notebook } from '@zikojs/notebook'
-import type { NotebookCell } from "@zikojs/notebook";
-console.log(Notebook)
+import type { NotebookCell } from "@zikojs/astro-notebook";
+import { Notebook } from "@zikojs/astro-notebook";
 const initialCellData : NotebookCell[] = [
   {
-    id: 1,
-    type: "markdown",
-    code: "# Interactive Playground Shortcuts\n- `Shift + Enter`: Run and advance/create cell\n- `Ctrl + Enter`: Run standalone without making a cell\n- `Ctrl + Shift + D`: Delete selection\n- `Ctrl + Shift + M`: Insert a new Markdown block below\n- `Ctrl + Shift + Y`: Insert a new Code block below",
-    readonly: false,
-    isEditingMarkdown: false
+    type : 'markdown',
+    code : '# @zikojs/confetti'
   },
+  {
+    code : `import { tags } from "ziko/dom";
+
+const { button } = tags
+
+const Button = (label) => button(label).style({ 
+  cursor: "pointer", 
+  padding: "10px 18px", 
+  margin : '0 10px',
+  border: "none", 
+  borderRadius: "8px", 
+  background: "#2563eb", 
+  color: "#fff", 
+  fontSize: "14px", 
+  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.15)", 
+  outline: "none"
+});
+`
+  },
+  {
+    code : `import {
+  Confetti,
+  Burst,
+  Fireworks,
+} from "@zikojs/canvas-confetti";
+
+const overlay = Confetti({ position: "fixed", zIndex: 1000 });
+overlay.mount(TARGET)
+
+const triggerBtn = Button("Celebrate!")
+  .onClick(() => {
+    overlay.fireFromElement(triggerBtn.element, Burst({ particleCount: 120 }));
+  });
+
+const fireworksBtn = Button("Launch Fireworks")
+  .onClick(() => {
+    overlay.fire(Fireworks({ duration: 4000 }));
+  });
+`
+  },
+  {
+    id: 1,
+    type: "code",
+    code: `const styles = {
+    container: {
+      display: "flex",
+      alignItems: "center",
+      gap: "12px",
+      padding: "12px",
+      border: "1px solid #ddd",
+      borderRadius: "8px",
+      width: "fit-content",
+    },
+    value: {
+      minWidth: "50px",
+      textAlign: "center",
+      fontSize: "24px",
+      fontWeight: "600",
+    },
+    button: {
+      width: "36px",
+      height: "36px",
+      border: "none",
+      borderRadius: "6px",
+      cursor: "pointer",
+      fontSize: "20px",
+    },
+  };`,
+    readonly: false,
+  },
+  {
+    code : `import { tags } from 'ziko/dom';
+import { useState } from 'ziko/hooks'
+
+const { div, span, button } = tags;
+function Counter({ start = 0, step = 1 } = {}) {
+  const [count, setCount] = useState(start);
+
+  return div(
+    button('-').onClick(
+        () => setCount(count => count -= step)
+    ).style(styles.button),
+    span(count).style(styles.value),
+    button('+').onClick(
+        () => setCount(count => count += step)
+    ).style(styles.button)
+  ).style(styles.container);
+}
+
+Counter()`
+  }
 ]
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-		<Notebook 
-			cells = {initialCellData}
-			runCells = {true},
-		client:only/>
-	</body>
-</html>
+<Notebook 
+    cells={initialCellData}
+    showHeader = {true},
+    runCells = {false}
+
+/>

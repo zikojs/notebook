@@ -6,9 +6,9 @@ import zikojs from '@zikojs/astro';
 // https://astro.build/config
 export default defineConfig({
   integrations: [zikojs()],
-  vite:{
-    resolve:{
-      noExternal:['@zikojs/notebook', '@zikojs/console']
-    }
-  }
+  // vite:{
+  //   resolve:{
+  //     noExternal:['@zikojs/notebook', '@zikojs/console', 'ziko']
+  //   }
+  // }
 });
