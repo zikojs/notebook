@@ -209,14 +209,14 @@ catalogs:
       specifier: latest
       version: 8.0.7
     '@zikojs/console':
-      specifier: latest
-      version: 0.5.0
+      specifier: ^0.8.0
+      version: 0.8.0
     zextra:
       specifier: ^1.15.0
       version: 1.15.2
     ziko:
-      specifier: 2.0.0-beta.17.0
-      version: 2.0.0-beta.17.0
+      specifier: 2.0.0-beta.17.1
+      version: 2.0.0-beta.17.1
 
 importers:
 
@@ -229,11 +229,11 @@ importers:
         specifier: ^7.29.9
         version: 7.29.9
       '@zikojs/console':
-        specifier: ^0.5.0
-        version: 0.5.0
+        specifier: 'catalog:'
+        version: 0.8.0
       ziko:
-        specifier: 2.0.0-beta.16.2
-        version: 2.0.0-beta.16.2
+        specifier: 2.0.0-beta.17.1
+        version: 2.0.0-beta.17.1
 
   astro:
     dependencies:
@@ -309,7 +309,7 @@ importers:
         version: 6.43.13
       '@zikojs/console':
         specifier: 'catalog:'
-        version: 0.5.0
+        version: 0.8.0
       '@zikojs/lucide':
         specifier: ^0.2.2
         version: 0.2.2
@@ -339,7 +339,7 @@ importers:
         version: 1.15.2
       ziko:
         specifier: 'catalog:'
-        version: 2.0.0-beta.17.0
+        version: 2.0.0-beta.17.1
 
   packages/runtimes/preact: {}
 
@@ -368,7 +368,7 @@ importers:
         version: 5.57.1
       ziko:
         specifier: 'catalog:'
-        version: 2.0.0-beta.17.0
+        version: 2.0.0-beta.17.1
 
 packages:
 
@@ -1263,8 +1263,8 @@ packages:
   '@zikojs/astro@0.3.5':
     resolution: {integrity: sha512-zm31SJnE0YP6sGlnopM0ix0EGwPFYWkOMQkUfW1DU0oyDzJ9cQfK3xWTUIjjhLlNQTOAb937tzGsu+KXvaKABg==}
 
-  '@zikojs/console@0.5.0':
-    resolution: {integrity: sha512-pxThg/0/iPE9SqBZWvaZVawf6kFaGj8cR5S5aY0Iaf3thr7Cqos//4grWxIQ3fGhFGnFo4ZQoDU6Zkov9UgD+A==}
+  '@zikojs/console@0.8.0':
+    resolution: {integrity: sha512-4BojEjmXz6dcwq5XLpkpmc6AHuL1KhJpR9zIh4Zv7EomnYCCp8n+qQQc5R5sl0k6mFYB35JUrPub/sPh5Urbtw==}
 
   '@zikojs/express@0.1.1':
     resolution: {integrity: sha512-zPNO9O/9eQ08nshTftH5ajU0aDg9sf+qma3m0bbNq/XzO4tuLukxHn5r7sgRyXfmdHcjKy0soB7IbbZosrZMAw==}
@@ -2996,8 +2996,8 @@ packages:
   ziko@2.0.0-beta.16.2:
     resolution: {integrity: sha512-M0G165WPxJ7kpmMWglql2kh8RdIcSEdGeNm5b8Aj0qE1bll93ROkApPaP2mjG8NDVCvyUtLsZ9TVdBlfhBJO1Q==}
 
-  ziko@2.0.0-beta.17.0:
-    resolution: {integrity: sha512-aAlQEfJ4qbD3YnZaM0yTSTqCVujizFIjTsqF6PJEqbRru8YW0PXrI2EOip3l/aWFVEpNPzl4c464rJwe5PxXmw==}
+  ziko@2.0.0-beta.17.1:
+    resolution: {integrity: sha512-/oxs9UKEvnMZAvQsHFeZJ9hgpgk01/HmSqW4AF+Y0RxZp9US0MNquG9iP3lHUXoXxcENogeOI0OiweMcg+1yJA==}
 
   zimmerframe@1.1.5:
     resolution: {integrity: sha512-msJxIvYDYcoNL+PJsu+7qmpDWsYmAxTY+2TNYXXF0hzBzBk0BMecOqDOG/EckUoKCuKwObfbugIl8QpqHDXeFA==}
@@ -3952,20 +3952,20 @@ snapshots:
       - tsx
       - yaml
 
-  '@zikojs/console@0.5.0':
+  '@zikojs/console@0.8.0':
     dependencies:
-      ziko: 2.0.0-beta.17.0
+      ziko: 2.0.0-beta.17.1
 
   '@zikojs/express@0.1.1':
     dependencies:
       express: 5.3.0
-      ziko: 2.0.0-beta.16.2
+      ziko: 2.0.0-beta.17.1
     transitivePeerDependencies:
       - supports-color
 
   '@zikojs/http@0.1.1':
     dependencies:
-      ziko: 2.0.0-beta.16.2
+      ziko: 2.0.0-beta.17.1
 
   '@zikojs/lucide@0.2.2':
     dependencies:
@@ -3975,14 +3975,14 @@ snapshots:
   '@zikojs/lucide@1.1.0':
     dependencies:
       lucide: 1.48.0
-      ziko: 2.0.0-beta.17.0
+      ziko: 2.0.0-beta.17.1
 
   '@zikojs/mind-elixir@1.0.0-alpha.1':
     dependencies:
       mind-elixir: 6.0.0-next.4
       yaml: 2.9.1
       zextra: 1.15.2
-      ziko: 2.0.0-beta.17.0
+      ziko: 2.0.0-beta.17.1
 
   '@zikojs/server@0.6.1(yaml@2.9.1)':
     dependencies:
@@ -3994,7 +3994,7 @@ snapshots:
       jsdom: 30.1.2
       sirv: 3.0.2
       vite: 8.3.1(yaml@2.9.1)
-      ziko: 2.0.0-beta.16.2
+      ziko: 2.0.0-beta.17.1
     transitivePeerDependencies:
       - '@noble/hashes'
       - '@types/node'
@@ -5439,7 +5439,7 @@ snapshots:
       mind-elixir: 6.0.0-next.4
       unist-util-visit: 5.1.0
       yaml: 2.9.1
-      ziko: 2.0.0-beta.17.0
+      ziko: 2.0.0-beta.17.1
 
   rehype-stringify@10.0.1:
     dependencies:
@@ -5926,7 +5926,7 @@ snapshots:
   zextra@1.15.2:
     dependencies:
       '@zikojs/lucide': 1.1.0
-      ziko: 2.0.0-beta.16.2
+      ziko: 2.0.0-beta.17.1
       ziko-lucide: 1.0.2
 
   ziko-lucide@1.0.2:
@@ -5939,7 +5939,7 @@ snapshots:
 
   ziko@2.0.0-beta.16.2: {}
 
-  ziko@2.0.0-beta.17.0: {}
+  ziko@2.0.0-beta.17.1: {}
 
   zimmerframe@1.1.5: {}
 

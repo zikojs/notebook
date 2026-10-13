@@ -6,9 +6,9 @@ packages:
   - 'astro'
 
 catalog:
-  ziko: 2.0.0-beta.17.0
+  ziko: 2.0.0-beta.17.1
   zextra: ^1.15.0
-  '@zikojs/console': latest
+  '@zikojs/console': ^0.8.0
   '@babel/standalone': latest
   '@babel/core': latest
 
