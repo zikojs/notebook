@@ -12,7 +12,9 @@
   background: #ffffff;
   color: #1e293b;
   cursor: pointer;
-  height: 24px;
+  height: 28px;
+  min-width: 50px;
+  translate: 0 -2px;
 }
 
 .ziko-notebook .runtime-select:focus {

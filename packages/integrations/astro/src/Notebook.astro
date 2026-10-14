@@ -1,5 +1,4 @@
 ---
-import "@zikojs/notebook/style.css"
 import type { NotebookOptions } from "@zikojs/notebook";
 
 type Props = NotebookOptions;
@@ -26,3 +25,7 @@ const serializedConfig = JSON.stringify(props)
     Notebook(config).mount(element);
   });
 </script>
+
+<style is:global>
+  @import "@zikojs/notebook/style.css";
+</style>

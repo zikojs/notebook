@@ -29,7 +29,7 @@
 .ziko-notebook .toolbar {
   display: flex;
   gap: 6px;
-  align-items: center;
+  align-items: baseline;
   flex-wrap: wrap;
   max-width: 100%;
 }

@@ -5,6 +5,7 @@ packages:
   - 'packages/integrations/*'
   - 'demo'
   - 'astro'
+  - 'starlight'
 
 catalog:
   ziko: 2.0.0-beta.17.1
