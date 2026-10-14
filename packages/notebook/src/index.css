@@ -1,3 +1,4 @@
+@import '@zikojs/console/style';
 @import url('./components/index.css');
 
 .ziko-notebook {

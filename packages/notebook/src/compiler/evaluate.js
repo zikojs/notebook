@@ -1,5 +1,5 @@
 import { transformImportsAndScope } from "./transform.js";
-import { Console as _Console } from '@zikojs/console'
+import { Console as _Console } from '@zikojs/console/no-css'
 import { tags } from 'ziko/dom'
 const { div } = tags
 

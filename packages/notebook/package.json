@@ -1,6 +1,6 @@
 {
   "name": "@zikojs/notebook",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "A lightweight, extensible JavaScript notebook component with Markdown, executable cells, persistent state, and pluggable runtimes.",
   "type": "module",
   "publishConfig": {
@@ -32,6 +32,9 @@
       "types": "./src/index.d.ts"
     },
     "./style": {
+      "import": "./src/index.css"
+    },
+    "./style.css": {
       "import": "./src/index.css"
     }
   },
