@@ -32,7 +32,7 @@
   border-left: 4px solid transparent;
   border-radius: 6px;
   padding: 8px;
-  gap: 8px;
+  gap: 2px;
   background: #ffffff;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   position: relative;
@@ -43,17 +43,15 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.ziko-notebook .cell-input-grid {
-  display: grid;
-  grid-template-columns: 56px 1fr auto;
+.ziko-notebook .cell-input-row {
+  display: flex;
   align-items: flex-start;
   gap: 8px;
   width: 100%;
 }
 
-.ziko-notebook .cell-output-grid {
-  display: grid;
-  grid-template-columns: 56px 1fr;
+.ziko-notebook .cell-output-row {
+  display: flex;
   align-items: flex-start;
   gap: 8px;
   width: 100%;
@@ -81,7 +79,9 @@
   border-radius: 4px;
   background: var(--bg-editor);
   overflow: hidden;
-  width: 100%;
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
   transition: border-color 0.15s ease;
 }
 
@@ -111,13 +111,10 @@
   /* align-items: center; */
   align-items: baseline;
   justify-content: flex-end;
-  grid-column: 1 / -1;
-  gap: 4px;
-  flex-shrink: 0;
+  gap: 2px;
   flex-wrap: wrap;
-  /* border-bottom: 1px solid #f1f5f9; */
-  padding-bottom: 6px;
-  margin-bottom: 2px;
+  margin: 0;
+  padding: 0;
 }
 
 .ziko-notebook .cm-line{
@@ -127,7 +124,9 @@
 /* --- OUTPUT --- */
 
 .ziko-notebook .output-wrapper {
-  width: 100%;
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
   padding: 4px 0;
 }
 
@@ -149,15 +148,6 @@
     width: 100%;
     justify-content: center;
     align-items: baseline;
-  }
-
-  .ziko-notebook .cell-input-grid {
-    grid-template-columns: 42px 1fr;
-    grid-template-rows: auto auto;
-  }
-
-  .ziko-notebook .cell-output-grid {
-    grid-template-columns: 42px 1fr;
   }
 
   .ziko-notebook .prompt {

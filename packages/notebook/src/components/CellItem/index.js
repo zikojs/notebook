@@ -46,16 +46,16 @@ export function CellItem({ cellData, app, store }) {
     runtimePlugins: app.runtimePlugins 
   });
 
-  const outputGrid = div({ class: "cell-output-grid" }, outPrompt, div({ class: "output-wrapper" }, outputRef));
-  const inputGrid = div({ class: "cell-input-grid" }, inPrompt, bodySlot, controlsEl);
-  const root = div({ class: "cell" }, inputGrid, outputGrid);
+  const inputRow = div({ class: "cell-input-row" }, inPrompt, bodySlot);
+  const outputRow = div({ class: "cell-output-row" }, outPrompt, div({ class: "output-wrapper" }, outputRef));
+  const root = div({ class: "cell" }, inputRow, controlsEl, outputRow);
   root.onClick(() => app.setActiveCell(cellData.id));
 
   cellData._dom = root.element;
   cellData._inPrompt = inPrompt.element;
   cellData._outPrompt = outPrompt.element;
   cellData._bodySlot = bodySlot.element;
-  cellData._outputGrid = outputGrid.element;
+  cellData._outputRow = outputRow.element;
   cellData._setIn = setIn;
 
   app._refreshCell(cellData);

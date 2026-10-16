@@ -224,7 +224,7 @@ export class UINotebook extends UIElement {
         _inPrompt: null,
         _outPrompt: null,
         _bodySlot: null,
-        _outputGrid: null,
+        _outputRow: null,
         _outputRef: null,
       };
     });
@@ -484,8 +484,8 @@ export class UINotebook extends UIElement {
     const showOutput =
       cellData.type === "code" && cellData.hasDomOutput;
 
-    cellData._outputGrid.style.display =
-      showOutput ? "grid" : "none";
+    cellData._outputRow.style.display =
+      showOutput ? "flex" : "none";
 
     cellData._outPrompt.textContent = `Out ${countText}:`;
   }
@@ -609,7 +609,7 @@ addCell(type = "code", initialCode = null, afterId = null, readonly = false) {
     _inPrompt: null,
     _outPrompt: null,
     _bodySlot: null,
-    _outputGrid: null,
+    _outputRow: null,
     _outputRef: null,
   };
 
