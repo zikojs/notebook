@@ -116,6 +116,16 @@ export function createCodeEditor(app, cellData, actions) {
       extensions: [
         lineNumbers(),
         highlightActiveLine(),
+        EditorView.theme({
+          "&": {
+            fontFamily: '"Fira Code", SFMono-Regular, Consolas, monospace',
+            fontSize: "13px",
+            lineHeight: "17px",
+          },
+          ".cm-scroller, .cm-content, .cm-line, .cm-gutterElement": {
+            lineHeight: "17px",
+          },
+        }),
 
         history(),
         bracketMatching(),
