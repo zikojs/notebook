@@ -1,14 +1,28 @@
-import { EditorView, keymap, lineNumbers, highlightActiveLine } from "@codemirror/view";
+import {
+  EditorView,
+  keymap,
+  lineNumbers,
+  highlightActiveLine,
+} from "@codemirror/view";
 import { EditorState, Compartment } from "@codemirror/state";
-import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands";
-import { bracketMatching, indentUnit, syntaxHighlighting, defaultHighlightStyle } from "@codemirror/language";
+import {
+  defaultKeymap,
+  history,
+  historyKeymap,
+  indentWithTab,
+} from "@codemirror/commands";
+import {
+  bracketMatching,
+  indentUnit,
+  syntaxHighlighting,
+  defaultHighlightStyle,
+} from "@codemirror/language";
 import { closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
 import { tags } from "ziko/dom";
 
 const { div } = tags;
-
 
 const getRuntimePlugin = (runtime, runtimePlugins = []) =>
   runtimePlugins.find((plugin) => plugin?.name === runtime);
@@ -39,7 +53,7 @@ export function createCodeEditor(app, cellData, actions) {
   const buildPluginKeymap = () => {
     const bindings = [];
 
-    app.codeMirrorPlugins.forEach(plugin => {
+    app.codeMirrorPlugins.forEach((plugin) => {
       if (plugin && typeof plugin === "object" && plugin.extraKeys) {
         Object.entries(plugin.extraKeys).forEach(([key, run]) => {
           bindings.push({
@@ -47,7 +61,7 @@ export function createCodeEditor(app, cellData, actions) {
             run: () => {
               run();
               return true;
-            }
+            },
           });
         });
       }
@@ -65,7 +79,7 @@ export function createCodeEditor(app, cellData, actions) {
         run: () => {
           actions.runCode(true);
           return true;
-        }
+        },
       },
       {
         key: "Ctrl-Enter",
@@ -73,7 +87,7 @@ export function createCodeEditor(app, cellData, actions) {
         run: () => {
           actions.runCode(false);
           return true;
-        }
+        },
       },
       {
         key: "Ctrl-Shift-d",
@@ -81,7 +95,7 @@ export function createCodeEditor(app, cellData, actions) {
         run: () => {
           app.notebookGlobalShortcuts.deleteActive();
           return true;
-        }
+        },
       },
       {
         key: "Ctrl-Shift-m",
@@ -89,7 +103,7 @@ export function createCodeEditor(app, cellData, actions) {
         run: () => {
           app.notebookGlobalShortcuts.addMdBelow();
           return true;
-        }
+        },
       },
       {
         key: "Ctrl-Shift-y",
@@ -97,14 +111,13 @@ export function createCodeEditor(app, cellData, actions) {
         run: () => {
           app.notebookGlobalShortcuts.addCodeBelow();
           return true;
-        }
+        },
       },
       indentWithTab,
       ...buildPluginKeymap(),
       ...closeBracketsKeymap,
       ...defaultKeymap,
       ...historyKeymap,
-      
     ]);
 
     const extraExtensions = Array.isArray(app.codeMirrorConfig)
@@ -114,49 +127,38 @@ export function createCodeEditor(app, cellData, actions) {
     const state = EditorState.create({
       doc: cellData.code,
       extensions: [
-        lineNumbers(),
+        // lineNumbers(),
         highlightActiveLine(),
-        EditorView.theme({
-          "&": {
-            fontFamily: '"Fira Code", SFMono-Regular, Consolas, monospace',
-            fontSize: "13px",
-            lineHeight: "17px",
-          },
-          ".cm-scroller, .cm-content, .cm-line, .cm-gutterElement": {
-            lineHeight: "17px",
-          },
-        }),
+        // EditorView.theme({
+        //   "&": {
+        //     fontFamily: '"Fira Code", SFMono-Regular, Consolas, monospace',
+        //     fontSize: "13px",
+        //     lineHeight: "17px",
+        //   },
+        //   ".cm-scroller, .cm-content, .cm-line, .cm-gutterElement": {
+        //     lineHeight: "17px",
+        //   },
+        // }),
 
         history(),
         bracketMatching(),
         closeBrackets(),
-
         syntaxHighlighting(defaultHighlightStyle),
-
         shortcutKeymap,
-
         EditorView.lineWrapping,
-
         indentUnit.of("  "),
         EditorState.tabSize.of(2),
-
         languageCompartment.of(
-  languageFor(cellData.type, cellData.runtime, app.runtimePlugins)
-),
-
-themeCompartment.of(
-  themeFor(cellData.runtime, app.runtimePlugins)
-),
-
-        readOnlyCompartment.of(
-          EditorState.readOnly.of(cellData.readonly)
+          languageFor(cellData.type, cellData.runtime, app.runtimePlugins),
         ),
 
-        editableCompartment.of(
-          EditorView.editable.of(!cellData.readonly)
-        ),
+        themeCompartment.of(themeFor(cellData.runtime, app.runtimePlugins)),
 
-        EditorView.updateListener.of(update => {
+        readOnlyCompartment.of(EditorState.readOnly.of(cellData.readonly)),
+
+        editableCompartment.of(EditorView.editable.of(!cellData.readonly)),
+
+        EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             cellData.code = update.state.doc.toString();
           }
@@ -165,24 +167,23 @@ themeCompartment.of(
         EditorView.domEventHandlers({
           focus: () => {
             actions.setActive();
-          }
+          },
         }),
 
-        ...extraExtensions
-      ]
+        ...extraExtensions,
+      ],
     });
 
     view = new EditorView({
       state,
-      parent: editorDom.element
+      parent: editorDom.element,
     });
 
     const lineHeight = view.defaultLineHeight || 19;
 
-    view.dom.style.minHeight =
-      `${Math.ceil(app.minLines * lineHeight + 8)}px`;
+    view.dom.style.minHeight = `${Math.ceil(app.minLines * lineHeight + 8)}px`;
 
-    app.codeMirrorPlugins.forEach(plugin => {
+    app.codeMirrorPlugins.forEach((plugin) => {
       if (typeof plugin === "function") {
         plugin(view);
       }
@@ -192,10 +193,7 @@ themeCompartment.of(
   return {
     dom: editorDom.element,
 
-    getValue: () =>
-      view
-        ? view.state.doc.toString()
-        : cellData.code,
+    getValue: () => (view ? view.state.doc.toString() : cellData.code),
 
     sync: (isActive, isMarkdownView) => {
       if (!isMarkdownView) {
@@ -205,21 +203,25 @@ themeCompartment.of(
           view.dispatch({
             effects: [
               languageCompartment.reconfigure(
-                languageFor(cellData.type, cellData.runtime, app.runtimePlugins)
+                languageFor(
+                  cellData.type,
+                  cellData.runtime,
+                  app.runtimePlugins,
+                ),
               ),
 
               themeCompartment.reconfigure(
-                themeFor(cellData.runtime, app.runtimePlugins)
+                themeFor(cellData.runtime, app.runtimePlugins),
               ),
 
               readOnlyCompartment.reconfigure(
-                EditorState.readOnly.of(cellData.readonly)
+                EditorState.readOnly.of(cellData.readonly),
               ),
 
               editableCompartment.reconfigure(
-                EditorView.editable.of(!cellData.readonly)
-              )
-            ]
+                EditorView.editable.of(!cellData.readonly),
+              ),
+            ],
           });
 
           const currentValue = view.state.doc.toString();
@@ -229,8 +231,8 @@ themeCompartment.of(
               changes: {
                 from: 0,
                 to: currentValue.length,
-                insert: cellData.code
-              }
+                insert: cellData.code,
+              },
             });
           }
         }
@@ -242,6 +244,6 @@ themeCompartment.of(
         view.destroy();
         view = null;
       }
-    }
+    },
   };
 }

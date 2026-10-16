@@ -155,3 +155,18 @@
     padding-top: 6px;
   }
 }
+
+
+/* TEMP */
+
+.ziko-notebook .cm-editor{
+  margin: 1px;
+  outline: none;
+}
+.ziko-notebook .cm-scroller{
+  margin: 1px;
+  outline: none;
+}
+.ziko-notebook .cm-line{
+  margin: 1px;
+}
