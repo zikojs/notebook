@@ -33,7 +33,9 @@ export function MarkdownView({
     content
   );
 
-  wrap.onClick(() => actions.editMarkdown());
+  wrap.element.addEventListener("dblclick", () =>
+    actions.editMarkdown()
+  );
 
   return wrap.element;
 }
