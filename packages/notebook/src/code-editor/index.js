@@ -75,6 +75,14 @@ export function createCodeEditor(app, cellData, actions) {
 
     const shortcutKeymap = keymap.of([
       {
+        key: "Ctrl-ArrowDown",
+        run: () => actions.moveToAdjacentCell(1),
+      },
+      {
+        key: "Ctrl-ArrowUp",
+        run: () => actions.moveToAdjacentCell(-1),
+      },
+      {
         key: "ArrowDown",
         run: (editorView) => {
           const selection = editorView.state.selection.main;

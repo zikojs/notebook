@@ -559,7 +559,11 @@ export class UINotebook extends UIElement {
   }
 
   this.store.set("activeCellId", id);
-  this._refreshCell(cell);
+  cells.forEach((currentCell) => {
+    if (currentCell._dom) {
+      this._refreshCell(currentCell);
+    }
+  });
 
   // Scroll the target cell into view when it is outside the viewport.
   requestAnimationFrame(() => {

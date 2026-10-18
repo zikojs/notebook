@@ -1,6 +1,6 @@
 {
   "name": "@zikojs/notebook",
-  "version": "0.14.2",
+  "version": "0.14.3",
   "description": "A lightweight, extensible JavaScript notebook component with Markdown, executable cells, persistent state, and pluggable runtimes.",
   "type": "module",
   "publishConfig": {
