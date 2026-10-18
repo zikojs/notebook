@@ -312,6 +312,23 @@ export class UINotebook extends UIElement {
     return {
       setActive: () => app.setActiveCell(cellData.id),
 
+      moveToAdjacentCell: (direction) => {
+        const cells = app.store.get("cells");
+        const index = cells.findIndex(
+          (cell) => cell.id === cellData.id
+        );
+        const target = cells[index + direction];
+
+        if (!target) return false;
+
+        app.focusCell(target.id);
+        target._editor.focusAt(
+          direction > 0 ? 0 : target._editor.getValue().length
+        );
+
+        return true;
+      },
+
       runCode: async (autoNext = true) => {
         // If this cell's code is still loading, wait for it.
         await app._resolveCellCode(cellData);

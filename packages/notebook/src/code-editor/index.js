@@ -75,6 +75,35 @@ export function createCodeEditor(app, cellData, actions) {
 
     const shortcutKeymap = keymap.of([
       {
+        key: "ArrowDown",
+        run: (editorView) => {
+          const selection = editorView.state.selection.main;
+          const line = editorView.state.doc.lineAt(selection.head);
+
+          if (
+            selection.empty &&
+            line.number === editorView.state.doc.lines
+          ) {
+            return actions.moveToAdjacentCell(1);
+          }
+
+          return false;
+        },
+      },
+      {
+        key: "ArrowUp",
+        run: (editorView) => {
+          const selection = editorView.state.selection.main;
+          const line = editorView.state.doc.lineAt(selection.head);
+
+          if (selection.empty && line.number === 1) {
+            return actions.moveToAdjacentCell(-1);
+          }
+
+          return false;
+        },
+      },
+      {
         key: "Shift-Enter",
         run: () => {
           actions.runCode(true);
@@ -194,6 +223,22 @@ export function createCodeEditor(app, cellData, actions) {
     dom: editorDom.element,
 
     getValue: () => (view ? view.state.doc.toString() : cellData.code),
+
+    focusAt: (position) => {
+      requestAnimationFrame(() => {
+        if (!view) return;
+
+        const cursor = Math.max(
+          0,
+          Math.min(position, view.state.doc.length),
+        );
+
+        view.dispatch({
+          selection: { anchor: cursor },
+        });
+        view.focus();
+      });
+    },
 
     sync: (isActive, isMarkdownView) => {
       if (!isMarkdownView) {
