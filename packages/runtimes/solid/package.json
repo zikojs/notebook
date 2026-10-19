@@ -1,6 +1,6 @@
 {
   "name": "@zikojs/notebook-runtime-solid",
-  "version": "0.3.0",
+  "version": "0.1.0",
   "description": "",
   "main": "src/index.js",
   "publishConfig": {
