@@ -16,5 +16,8 @@
   ],
   "author": "zakaria elalaoui",
   "license": "MIT",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "ziko" : "catalog:"
+  }
 }

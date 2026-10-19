@@ -18,6 +18,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@zikojs/notebook-vite-resolver" : "workspace:*"
+    "@zikojs/notebook-vite-resolver" : "workspace:*",
+    "ziko" : "catalog:"
   }
 }
