@@ -3,7 +3,15 @@ import { notebookViteResolver } from './resolver.js'
 
 export default defineConfig({
     plugins: [
-        notebookViteResolver(),
+        notebookViteResolver({
+            packages: [
+                "ziko/dom",
+                "preact",
+                "preact/hooks",
+                "react",
+                "react-dom/client",
+            ]
+        }),
     ],
     build:{
         rolldownOptions:{

@@ -1,7 +1,7 @@
 import { UINotebook  } from "@zikojs/notebook";
 // import { reactPlugin } from '@zikojs/notebook-runtime-react'
 // import { sveltePlugin } from '@zikojs/notebook-runtime-svelte'
-// import { preactPlugin } from '@zikojs/notebook-runtime-preact'
+import { preactPlugin } from '@zikojs/notebook-runtime-preact'
 
 import rehypeMindElixir from 'rehype-mind-elixir'
 import rehypeMermaid from 'rehype-mermaid'
@@ -123,7 +123,7 @@ const notebookApp = new UINotebook({
   runtimePlugins : [
     // reactPlugin(),
     // sveltePlugin(),
-    // preactPlugin()
+    preactPlugin()
   ],
   rehypePlugins : [rehypeMermaid, rehypeMindElixir]
   

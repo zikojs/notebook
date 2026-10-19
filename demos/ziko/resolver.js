@@ -1,12 +1,29 @@
-
 import path from "node:path";
 
+const MANIFEST_FILE = "ziko-notebook-imports.json";
 const ENDPOINT = "/__notebook_resolve";
 
-export function notebookViteResolver() {
+function safeName(specifier) {
+  return specifier.replace(/[^a-zA-Z0-9_-]+/g, "-");
+}
+
+export function notebookViteResolver({
+  packages = [],
+  manifestFileName = MANIFEST_FILE,
+} = {}) {
+  let command;
+  let root;
+  let base = "/";
+  const entries = new Map();
+
   return {
     name: "ziko-notebook-vite-resolver",
-    apply: "serve",
+
+    configResolved(config) {
+      command = config.command;
+      root = config.root;
+      base = config.base;
+    },
 
     configureServer(server) {
       server.middlewares.use(ENDPOINT, async (req, res) => {
@@ -20,12 +37,8 @@ export function notebookViteResolver() {
         }
 
         try {
-          const requestUrl = new URL(
-            req.url || "/",
-            "http://localhost",
-          );
-
-          const specifier = requestUrl.searchParams.get("specifier");
+          const url = new URL(req.url || "/", "http://localhost");
+          const specifier = url.searchParams.get("specifier");
 
           if (
             !specifier ||
@@ -39,7 +52,6 @@ export function notebookViteResolver() {
             return;
           }
 
-          // Resolve relative to the Vite project, not the notebook package.
           const importer = path.join(
             server.config.root,
             "__ziko_notebook_resolver__.js",
@@ -61,7 +73,6 @@ export function notebookViteResolver() {
             return;
           }
 
-          // Let Vite serve and transform the resolved source file.
           const [file, ...queryParts] = resolved.id.split("?");
           const query = queryParts.length
             ? `?${queryParts.join("?")}`
@@ -73,16 +84,62 @@ export function notebookViteResolver() {
             return;
           }
 
-          const url = server.resolvedUrls
-                ? `/@fs/${file.replace(/\\/g, "/")}${query}`
-                : `/@fs/${file.replace(/\\/g, "/")}${query}`;
-
           res.statusCode = 200;
-          res.end(JSON.stringify({ url }));
+          res.end(JSON.stringify({
+            url: `/@fs/${file.replace(/\\/g, "/")}${query}`,
+          }));
         } catch {
           res.statusCode = 404;
           res.end(JSON.stringify({ error: "Local resolution failed" }));
         }
+      });
+    },
+
+    async buildStart() {
+      if (command !== "build") return;
+
+      entries.clear();
+
+      for (const specifier of new Set(packages)) {
+        const importer = path.join(root, "__ziko_notebook_resolver__.js");
+
+        try {
+          const resolved = await this.resolve(specifier, importer);
+
+          if (!resolved || resolved.external) {
+            this.warn(`Notebook package could not be bundled: ${specifier}`);
+            continue;
+          }
+
+          const referenceId = this.emitFile({
+            type: "chunk",
+            id: resolved.id,
+            name: `notebook-${safeName(specifier)}`,
+          });
+
+          entries.set(specifier, referenceId);
+        } catch (error) {
+          this.warn(
+            `Failed to bundle notebook package "${specifier}": ${error.message}`,
+          );
+        }
+      }
+    },
+
+    generateBundle() {
+      if (command !== "build") return;
+
+      const imports = {};
+
+      for (const [specifier, referenceId] of entries) {
+        const fileName = this.getFileName(referenceId);
+        imports[specifier] = `${base}${fileName}`.replace(/([^:]\/)\/+/g, "$1");
+      }
+
+      this.emitFile({
+        type: "asset",
+        fileName: manifestFileName,
+        source: JSON.stringify(imports, null, 2),
       });
     },
   };
