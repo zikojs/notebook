@@ -2,6 +2,8 @@
 
 A modular, extensible notebook ecosystem for interactive code cells, Markdown, and multiple JavaScript runtimes.
 
+![zikojs notebook demo](./assets/notebook.gif)
+
 ## Packages
 
 ### Core
