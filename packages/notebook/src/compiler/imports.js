@@ -1,5 +1,42 @@
 
 const CDN = "https://esm.sh/";
+const MANIFEST_FILE = "ziko-notebook-imports.json";
+const isProductionBuild =
+  typeof import.meta.env !== "undefined" && import.meta.env.PROD;
+
+let buildImportMapPromise;
+
+const loadBuildImportMap = () => {
+  if (!isProductionBuild || typeof document === "undefined") {
+    return Promise.resolve({});
+  }
+
+  if (!buildImportMapPromise) {
+    const manifestUrl = new URL(MANIFEST_FILE, document.baseURI);
+
+    buildImportMapPromise = fetch(manifestUrl).then(async (response) => {
+      if (response.status === 404) {
+        return {};
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to load the notebook import map: ${response.status} ${response.statusText}`,
+        );
+      }
+
+      const imports = await response.json();
+
+      if (!imports || typeof imports !== "object" || Array.isArray(imports)) {
+        throw new TypeError("The notebook import map must be a JSON object.");
+      }
+
+      return imports;
+    });
+  }
+
+  return buildImportMapPromise;
+};
 
 const isURL = (source) =>
   /^(?:https?:\/\/|data:|blob:)/i.test(source);
@@ -39,6 +76,12 @@ export const resolveImport = async (
     if (typeof resolved === "string" && resolved) {
       return resolved;
     }
+  }
+
+  const buildImportMap = await loadBuildImportMap();
+
+  if (typeof buildImportMap[source] === "string") {
+    return buildImportMap[source];
   }
 
   // Ask the host dev server to resolve installed packages.

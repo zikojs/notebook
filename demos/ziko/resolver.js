@@ -1,3 +1,4 @@
+
 import path from "node:path";
 
 const MANIFEST_FILE = "ziko-notebook-imports.json";
@@ -37,8 +38,12 @@ export function notebookViteResolver({
         }
 
         try {
-          const url = new URL(req.url || "/", "http://localhost");
-          const specifier = url.searchParams.get("specifier");
+          const requestUrl = new URL(
+            req.url || "/",
+            "http://localhost",
+          );
+
+          const specifier = requestUrl.searchParams.get("specifier");
 
           if (
             !specifier ||
@@ -52,6 +57,7 @@ export function notebookViteResolver({
             return;
           }
 
+          // Resolve relative to the Vite project, not the notebook package.
           const importer = path.join(
             server.config.root,
             "__ziko_notebook_resolver__.js",
@@ -73,6 +79,7 @@ export function notebookViteResolver({
             return;
           }
 
+          // Let Vite serve and transform the resolved source file.
           const [file, ...queryParts] = resolved.id.split("?");
           const query = queryParts.length
             ? `?${queryParts.join("?")}`
@@ -84,10 +91,12 @@ export function notebookViteResolver({
             return;
           }
 
+          const url = server.resolvedUrls
+                ? `/@fs/${file.replace(/\\/g, "/")}${query}`
+                : `/@fs/${file.replace(/\\/g, "/")}${query}`;
+
           res.statusCode = 200;
-          res.end(JSON.stringify({
-            url: `/@fs/${file.replace(/\\/g, "/")}${query}`,
-          }));
+          res.end(JSON.stringify({ url }));
         } catch {
           res.statusCode = 404;
           res.end(JSON.stringify({ error: "Local resolution failed" }));
@@ -115,6 +124,7 @@ export function notebookViteResolver({
             type: "chunk",
             id: resolved.id,
             name: `notebook-${safeName(specifier)}`,
+            preserveSignature: "strict",
           });
 
           entries.set(specifier, referenceId);
