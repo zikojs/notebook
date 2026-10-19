@@ -211,6 +211,9 @@ importers:
       astro:
         specifier: ^7.3.8
         version: 7.4.0(@types/node@24.19.2)(yaml@2.9.1)
+      ziko:
+        specifier: 'catalog:'
+        version: 2.0.0-beta.17.1
 
   demos/starlight:
     dependencies:
