@@ -17,6 +17,7 @@ export const evaluateCodeAsync = async (
     importMap = {},
     plugins = [],
     runtime = null,
+    cdnFallback = true,
   } = {},
   scope,
 ) => {
@@ -30,6 +31,7 @@ export const evaluateCodeAsync = async (
     importMap,
     plugins,
     runtime,
+    cdnFallback
   };
 
   const selectedPlugin = plugins.find(
@@ -70,6 +72,7 @@ export const evaluateCodeAsync = async (
   {
     importMap,
     plugins,
+    cdnFallback
   },
 );
 // console.log(compiledCode)

@@ -33,6 +33,7 @@ export class UINotebook extends UIElement {
   constructor({
     cells: initialCells = [],
     importMap = {},
+    cdnFallback = true,
     runCells = true,
     minLines = 3,
     maxCells = Infinity,
@@ -58,6 +59,7 @@ export class UINotebook extends UIElement {
     this.resetScope();
 
     this.importMap = importMap;
+    this.cdnFallback = cdnFallback;
     this.runtimePlugins = runtimePlugins;
     this.codeMirrorConfig = codeMirrorConfig;
     this.codeMirrorPlugins = codeMirrorPlugins;
@@ -366,6 +368,7 @@ export class UINotebook extends UIElement {
             cellData._outputRef,
             {
               importMap: app.importMap,
+              cdnFallback: app.cdnFallback,
               plugins: app.runtimePlugins,
               runtime: cellData.runtime,
             },

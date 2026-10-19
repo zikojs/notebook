@@ -1,7 +1,7 @@
 import { UINotebook  } from "@zikojs/notebook";
-import { reactPlugin } from '@zikojs/notebook-runtime-react'
-import { sveltePlugin } from '@zikojs/notebook-runtime-svelte'
-import { preactPlugin } from '@zikojs/notebook-runtime-preact'
+// import { reactPlugin } from '@zikojs/notebook-runtime-react'
+// import { sveltePlugin } from '@zikojs/notebook-runtime-svelte'
+// import { preactPlugin } from '@zikojs/notebook-runtime-preact'
 
 import rehypeMindElixir from 'rehype-mind-elixir'
 import rehypeMermaid from 'rehype-mermaid'
@@ -47,34 +47,34 @@ render(<Counter />, TARGET);`,
 runtime : 'preact'
   },
   {
-    code : `import { tags } from 'ziko@2.0.0-beta.17.1/dom'
+    code : `import { tags } from 'ziko/dom'
 import { useState } from 'ziko/hooks'
 const [state, setState] = useState('kkkk')
 tags.p(state)
 setState(tags.h1('kkkk'))
 setState(tags.h1('kkkkLL'))`
   },
-  {
-    runtime : 'svelte',
-    code : `<script>
-  let count = $state(0);
-</script>
+//   {
+//     runtime : 'svelte',
+//     code : `<script>
+//   let count = $state(0);
+// </script>
 
-<button onclick={() => count++}>
-  Svelte Counter: {count}
-</button>
+// <button onclick={() => count++}>
+//   Svelte Counter: {count}
+// </button>
 
-<style>
-  button {
-    padding: 8px 12px;
-    background: #ff3e00;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-</style>`
-  },
+// <style>
+//   button {
+//     padding: 8px 12px;
+//     background: #ff3e00;
+//     color: white;
+//     border: none;
+//     border-radius: 4px;
+//     cursor: pointer;
+//   }
+// </style>`
+//   },
 //   {
 //     id: 2,
 //     type: "code",
@@ -84,31 +84,31 @@ setState(tags.h1('kkkkLL'))`
 // const btn = van.tags.button({ class: "btn btn-primary", onclick: () => confetti() }, "Launch Confetti");
 // van.add(TARGET, btn);` 
 //   },
-  {
-    runtime : 'react',
-    code : `import { createRoot } from "react-dom/client";
-import { useState } from "react"
-import confetti from "canvas-confetti";
+//   {
+//     runtime : 'react',
+//     code : `import { createRoot } from "react-dom/client";
+// import { useState } from "react"
+// import confetti from "canvas-confetti";
 
-const App = () => {
-  const [count, setCount] = useState(0);
-  const handleClick = () => {
-    setCount(count + 1)
-    confetti()
-  }
-  return <button 
-    className="btn btn-primary" 
-    onClick={handleClick}>
-    Launch Confetti {count} 
-  </button>
-}
+// const App = () => {
+//   const [count, setCount] = useState(0);
+//   const handleClick = () => {
+//     setCount(count + 1)
+//     confetti()
+//   }
+//   return <button 
+//     className="btn btn-primary" 
+//     onClick={handleClick}>
+//     Launch Confetti {count} 
+//   </button>
+// }
 
-const container = document.createElement("div");
-TARGET.appendChild(container);
-createRoot(container).render(<App />);
-    `
+// const container = document.createElement("div");
+// TARGET.appendChild(container);
+// createRoot(container).render(<App />);
+//     `
 
-  }
+//   }
 ];
 
 const notebookApp = new UINotebook({
@@ -121,9 +121,9 @@ const notebookApp = new UINotebook({
   minLines: 4,
   maxCells: 10,
   runtimePlugins : [
-    reactPlugin(),
-    sveltePlugin(),
-    preactPlugin()
+    // reactPlugin(),
+    // sveltePlugin(),
+    // preactPlugin()
   ],
   rehypePlugins : [rehypeMermaid, rehypeMindElixir]
   

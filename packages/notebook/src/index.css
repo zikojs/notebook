@@ -24,9 +24,9 @@
   flex-direction: column;
   gap: 12px;
   overflow: auto;
-  max-height: 100vh;
+  /* max-height: 100vh; */
   /* scrollbar-color: rebeccapurple transparent; */
-  scrollbar-color: var(--prompt-in) transparent;
+  /* scrollbar-color: var(--prompt-in) transparent; */
 }
 
 .ziko-notebook .cell {

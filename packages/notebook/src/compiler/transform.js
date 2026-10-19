@@ -95,6 +95,8 @@ export const transformImportsAndScope = async (
         transformedCode.slice(modification.end);
     }
 
+    console.log(transformedCode)
+
     return transformedCode;
   } catch (error) {
     if (

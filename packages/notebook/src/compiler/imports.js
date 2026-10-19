@@ -16,8 +16,10 @@ export const resolveImport = async (
     importMap = {},
     plugins = [],
     resolverEndpoint = "/__notebook_resolve",
+    cdnFallback = true,
   } = {},
 ) => {
+  // Preserve explicit mappings, including package subpaths.
   if (importMap[source]) {
     return importMap[source];
   }
@@ -26,6 +28,7 @@ export const resolveImport = async (
     return source;
   }
 
+  // Preserve runtime-specific and custom resolution hooks.
   for (const plugin of plugins) {
     if (typeof plugin.resolveImport !== "function") {
       continue;
@@ -38,8 +41,11 @@ export const resolveImport = async (
     }
   }
 
+  // Ask the host dev server to resolve installed packages.
   try {
-    const params = new URLSearchParams({ specifier: source });
+    const params = new URLSearchParams({
+      specifier: source,
+    });
 
     const response = await fetch(
       `${resolverEndpoint}?${params.toString()}`,
@@ -56,8 +62,18 @@ export const resolveImport = async (
     // The Vite endpoint may not be available outside development.
   }
 
-  return `${CDN}${source}`;
+  if (cdnFallback) {
+    return `${CDN}${source}`;
+  }
+
+  throw new Error(
+    `Cannot resolve "${source}" locally. ` +
+    `Install the package or provide an importMap entry. ` +
+    `CDN fallback is disabled.`,
+  );
 };
+
+// Keep your existing rewriteImportNode implementation below.
 
 export const rewriteImportNode = async (
   node,
