@@ -22,8 +22,9 @@ export const evaluateCodeAsync = async (
   scope,
 ) => {
   const validScope = scope || Object.create(null);
+  const importScope = Object.create(null);
 
-  scope.console = Console
+  validScope.console = Console;
 
   const context = {
     TARGET,
@@ -72,7 +73,8 @@ export const evaluateCodeAsync = async (
   {
     importMap,
     plugins,
-    cdnFallback
+    cdnFallback,
+    importScopeIdentifier: "__imports__",
   },
 );
 // console.log(compiledCode)
@@ -80,6 +82,7 @@ export const evaluateCodeAsync = async (
   const runCell = new Function(
     "TARGET",
     "__scope__",
+    "__imports__",
     `
     // Bind the active TARGET for this cell evaluation
     if (typeof __Ziko__ !== "undefined" && __Ziko__.__Config__) {
@@ -92,9 +95,11 @@ export const evaluateCodeAsync = async (
     return (async () => {
       with (__scope__) {
         return await (async () => {
-          ${compiledCode}
+          with (__imports__) {
+            ${compiledCode}
+          }
         })();
-      }
+        }
     })();
     `,
   );
@@ -102,6 +107,7 @@ export const evaluateCodeAsync = async (
   let result = await runCell(
     TARGET,
     validScope,
+    importScope,
   );
 
   for (const plugin of plugins) {

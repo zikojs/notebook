@@ -14,6 +14,7 @@
     "@zikojs/notebook-runtime-react": "workspace:*",
     "@zikojs/notebook-runtime-svelte": "workspace:*",
     "canvas-confetti": "^1.9.4",
+    "preact": "^10.27.2",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "rehype-mermaid": "^3.0.0",

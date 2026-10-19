@@ -54,27 +54,27 @@ tags.p(state)
 setState(tags.h1('kkkk'))
 setState(tags.h1('kkkkLL'))`
   },
-//   {
-//     runtime : 'svelte',
-//     code : `<script>
-//   let count = $state(0);
-// </script>
+  {
+    runtime : 'svelte',
+    code : `<script>
+  let count = $state(0);
+</script>
 
-// <button onclick={() => count++}>
-//   Svelte Counter: {count}
-// </button>
+<button onclick={() => count++}>
+  Svelte Counter: {count}
+</button>
 
-// <style>
-//   button {
-//     padding: 8px 12px;
-//     background: #ff3e00;
-//     color: white;
-//     border: none;
-//     border-radius: 4px;
-//     cursor: pointer;
-//   }
-// </style>`
-//   },
+<style>
+  button {
+    padding: 8px 12px;
+    background: #ff3e00;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+</style>`
+  },
 //   {
 //     id: 2,
 //     type: "code",

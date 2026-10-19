@@ -2,6 +2,9 @@ import { defineConfig } from 'vite';
 import { notebookViteResolver } from './resolver.js'
 
 export default defineConfig({
+    optimizeDeps: {
+        exclude: ["preact"],
+    },
     plugins: [
         notebookViteResolver({
             packages: [

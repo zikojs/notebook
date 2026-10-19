@@ -17,6 +17,7 @@ export const transformImportsAndScope = async (
     importMap = {},
     plugins = [],
     resolverEndpoint,
+    importScopeIdentifier = "__scope__",
   } = {},
 ) => {
   try {
@@ -30,6 +31,7 @@ export const transformImportsAndScope = async (
       importMap,
       plugins,
       resolverEndpoint,
+      importScopeIdentifier,
     };
 
     const modifications = [];

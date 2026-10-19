@@ -20,5 +20,8 @@
   "dependencies": {
     "sucrase": "catalog:",
     "@codemirror/lang-javascript": "catalog:"
+  },
+  "peerDependencies": {
+    "preact": "^10.27.2"
   }
 }

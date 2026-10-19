@@ -127,6 +127,8 @@ export const rewriteImportNode = async (
     node.source.value,
     context,
   );
+  const importScope =
+    context.importScopeIdentifier || "__scope__";
 
   // Safely quote the URL in generated JavaScript.
   const url = JSON.stringify(source);
@@ -155,7 +157,7 @@ export const rewriteImportNode = async (
 
   if (namespaceId) {
     return (
-      `__scope__.${namespaceId} = ` +
+      `${importScope}.${namespaceId} = ` +
       `await import(${url});`
     );
   }
@@ -168,14 +170,14 @@ export const rewriteImportNode = async (
 
   if (defaultImportName) {
     lines.push(
-      `__scope__.${defaultImportName} = ` +
+      `${importScope}.${defaultImportName} = ` +
       `${tmp}.default ?? ${tmp};`,
     );
   }
 
   for (const { imported, local } of namedImports) {
     lines.push(
-      `__scope__.${local} = ` +
+      `${importScope}.${local} = ` +
       `${tmp}[${JSON.stringify(imported)}] !== undefined ` +
       `? ${tmp}[${JSON.stringify(imported)}] ` +
       `: (${tmp}.default?.[${JSON.stringify(imported)}] !== undefined ` +
