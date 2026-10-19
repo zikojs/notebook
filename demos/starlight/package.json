@@ -11,9 +11,10 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^11.1.8",
     "@astrojs/starlight": "^0.42.6",
+    "@zikojs/astro-notebook": "workspace:*",
     "astro": "^7.2.10",
-    "sharp": "^0.35.3",
-    "@zikojs/astro-notebook" : "workspace:*"
+    "sharp": "^0.35.3"
   }
 }
