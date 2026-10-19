@@ -1,25 +1,21 @@
-import { transformReact } from "./transform.js";
-export const ReacIdentifier = 'react'
 
-export const reactPlugin = ({
-  jsxRuntime = "automatic",
-  importSource = "react",
-} = {}) => ({
-  name: ReacIdentifier,
+import { transform } from "sucrase";
+
+export const ReactIdentifier = "react";
+
+export const reactPlugin = () => ({
+  name: ReactIdentifier,
 
   async transform(code, context) {
-    // CRITICAL: Only transform if this cell's runtime is explicitly "react"
-    if (context.runtime && context.runtime !== "react") {
+    if (context.runtime && context.runtime !== ReactIdentifier) {
       return code;
     }
-    return transformReact(code, { jsxRuntime, importSource });
+
+    return transform(code, {
+      transforms: ["jsx"],
+      jsxRuntime: "automatic",
+      jsxImportSource: "react",
+      production: true,
+    }).code;
   },
-
-  // async afterEvaluate(result, context) {
-  //   if (context.runtime && context.runtime !== "react") {
-  //     return result;
-  //   }
-  //   // ... rest of React afterEvaluate logic
-  // }
-
 });

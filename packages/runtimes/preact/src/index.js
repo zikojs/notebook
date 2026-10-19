@@ -1,31 +1,21 @@
-import { transform } from "@babel/standalone";
 
-const transformPreact = (code) =>
-  transform(code, {
-    plugins: [
-      [
-        "transform-react-jsx",
-        {
-          runtime: "automatic",
-          importSource: "preact",
-        },
-      ],
-    ],
-  }).code;
+import { transform } from "sucrase";
 
-export const PreacIdentifier = 'preact'
+export const PreactIdentifier = "preact";
 
-export const preactPlugin = ({
-  jsxRuntime = "automatic",
-  importSource = "preact",
-} = {}) => ({
-  name: PreacIdentifier,
+export const preactPlugin = () => ({
+  name: PreactIdentifier,
 
   async transform(code, context) {
-    if (context.runtime && context.runtime !== "preact") {
+    if (context.runtime && context.runtime !== PreactIdentifier) {
       return code;
     }
-    return transformPreact(code, { jsxRuntime, importSource });
-  },
 
+    return transform(code, {
+      transforms: ["jsx"],
+      jsxRuntime: "automatic",
+      jsxImportSource: "preact",
+      production: true,
+    }).code;
+  },
 });
