@@ -1,6 +1,6 @@
 import { UINotebook  } from "@zikojs/notebook";
-// import { reactPlugin } from '@zikojs/notebook-runtime-react'
-// import { sveltePlugin } from '@zikojs/notebook-runtime-svelte'
+import { reactPlugin } from '@zikojs/notebook-runtime-react'
+import { sveltePlugin } from '@zikojs/notebook-runtime-svelte'
 import { preactPlugin } from '@zikojs/notebook-runtime-preact'
 
 import rehypeMindElixir from 'rehype-mind-elixir'
@@ -84,31 +84,31 @@ setState(tags.h1('kkkkLL'))`
 // const btn = van.tags.button({ class: "btn btn-primary", onclick: () => confetti() }, "Launch Confetti");
 // van.add(TARGET, btn);` 
 //   },
-//   {
-//     runtime : 'react',
-//     code : `import { createRoot } from "react-dom/client";
-// import { useState } from "react"
-// import confetti from "canvas-confetti";
+  {
+    runtime : 'react',
+    code : `import { createRoot } from "react-dom/client";
+import { useState } from "react"
+import confetti from "canvas-confetti";
 
-// const App = () => {
-//   const [count, setCount] = useState(0);
-//   const handleClick = () => {
-//     setCount(count + 1)
-//     confetti()
-//   }
-//   return <button 
-//     className="btn btn-primary" 
-//     onClick={handleClick}>
-//     Launch Confetti {count} 
-//   </button>
-// }
+const App = () => {
+  const [count, setCount] = useState(0);
+  const handleClick = () => {
+    setCount(count + 1)
+    confetti()
+  }
+  return <button 
+    className="btn btn-primary" 
+    onClick={handleClick}>
+    Launch Confetti {count} 
+  </button>
+}
 
-// const container = document.createElement("div");
-// TARGET.appendChild(container);
-// createRoot(container).render(<App />);
-//     `
+const container = document.createElement("div");
+TARGET.appendChild(container);
+createRoot(container).render(<App />);
+    `
 
-//   }
+  }
 ];
 
 const notebookApp = new UINotebook({
@@ -121,8 +121,8 @@ const notebookApp = new UINotebook({
   minLines: 4,
   maxCells: 10,
   runtimePlugins : [
-    // reactPlugin(),
-    // sveltePlugin(),
+    reactPlugin(),
+    sveltePlugin(),
     preactPlugin()
   ],
   rehypePlugins : [rehypeMermaid, rehypeMindElixir]

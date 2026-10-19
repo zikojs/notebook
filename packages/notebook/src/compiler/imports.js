@@ -178,7 +178,9 @@ export const rewriteImportNode = async (
       `__scope__.${local} = ` +
       `${tmp}[${JSON.stringify(imported)}] !== undefined ` +
       `? ${tmp}[${JSON.stringify(imported)}] ` +
-      `: (${tmp}.default ?? ${tmp});`,
+      `: (${tmp}.default?.[${JSON.stringify(imported)}] !== undefined ` +
+      `? ${tmp}.default[${JSON.stringify(imported)}] ` +
+      `: (${tmp}.default ?? ${tmp}));`,
     );
   }
 
