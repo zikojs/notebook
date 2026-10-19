@@ -197,35 +197,50 @@ importers:
         specifier: 2.0.0-beta.17.1
         version: 2.0.0-beta.17.1
 
-  astro:
+  demos/astro:
     dependencies:
       '@zikojs/astro':
         specifier: ^0.3.5
         version: 0.3.5(@types/node@24.19.2)(yaml@2.9.1)
       '@zikojs/astro-notebook':
         specifier: workspace:*
-        version: link:../packages/integrations/astro
+        version: link:../../packages/integrations/astro
       '@zikojs/notebook':
         specifier: workspace:*
-        version: link:../packages/notebook
+        version: link:../../packages/notebook
       astro:
         specifier: ^7.3.8
         version: 7.4.0(@types/node@24.19.2)(yaml@2.9.1)
 
-  demo:
+  demos/starlight:
+    dependencies:
+      '@astrojs/starlight':
+        specifier: ^0.42.6
+        version: 0.42.6(astro@7.4.0(@types/node@24.19.2)(yaml@2.9.1))
+      '@zikojs/astro-notebook':
+        specifier: workspace:*
+        version: link:../../packages/integrations/astro
+      astro:
+        specifier: ^7.2.10
+        version: 7.4.0(@types/node@24.19.2)(yaml@2.9.1)
+      sharp:
+        specifier: ^0.35.3
+        version: 0.35.5(@types/node@24.19.2)
+
+  demos/ziko:
     dependencies:
       '@zikojs/notebook':
         specifier: workspace:*
-        version: link:../packages/notebook
+        version: link:../../packages/notebook
       '@zikojs/notebook-runtime-preact':
         specifier: workspace:*
-        version: link:../packages/runtimes/preact
+        version: link:../../packages/runtimes/preact
       '@zikojs/notebook-runtime-react':
         specifier: workspace:*
-        version: link:../packages/runtimes/react
+        version: link:../../packages/runtimes/react
       '@zikojs/notebook-runtime-svelte':
         specifier: workspace:*
-        version: link:../packages/runtimes/svelte
+        version: link:../../packages/runtimes/svelte
       canvas-confetti:
         specifier: ^1.9.4
         version: 1.9.4
@@ -267,7 +282,7 @@ importers:
         specifier: ^6.11.0
         version: 6.11.1
       '@codemirror/lang-javascript':
-        specifier: ^6.2.5
+        specifier: 'catalog:'
         version: 6.2.5
       '@codemirror/lang-markdown':
         specifier: ^6.5.2
@@ -293,9 +308,6 @@ importers:
       codemirror:
         specifier: ^6.0.2
         version: 6.0.2
-      lucide:
-        specifier: ^1.44.0
-        version: 1.59.0
       rehype-stringify:
         specifier: ^10.0.1
         version: 10.0.1
@@ -347,21 +359,6 @@ importers:
       ziko:
         specifier: 'catalog:'
         version: 2.0.0-beta.17.1
-
-  starlight:
-    dependencies:
-      '@astrojs/starlight':
-        specifier: ^0.42.6
-        version: 0.42.6(astro@7.4.0(@types/node@24.19.2)(yaml@2.9.1))
-      '@zikojs/astro-notebook':
-        specifier: workspace:*
-        version: link:../packages/integrations/astro
-      astro:
-        specifier: ^7.2.10
-        version: 7.4.0(@types/node@24.19.2)(yaml@2.9.1)
-      sharp:
-        specifier: ^0.35.3
-        version: 0.35.5(@types/node@24.19.2)
 
 packages:
 
@@ -3088,6 +3085,9 @@ packages:
   ziko@2.0.0-beta.17.1:
     resolution: {integrity: sha512-/oxs9UKEvnMZAvQsHFeZJ9hgpgk01/HmSqW4AF+Y0RxZp9US0MNquG9iP3lHUXoXxcENogeOI0OiweMcg+1yJA==}
 
+  ziko@2.0.0-beta.17.2:
+    resolution: {integrity: sha512-UEk3orR14SjrfS+b9nHeX5a1N6f+BxwSm6gb/580oYUyn8f6bKjJ89D6eomknnLjy4dSNQq+NjSEkjVk9KdlSg==}
+
   zimmerframe@1.1.5:
     resolution: {integrity: sha512-msJxIvYDYcoNL+PJsu+7qmpDWsYmAxTY+2TNYXXF0hzBzBk0BMecOqDOG/EckUoKCuKwObfbugIl8QpqHDXeFA==}
 
@@ -4038,7 +4038,7 @@ snapshots:
       mind-elixir: 6.0.0-next.4
       yaml: 2.9.1
       zextra: 1.15.2
-      ziko: 2.0.0-beta.17.1
+      ziko: 2.0.0-beta.17.2
 
   '@zikojs/server@0.6.1(@types/node@24.19.2)(yaml@2.9.1)':
     dependencies:
@@ -5645,7 +5645,7 @@ snapshots:
       mind-elixir: 6.0.0-next.4
       unist-util-visit: 5.1.0
       yaml: 2.9.1
-      ziko: 2.0.0-beta.17.1
+      ziko: 2.0.0-beta.17.2
 
   rehype-stringify@10.0.1:
     dependencies:
@@ -6183,6 +6183,8 @@ snapshots:
   ziko@1.10.0: {}
 
   ziko@2.0.0-beta.17.1: {}
+
+  ziko@2.0.0-beta.17.2: {}
 
   zimmerframe@1.1.5: {}
 

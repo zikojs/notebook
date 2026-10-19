@@ -3,9 +3,7 @@ packages:
   - 'packages/*'
   - 'packages/runtimes/*'
   - 'packages/integrations/*'
-  - 'demo'
-  - 'astro'
-  - 'starlight'
+  - 'demos/*'
 
 catalog:
   ziko: 2.0.0-beta.17.1
