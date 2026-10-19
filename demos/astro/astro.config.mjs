@@ -1,16 +1,17 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import { notebookAstroResolver } from './resolver.js'
+import  notebookAstroResolver  from "@zikojs/notebook-astro-resolver"
 
 
 import zikojs from '@zikojs/astro';
+
 
 // https://astro.build/config
 export default defineConfig({
   integrations: [
     zikojs(),
     notebookAstroResolver({
-         packages: [
+         modules: [
                 "ziko",
                 "ziko/dom",
                 "ziko/hooks",

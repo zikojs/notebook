@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import { notebookViteResolver } from './resolver.js'
+import notebookViteResolver from "@zikojs/notebook-vite-resolver"
 
 export default defineConfig({
     optimizeDeps: {
@@ -7,7 +7,7 @@ export default defineConfig({
     },
     plugins: [
         notebookViteResolver({
-            packages: [
+            modules: [
                 "ziko",
                 "ziko/dom",
                 "ziko/hooks",

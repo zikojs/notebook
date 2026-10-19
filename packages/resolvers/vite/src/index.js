@@ -9,7 +9,7 @@ function safeName(specifier) {
 }
 
 export default function notebookViteResolver({
-  packages = [],
+  modules = [],
   manifestFileName = MANIFEST_FILE,
 } = {}) {
   let command;
@@ -109,7 +109,7 @@ export default function notebookViteResolver({
 
       entries.clear();
 
-      for (const specifier of new Set(packages)) {
+      for (const specifier of new Set(modules)) {
         const importer = path.join(root, "__ziko_notebook_resolver__.js");
 
         try {

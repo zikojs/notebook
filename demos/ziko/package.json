@@ -13,6 +13,7 @@
     "@zikojs/notebook-runtime-preact": "workspace:*",
     "@zikojs/notebook-runtime-react": "workspace:*",
     "@zikojs/notebook-runtime-svelte": "workspace:*",
+    "@zikojs/notebook-vite-resolver": "workspace:*",
     "canvas-confetti": "^1.9.4",
     "preact": "^10.27.2",
     "react": "^19.3.0",

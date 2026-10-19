@@ -16,6 +16,7 @@
     "@zikojs/astro": "^0.3.5",
     "@zikojs/astro-notebook": "workspace:*",
     "@zikojs/notebook": "workspace:*",
+    "@zikojs/notebook-astro-resolver": "workspace:*",
     "astro": "^7.3.8",
     "ziko": "catalog:"
   }

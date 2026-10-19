@@ -1,7 +1,7 @@
 import notebookViteResolver  from '@zikojs/notebook-vite-resolver'
 
-export function notebookAstroResolver({
-  packages = [],
+export default function notebookAstroResolver({
+  modules = [],
   manifestFileName = "ziko-notebook-imports.json",
 } = {}) {
   return {
@@ -10,7 +10,7 @@ export function notebookAstroResolver({
     vite: {
       plugins: [
         notebookViteResolver({
-          packages,
+          modules,
           manifestFileName,
         }),
       ],

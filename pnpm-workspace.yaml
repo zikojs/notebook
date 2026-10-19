@@ -1,8 +1,10 @@
 packages:
   - 'apps/*'
   - 'packages/*'
-  - 'packages/runtimes/*'
-  - 'packages/integrations/*'
+  - 'packages/*/*'
+  # - 'packages/runtimes/*'
+  # - 'packages/integrations/*'
+  # - 'packages/resolvers/*'
   - 'demos/*'
 
 catalog:

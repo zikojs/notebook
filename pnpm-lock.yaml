@@ -208,6 +208,9 @@ importers:
       '@zikojs/notebook':
         specifier: workspace:*
         version: link:../../packages/notebook
+      '@zikojs/notebook-astro-resolver':
+        specifier: workspace:*
+        version: link:../../packages/resolvers/astro
       astro:
         specifier: ^7.3.8
         version: 7.4.0(@types/node@24.19.2)(yaml@2.9.1)
@@ -247,6 +250,9 @@ importers:
       '@zikojs/notebook-runtime-svelte':
         specifier: workspace:*
         version: link:../../packages/runtimes/svelte
+      '@zikojs/notebook-vite-resolver':
+        specifier: workspace:*
+        version: link:../../packages/resolvers/vite
       canvas-confetti:
         specifier: ^1.9.4
         version: 1.9.4
@@ -332,6 +338,21 @@ importers:
       zextra:
         specifier: 'catalog:'
         version: 1.15.2
+      ziko:
+        specifier: 'catalog:'
+        version: 2.0.0-beta.17.1
+
+  packages/resolvers/astro:
+    dependencies:
+      '@zikojs/notebook-vite-resolver':
+        specifier: workspace:*
+        version: link:../vite
+      ziko:
+        specifier: 'catalog:'
+        version: 2.0.0-beta.17.1
+
+  packages/resolvers/vite:
+    dependencies:
       ziko:
         specifier: 'catalog:'
         version: 2.0.0-beta.17.1
