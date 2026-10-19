@@ -31,8 +31,19 @@ const initialCellData = [
   },
   {
     code : `import { render } from 'preact'
-const App = () => <h1>Hello from preact</h1>
-render(<App />, TARGET);`,
+import { useState } from 'preact/hooks'
+function Counter() {
+	const [value, setValue] = useState(0);
+
+	return (
+		<>
+			<div>Counter: {value}</div>
+			<button onClick={() => setValue(value + 1)}>Increment</button>
+			<button onClick={() => setValue(value - 1)}>Decrement</button>
+		</>
+	);
+}
+render(<Counter />, TARGET);`,
 runtime : 'preact'
   },
   {
