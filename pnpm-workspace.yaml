@@ -12,6 +12,7 @@ catalog:
   zextra: ^1.15.0
   '@zikojs/console': ^0.8.0
   sucrase : latest
+  '@codemirror/lang-javascript' : latest
 
 minimumReleaseAgeExclude:
   - ziko@2.0.0-beta.17.0

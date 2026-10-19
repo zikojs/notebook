@@ -18,6 +18,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "sucrase": "catalog:"
+    "sucrase": "catalog:",
+    "@codemirror/lang-javascript": "catalog:"
   }
 }

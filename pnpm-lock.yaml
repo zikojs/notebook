@@ -164,6 +164,9 @@ settings:
 
 catalogs:
   default:
+    '@codemirror/lang-javascript':
+      specifier: latest
+      version: 6.2.5
     '@zikojs/console':
       specifier: ^0.8.0
       version: 0.8.0
@@ -181,6 +184,9 @@ importers:
 
   .:
     dependencies:
+      '@codemirror/lang-javascript':
+        specifier: ^6.2.5
+        version: 6.2.5
       '@zikojs/console':
         specifier: 'catalog:'
         version: 0.8.0
@@ -311,12 +317,18 @@ importers:
 
   packages/runtimes/preact:
     dependencies:
+      '@codemirror/lang-javascript':
+        specifier: 'catalog:'
+        version: 6.2.5
       sucrase:
         specifier: 'catalog:'
         version: 3.35.1
 
   packages/runtimes/react:
     dependencies:
+      '@codemirror/lang-javascript':
+        specifier: 'catalog:'
+        version: 6.2.5
       sucrase:
         specifier: 'catalog:'
         version: 3.35.1
