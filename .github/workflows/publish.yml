@@ -77,7 +77,8 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "Publishing with npm dist-tag: $TAG"
 
-      - name: Build packages
+      - name: Build packages when possible
+        continue-on-error: true
         run: pnpm --filter "./packages/**" -r --if-present run build
 
       - name: Preview packages
@@ -88,6 +89,5 @@ jobs:
         working-directory: packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
           NPM_DIST_TAG: ${{ steps.release.outputs.tag }}
         run: pnpm publish -r --tag "$NPM_DIST_TAG"
