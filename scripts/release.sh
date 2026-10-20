@@ -11,7 +11,17 @@ fi
 
 TAG="notebook-v$VERSION"
 
+# Ensure there are changes to commit
+if [[ -z "$(git status --porcelain)" ]]; then
+  echo "No changes to commit."
+else
+  git add .
+  git commit -m "chore: release $VERSION"
+fi
+
+# Create and push the release tag
 git tag "$TAG"
+git push origin HEAD
 git push origin "$TAG"
 
 echo "Released tag: $TAG"
