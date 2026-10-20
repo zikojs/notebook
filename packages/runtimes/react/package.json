@@ -17,6 +17,10 @@
   "author": "zakaria elalaoui",
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zikojs/notebook.git"
+  },
   "dependencies": {
     "@codemirror/lang-javascript": "catalog:",
     "sucrase": "catalog:"
