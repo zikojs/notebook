@@ -36,3 +36,4 @@ jobs:
           npm-token: ${{ secrets.NPM_TOKEN }}
           tag-prefix: "notebook-v"
           default-dist-tag: ${{ inputs.tag }}
+          
