@@ -1,10 +1,6 @@
 name: Publish Notebook
 
 on:
-  push:
-    tags:
-      - "notebook-v*"
-
   workflow_dispatch:
     inputs:
       tag:
@@ -17,18 +13,26 @@ on:
           - next
           - beta
 
-permissions:
-  contents: read
+  push:
+    tags:
+      - "notebook-v*"
+
+concurrency:
+  group: publish-notebook
+  cancel-in-progress: false
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: zikojs/workflow@v1
+      - name: Run Publish Action
+        uses: zikojs/workflow@main # Replace with your repo and tag/branch (e.g. @v1)
         with:
-          tag-prefix: notebook-v
           npm-token: ${{ secrets.NPM_TOKEN }}
-          dist-tag: ${{ inputs.tag || 'latest' }}
+          tag-prefix: "notebook-v"
+          default-dist-tag: ${{ inputs.tag }}
