@@ -7,8 +7,7 @@ import {
   ErrorOutput,
 } from "./components/index.js";
 import { evaluateCodeAsync } from "./compiler/index.js";
-import { tags, UIElement } from "ziko/dom";
-import { call_with_optional_props } from "ziko/dom/internal-utils";
+import { tags, UIElement, callWithOptionalProps } from "ziko/dom";
 
 const { div } = tags;
 
@@ -814,4 +813,4 @@ getNotebookData({ inputs = true, outputs = true } = {}) {
 }
 }
 
-export const Notebook = call_with_optional_props(UINotebook);
+export const Notebook = callWithOptionalProps(UINotebook);

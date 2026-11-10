@@ -49,7 +49,7 @@ export function CellItem({ cellData, app, store }) {
   const inputRow = div({ class: "cell-input-row" }, inPrompt, bodySlot);
   const outputRow = div({ class: "cell-output-row" }, outPrompt, div({ class: "output-wrapper" }, outputRef));
   const root = div({ class: "cell" }, inputRow, controlsEl, outputRow);
-  root.onClick(() => app.setActiveCell(cellData.id));
+  root.on('click', () => app.setActiveCell(cellData.id));
 
   cellData._dom = root.element;
   cellData._inPrompt = inPrompt.element;
