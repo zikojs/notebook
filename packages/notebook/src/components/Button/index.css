@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: #ffffff;
+  background: transparent;
   border: 1px solid var(--border-color);
   padding: 6px 10px;
   border-radius: 4px;

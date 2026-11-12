@@ -1,8 +1,8 @@
 /* --- HEADER & TOOLBAR --- */
 
 .ziko-notebook .header {
-  border-bottom: 1px solid var(--border-color);
-  background: #ffffff;
+  /* border-bottom: 1px solid var(--border-color);
+  background: #ffffff; */
   padding: 10px 16px;
   display: flex;
   align-items: center;

@@ -37,7 +37,7 @@
   border-radius: 6px;
   padding: 8px;
   gap: 2px;
-  background: #ffffff;
+  /* background: #ffffff; */
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   position: relative;
 }
@@ -81,7 +81,7 @@
 .ziko-notebook .input-wrapper {
   border: 1px solid var(--border-color);
   border-radius: 4px;
-  background: var(--bg-editor);
+  /* background: var(--bg-editor); */
   overflow: hidden;
   flex: 1 1 0;
   min-width: 0;
