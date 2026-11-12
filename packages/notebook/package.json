@@ -60,7 +60,6 @@
     "remark": "^15.0.1",
     "remark-rehype": "^11.1.2",
     "vanjs-core": "^1.6.1",
-    "zextra": "catalog:",
     "ziko": "catalog:"
   }
 }

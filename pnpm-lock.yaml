@@ -168,14 +168,11 @@ catalogs:
       specifier: latest
       version: 6.2.5
     '@zikojs/console':
-      specifier: ^0.8.0
-      version: 0.8.0
+      specifier: latest
+      version: 0.9.3
     sucrase:
       specifier: latest
       version: 3.35.1
-    zextra:
-      specifier: ^1.15.0
-      version: 1.15.2
     ziko:
       specifier: latest
       version: 2.0.0-rc.12
@@ -188,8 +185,8 @@ importers:
         specifier: ^6.2.5
         version: 6.2.5
       '@zikojs/console':
-        specifier: 'catalog:'
-        version: 0.8.0
+        specifier: ^0.9.3
+        version: 0.9.3
       sucrase:
         specifier: ^3.35.1
         version: 3.35.1
@@ -313,7 +310,7 @@ importers:
         version: 6.43.15
       '@zikojs/console':
         specifier: 'catalog:'
-        version: 0.8.0
+        version: 0.9.3
       '@zikojs/lucide':
         specifier: ^0.2.2
         version: 0.2.2
@@ -335,9 +332,6 @@ importers:
       vanjs-core:
         specifier: ^1.6.1
         version: 1.6.2
-      zextra:
-        specifier: 'catalog:'
-        version: 1.15.2
       ziko:
         specifier: 'catalog:'
         version: 2.0.0-rc.12
@@ -1464,8 +1458,8 @@ packages:
   '@zikojs/astro@0.3.5':
     resolution: {integrity: sha512-zm31SJnE0YP6sGlnopM0ix0EGwPFYWkOMQkUfW1DU0oyDzJ9cQfK3xWTUIjjhLlNQTOAb937tzGsu+KXvaKABg==}
 
-  '@zikojs/console@0.8.0':
-    resolution: {integrity: sha512-4BojEjmXz6dcwq5XLpkpmc6AHuL1KhJpR9zIh4Zv7EomnYCCp8n+qQQc5R5sl0k6mFYB35JUrPub/sPh5Urbtw==}
+  '@zikojs/console@0.9.3':
+    resolution: {integrity: sha512-msa7cE+sRlopK8dHpwLPODpyPHQZRTkkIUd4jWBaBvTp1En4tbvivc/ruSAz0v2TUpvu3Ueh5eLIufMhd/ssrw==}
 
   '@zikojs/express@0.1.1':
     resolution: {integrity: sha512-zPNO9O/9eQ08nshTftH5ajU0aDg9sf+qma3m0bbNq/XzO4tuLukxHn5r7sgRyXfmdHcjKy0soB7IbbZosrZMAw==}
@@ -2994,6 +2988,7 @@ packages:
 
   tldts-core@7.4.20:
     resolution: {integrity: sha512-C630TWXZCZmLq0F2bW4QqwnaaxCQ/svpAqvJwnC4JvgEM5ohhBnGsEzTLSOXcN+xjz+kEaHS5uoWIw2klnqd0A==}
+    deprecated: Partial release, see https://github.com/remusao/tldts/issues/2735. Use >=7.4.22.
 
   tldts@7.4.19:
     resolution: {integrity: sha512-48dH6aSpQnpbzDUc4vIQZ1VjB8tkK+e8c1yx05/SZK+rkssgjEOlxDd/yU8/a4vGYQ9vRgJr9dwMq9TJ0b3X2Q==}
@@ -4329,7 +4324,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@zikojs/console@0.8.0':
+  '@zikojs/console@0.9.3':
     dependencies:
       ziko: 2.0.0-rc.12
 

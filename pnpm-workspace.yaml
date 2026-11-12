@@ -9,8 +9,7 @@ packages:
 
 catalog:
   ziko: latest
-  zextra: ^1.15.0
-  '@zikojs/console': ^0.8.0
+  '@zikojs/console': latest
   sucrase : latest
   '@codemirror/lang-javascript' : latest
 
