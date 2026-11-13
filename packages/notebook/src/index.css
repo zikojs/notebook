@@ -121,9 +121,9 @@
   padding: 0;
 }
 
-.ziko-notebook .cm-line{
+/* .ziko-notebook .cm-line{
   line-height: 1.3 !important;
-}
+} */
 
 /* --- OUTPUT --- */
 
@@ -163,7 +163,7 @@
 
 /* TEMP */
 
-.ziko-notebook .cm-editor{
+/* .ziko-notebook .cm-editor{
   margin: 1px;
   outline: none;
 }
@@ -173,4 +173,4 @@
 }
 .ziko-notebook .cm-line{
   margin: 1px;
-}
+} */

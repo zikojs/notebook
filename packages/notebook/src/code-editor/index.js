@@ -164,18 +164,26 @@ export function createCodeEditor(app, cellData, actions) {
     const state = EditorState.create({
       doc: cellData.code,
       extensions: [
-        // lineNumbers(),
+        lineNumbers(),
         highlightActiveLine(),
-        // EditorView.theme({
-        //   "&": {
-        //     fontFamily: '"Fira Code", SFMono-Regular, Consolas, monospace',
-        //     fontSize: "13px",
-        //     lineHeight: "17px",
-        //   },
-        //   ".cm-scroller, .cm-content, .cm-line, .cm-gutterElement": {
-        //     lineHeight: "17px",
-        //   },
-        // }),
+        EditorView.theme({
+          ".cm-scroller, .cm-content, .cm-line, .cm-gutterElement": {
+            lineHeight: "17px",
+            margin : 0,
+          },
+          '.cm-gutters': {
+            background : 'transparent'
+          },
+          ".cm-gutterElement":{
+            display : 'flex',
+            justifyContent : 'center',
+            // alignItems : 'center',
+            fontFamily : 'cursive',
+            fontSize : '.75em'
+          }
+        }, 
+        // { dark : true}
+      ),
 
         history(),
         bracketMatching(),
